@@ -1,0 +1,25 @@
+﻿<Page x:Class="PGTA_WPF.Info"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:PGTA_WPF"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Info">
+
+    <Grid Background="#FF464646" Loaded="FormLoad" SizeChanged="Resize" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" x:Name="Column"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ScrollViewer HorizontalScrollBarVisibility="Hidden" x:Name="ScrollBar" Grid.Row="1" Grid.Column="1" Margin="0,0" >
+            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center">
+                <TextBlock Text="INFORMATION " Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Bottom"  Margin="0,10" Foreground="#FFC2B8B2" FontFamily="Microsoft Sans Serif" FontSize="40" TextDecorations="Underline"/>
+                <TextBlock Text="aa" x:Name="Label" TextWrapping="Wrap" Grid.Column="1" Grid.Row="1" Margin="0,30" HorizontalAlignment="Center"  Foreground="#FFC2B8B2" FontFamily="Microsoft Sans Serif" FontSize="20" />
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>
