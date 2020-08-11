@@ -11,6 +11,9 @@ namespace PGTAWPF
 {
     public class CAT10
     {
+        /// <summary>
+        /// Hi
+        /// </summary>
         readonly LibreriaDecodificacion lib;
         readonly string[] mensaje;
         readonly string FSPEC1;
@@ -28,18 +31,18 @@ namespace PGTAWPF
         {
         }
 
+
         public CAT10(string[] mensajehexa, double firsttime, LibreriaDecodificacion lib)
         {
             try
             {
                 this.lib = lib;
                 this.FirstTime = firsttime;
-                this.mensaje = mensajehexa;//lib.passarmensajeenteroabinario(mensajehexa);
+                this.mensaje = mensajehexa;
                 FSPEC1 = lib.FSPEC(mensaje);
                 int longFSPEC = this.FSPEC1.Length / 7;
                 int pos = 3 + longFSPEC;
                 char[] FSPEC = FSPEC1.ToCharArray(0, FSPEC1.Length);
-                // this.airportCode = airportcode;
                 this.mensaje = lib.Passarmensajeenteroabinario(mensaje);
                 if (FSPEC[0] == '1') { pos = this.Compute_Data_Source_Identifier(mensaje, pos); } //
                 if (FSPEC[1] == '1') { pos = this.Compute_Message_Type(mensaje, pos); } //
@@ -76,19 +79,13 @@ namespace PGTAWPF
                         if (FSPEC[22] == '1') { pos = this.Compute_Presence(mensaje, pos); }
                         if (FSPEC[23] == '1') { pos = this.Compute_Amplitude_of_Primary_Plot(mensaje, pos); }
                         if (FSPEC[24] == '1') { pos = this.Compute_Calculated_Acceleration(mensaje, pos); }
-                    }
-                   // ComputeZone();
-                    
+                    }                    
                 }
-              //  lib = null;
             }
             catch
             {
-                //  mensaje = mensajehexa;
             }
-        
         }
-
 
         public void Setnum(int num)
         {
