@@ -16,6 +16,9 @@ namespace PGTA_WPF
 
         public DataTable parameters = new DataTable();
         public DataTable PD = new DataTable();
+        public DataTable PFD = new DataTable();
+        public DataTable PFI = new DataTable();
+
         public List<DataZone> ListZones = new List<DataZone>();
         public List<PrecissionPoint> PrecissionPoints = new List<PrecissionPoint>();
         public Data()
@@ -76,6 +79,18 @@ namespace PGTA_WPF
             PD.Columns.Add("PD %");
             PD.Columns.Add("Minimum\nPD %");
 
+            PFD.Columns.Add("Zone");
+            PFD.Columns.Add("Correct Reports");
+            PFD.Columns.Add("False Reports");
+            PFD.Columns.Add("PFD %");
+            PFD.Columns.Add("Minimum PFD %");
+
+            PFI.Columns.Add("Zone");
+            PFI.Columns.Add("Correct Identification");
+            PFI.Columns.Add("False Identification");
+            PFI.Columns.Add("PFI %");
+            PFI.Columns.Add("Minimum PFI %");
+
         }
 
         public void CreateTable()
@@ -126,11 +141,95 @@ namespace PGTA_WPF
             AddTotal(ListZones[18], list1);
         }
 
+        public void CreatePFDTable()
+        {
+            PFD.Clear();
+            AddHeatherPFD("--- RUNWAYS ---");
+            for (int i = 0; i < 3; i++)
+            {
+                AddRowPFD(ListZones[i],0.01);
+            }
+            int[] list1 = new int[] { 0, 1, 2 };
+            AddTotalPFD(ListZones[14], list1,0.01);
+            AddHeatherPFD("--- STANDS ---");
+            for (int i = 3; i < 5; i++)
+            {
+                AddRowPFD(ListZones[i],0.01);
+            }
+            list1 = new int[] { 3, 4 };
+            AddTotalPFD(ListZones[15], list1, 0.01);
+            AddHeatherPFD("--- APRONS ---");
+            for (int i = 5; i < 7; i++)
+            {
+                AddRowPFD(ListZones[i],0.01);
+            }
+            list1 = new int[] { 5, 6 };
+            AddTotalPFD(ListZones[16], list1, 0.01);
+            AddHeatherPFD("--- TAXI ---");
+            AddRowPFD(ListZones[7], 0.01);
+            AddHeatherPFD("-- AIRBORNE 0-2.5NM --");
+            for (int i = 8; i < 11; i++)
+            {
+                AddRowPFD(ListZones[i], 0.01);
+            }
+            list1 = new int[] { 8, 9, 10 };
+            AddTotalPFD(ListZones[17], list1, 0.01);
+            AddHeatherPFD("-- AIRBORNE 2.5-5NM --");
+            for (int i = 11; i < 14; i++)
+            {
+                AddRowPFD(ListZones[i], 0.01);
+            }
+            list1 = new int[] { 11, 12, 13 };
+            AddTotalPFD(ListZones[18], list1, 0.01);
+        }
+
+
+        public void CreatePFITable()
+        {
+            PFI.Clear();
+            AddHeatherPFI("--- RUNWAYS ---");
+            for (int i = 0; i < 3; i++)
+            {
+                AddRowPFI(ListZones[i],0.0001);
+            }
+            int[] list1 = new int[] { 0, 1, 2 };
+            AddTotalPFI(ListZones[14], list1, 0.0001);
+            AddHeatherPFI("--- STANDS ---");
+            for (int i = 3; i < 5; i++)
+            {
+                AddRowPFI(ListZones[i], 0.0001);
+            }
+            list1 = new int[] { 3, 4 };
+            AddTotalPFI(ListZones[15], list1, 0.0001);
+            AddHeatherPFI("--- APRONS ---");
+            for (int i = 5; i < 7; i++)
+            {
+                AddRowPFI(ListZones[i], 0.0001);
+            }
+            list1 = new int[] { 5, 6 };
+            AddTotalPFI(ListZones[16], list1, 0.0001);
+            AddHeatherPFI("--- TAXI ---");
+            AddRowPFI(ListZones[7], 0.0001);
+            AddHeatherPFI("-- AIRBORNE 0-2.5NM --");
+            for (int i = 8; i < 11; i++)
+            {
+                AddRowPFI(ListZones[i], 0.0001);
+            }
+            list1 = new int[] { 8, 9, 10 };
+            AddTotalPFI(ListZones[17], list1, 0.0001);
+            AddHeatherPFI("-- AIRBORNE 2.5-5NM --");
+            for (int i = 11; i < 14; i++)
+            {
+                AddRowPFI(ListZones[i], 0.0001);
+            }
+            list1 = new int[] { 11, 12, 13 };
+            AddTotalPFI(ListZones[18], list1, 0.0001);
+        }
+
+
         private void AddHeather(String name)
         {
             var row = parameters.NewRow();
-            
-          //  row.Background = new SolidColorBrush(Colors.BlanchedAlmond);
             row["Zone"] =name;
             row["P95"] ="--------";
             row["P99"] = "--------";
@@ -144,12 +243,6 @@ namespace PGTA_WPF
         private void AddHeatherPD(String name)
         {
             var row =PD.NewRow();
-            //PD.Columns.Add("Zone");
-            //PD.Columns.Add("Expected Updates");
-            //PD.Columns.Add("Missing Updates");
-            //PD.Columns.Add("Update Rate %");
-            //PD.Columns.Add("Minimum Update Rate %");
-            //  row.Background = new SolidColorBrush(Colors.BlanchedAlmond);
             row["Zone"] = name;
             row["Expected\nUpdates UR"] = "--------";
             row["Missing\nUpdates UR"] = "--------";
@@ -161,6 +254,30 @@ namespace PGTA_WPF
             row["Minimum\nPD %"] = "--------";
             PD.Rows.Add(row);
         }
+
+        private void AddHeatherPFD(String name)
+        {
+            var row = PFD.NewRow();
+            row["Zone"] = name;
+            row["Correct Reports"] = "--------";
+            row["False Reports"] = "--------";
+            row["PFD %"] = "--------";
+            row["Minimum PFD %"] = "--------";
+            PFD.Rows.Add(row);
+        }
+
+        private void AddHeatherPFI(String name)
+        {
+            var row = PFI.NewRow();
+            row["Zone"] = name;
+            row["Correct Identification"] = "--------";
+            row["False Identification"] = "--------";
+            row["PFI %"] = "--------";
+            row["Minimum PFI %"] = "--------";
+            PFI.Rows.Add(row);
+        }
+
+
         private void AddRow(DataZone zone)
         {
             var row = parameters.NewRow();
@@ -173,6 +290,8 @@ namespace PGTA_WPF
             row["STD"] = zone.GetDesviacion();
             parameters.Rows.Add(row);
         }
+
+
 
         private void AddRowPD(DataZone zone, int minUR, double minPD)
         {
@@ -188,6 +307,27 @@ namespace PGTA_WPF
             row["Minimum\nPD %"] = Convert.ToString(minPD) + "%";
             PD.Rows.Add(row);
         }
+        private void AddRowPFD(DataZone zone, double minPFD)
+        {
+            var row = PFD.NewRow();
+            row["Zone"] = zone.name;
+            row["Correct Reports"] = Convert.ToString(zone.CorrectDetection);
+            row["False Reports"] = Convert.ToString(zone.FalseDetection);
+            row["PFD %"] = zone.GetPFD();
+            row["Minimum PFD %"] = $"{minPFD} %";
+            PFD.Rows.Add(row);
+        }
+
+        private void AddRowPFI(DataZone zone,  double minPFI)
+        {
+            var row = PFI.NewRow();
+            row["Zone"] = zone.name;
+            row["Correct Identification"] =Convert.ToString(zone.CorrectIdentification);
+            row["False Identification"] = Convert.ToString(zone.FalseIdentification);
+            row["PFI %"] = zone.GetPFI();
+            row["Minimum PFI %"] = $"{minPFI} %"; ;
+            PFI.Rows.Add(row);        
+        }
 
         private void AddTotal(DataZone zone, int[] list)
         {
@@ -200,7 +340,18 @@ namespace PGTA_WPF
             zone.CreateTotalPD(list, ListZones);
             AddRowPD(zone,minUR, minPD);
         }
-       
+
+        private void AddTotalPFD(DataZone zone, int[] list, double minPFD)
+        {
+            zone.CreateTotalPFD(list, ListZones);
+            AddRowPFD(zone, minPFD);
+        }
+
+        private void AddTotalPFI(DataZone zone, int[] list, double minPFI)
+        {
+            zone.CreateTotalPFI(list, ListZones);
+            AddRowPFI(zone, minPFI);
+        }
 
         public void CreatePDTable()
         {

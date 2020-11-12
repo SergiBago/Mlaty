@@ -26,17 +26,12 @@ namespace PGTA_WPF
             InitializeComponent();
         }
 
-    //   Data parameters = new Data();
         DataTable parameters = new DataTable();
 
         private void ViewLoaded(object sender, RoutedEventArgs e)
         {
-        //    MessageBox.Show("loaded");
-          //  parameters.CreateTable();
             DatagridView.ItemsSource = parameters.DefaultView;
             DatagridView.Items.Refresh();
-
-            //DatagridView.DataContext = parameters.parameters;
             foreach (DataGridColumn col in DatagridView.Columns)
             {
                 col.Width = new DataGridLength(1, DataGridLengthUnitType.Auto);
@@ -46,36 +41,10 @@ namespace PGTA_WPF
             this.DatagridView.CanUserResizeRows = false;
             DatagridView.IsReadOnly = true;
             DatagridView.CanUserReorderColumns = false;
-            //DatagridView.Allow
-            //    foreach (DataGridViewColumn column in dataGridView.Columns)
-            //{
-            //    column.SortMode = DataGridViewColumnSortMode.NotSortable;
-            ////}
-            //DatagridViewPD.ItemsSource = parameters.PD.DefaultView;
-            //DatagridViewPD.Items.Refresh();
-
-            ////DatagridView.DataContext = parameters.parameters;
-            //foreach (DataGridColumn col in DatagridViewPD.Columns)
-            //{
-            //    col.Width = new DataGridLength(1, DataGridLengthUnitType.Auto);
-            //    col.CanUserSort = false;
-
-            //}
-            ////DataRowView item = (DatagridView.Items[1] as DataRowView);
-            //DataRow row = item.Row;
-            //item
-            //row.Background = new SolidColorBrush(Colors.BlanchedAlmond);
-            //this.DatagridViewPD.CanUserResizeColumns = false;
-            //this.DatagridViewPD.CanUserResizeRows = false;
-            //DatagridViewPD.IsReadOnly = true;
-            //DatagridViewPD.CanUserReorderColumns = false;
-
-
         }
 
         public void GetData(DataTable Table)
         {
-          //  MessageBox.Show("GetData");
             this.parameters = Table;
         }
     }

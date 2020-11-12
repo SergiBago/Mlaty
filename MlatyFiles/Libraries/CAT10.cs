@@ -548,7 +548,7 @@ namespace PGTAWPF
             StringBuilder Identification = new StringBuilder();
             string octets = string.Concat(message[pos + 1], message[pos + 2], message[pos + 3], message[pos + 4], message[pos + 5], message[pos + 6]);
             for (int i = 0; i < 8; i++) { Identification.Append(lib.Compute_Char(octets.Substring(i * 6, 6))); }
-            TAR = Identification.ToString().Trim();
+            Target_Identification = Identification.ToString().Trim();
             pos += 7;
             return pos;
         }
@@ -681,27 +681,9 @@ namespace PGTAWPF
             return pos;
         }
 
-        // DATA ITEM I010/550, SYSTEM STATUS
-        //public string NOGO;
-        //public string OVL;
-        //public string TSV;
-        //public string DIV;
-        //public string TIF;
+
         private int Compute_System_Status(string[] message, int pos)
         {
-            //char[] OctetoChar = message[pos].ToCharArray(0, 8);
-            //int nogo = Convert.ToInt32(string.Concat(OctetoChar[0], OctetoChar[1]), 2);
-            //if (nogo == 0) { NOGO = "Operational Release Status of the System (NOGO): Operational"; }
-            //else if (nogo == 1) { NOGO = "Operational Release Status of the System (NOGO): Degraded"; }
-            //else if (nogo == 2) { NOGO = "Operational Release Status of the System (NOGO): NOGO"; }
-            //if (OctetoChar[2] == '0') { OVL = "Overload indicator: No overload"; }
-            //else if (OctetoChar[2] == '1') { OVL = "Overload indicator: Overload"; }
-            //if (OctetoChar[3] == '0') { TSV = "Time Source Validity: Valid"; }
-            //else if (OctetoChar[3] == '1') { TSV = "Time Source Validity: Invalid"; }
-            //if (OctetoChar[4] == '0') { DIV = "DIV: Normal Operation"; }
-            //else if (OctetoChar[4] == '1') { DIV = "DIV: Diversity degraded"; }
-            //if (OctetoChar[5] == '0') { TIF = "TIF: Test Target Operative"; }
-            //else if (OctetoChar[5] == '1') { TIF = "TIF: Test Target Failure"; }
             pos = pos++;
             return pos;
         }

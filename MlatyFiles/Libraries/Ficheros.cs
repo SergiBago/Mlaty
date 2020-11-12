@@ -27,7 +27,7 @@ namespace PGTAWPF
         List<int> PICS = new List<int>();
         bool SavePositions = true;
         List<TrajectoriestoCompute> trajdgps = new List<TrajectoriestoCompute>();
-
+        int failed;
 
         public Ficheros()
         {
@@ -48,6 +48,7 @@ namespace PGTAWPF
         {
             //try
             //{
+            failed = 0;
                 SavePositions = SaveMarkers;
                 for (int i = 0; i < namesastadsb.Count; i += 2)
                 {
@@ -83,23 +84,6 @@ namespace PGTAWPF
             }
             return 1;
 
-
-            //try
-            //{
-            //SavePositions = SaveMarkers;
-            //for (int i = 0; i < names.Count; i += 2)
-            //{
-            //    if (names[i + 1] == "Uncomputed!")
-            //    {
-            //        ComputeFile(names[i], (i));
-            //    }
-            //}
-            //return 1;
-            //}
-            //catch
-            //{
-         //   return 0;
-            //}
         }
 
         private void AddMapMarker(CAT21vs21 newcat)
@@ -125,9 +109,10 @@ namespace PGTAWPF
         
         public void ComputeFileADSB(string path, int s, string PICvalue)
         {
+          
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
-            try
-            {
+            //try
+            //{
                 bool computePIC = false;
                 if (PICvalue == "Auto") { computePIC = true; }
 
@@ -176,8 +161,37 @@ namespace PGTAWPF
                         CAT10 newcat10 = new CAT10(arraystring, firsttime, lib);
                         if (newcat10.TYP == "Mode S MLAT")
                         {
+                            if(newcat10.Target_Identification!=null)
+                            {
+                                int a = 0;
+                            }
 
                             bool trajfound = false;
+                            
+                            if (newcat10.Track_Number != -1)// && trajfound == false)
+                            {
+                                if (traj.Exists(x => x.TrackNumber == newcat10.Track_Number))
+                                {
+
+                                    TrajectoriestoCompute traject= traj.Find(x => x.TrackNumber == newcat10.Track_Number);
+         
+                                    if(traject.ListMLAT.Count() > 0 && traject.ListMLAT[traject.ListMLAT.Count()-1].Time_of_day_sec>=newcat10.Time_of_day_sec-25 && traject.ListMLAT[traject.ListMLAT.Count() - 1].Time_of_day_sec <= newcat10.Time_of_day_sec + 25)
+                                    {
+                                        traject.ADDCAT10(newcat10);
+                                        trajfound = true;
+                                    }
+                                    else
+                                    {
+                                        TrajectoriestoCompute newtraj = new TrajectoriestoCompute(newcat10);
+                                        traj.Add(newtraj);
+                                        trajfound = true;
+
+                                    }
+                                    trajfound = true;
+                                }
+                            }
+                            if (trajfound == false)
+                            {
                             if (newcat10.Target_Identification != null)
                             {
                                 if (traj.Exists(x => x.TargetIdentification == newcat10.Target_Identification))
@@ -190,22 +204,19 @@ namespace PGTAWPF
                             {
                                 if (traj.Exists(x => x.TargetAdress == newcat10.Target_Address))
                                 {
-                                    traj.Find(x => x.TargetAdress == newcat10.Target_Address).ADDCAT10(newcat10);
+                                    TrajectoriestoCompute traject = traj.Find(x => x.TargetAdress == newcat10.Target_Address);
+                                    if (traject.TrackNumber == newcat10.Track_Number && traject.TargetIdentification != newcat10.Target_Identification)
+                                    {
+                                    }
                                     trajfound = true;
                                 }
                             }
-                            if (newcat10.Track_Number != -1 && trajfound == false)
+                            if (!trajfound)
                             {
-                                if (traj.Exists(x => x.TrackNumber == newcat10.Track_Number))
-                                {
-                                    traj.Find(x => x.TrackNumber == newcat10.Track_Number).ADDCAT10(newcat10);
-                                    trajfound = true;
-                                }
-                            }
-                            if (trajfound == false)
-                            {
+
                                 TrajectoriestoCompute newtraj = new TrajectoriestoCompute(newcat10);
                                 traj.Add(newtraj);
+                            }
                             }
                             if (first == true)
                             {
@@ -230,6 +241,7 @@ namespace PGTAWPF
                                     {
                                         traj.Find(x => x.TargetIdentification == newcat21.Target_Identification).ADDCAT21(newcat21);
                                         trajfound = true;
+                                        TrajectoriestoCompute traject = traj.Find(x => x.TargetIdentification == newcat21.Target_Identification);
                                     }
                                 }
                                 if (newcat21.Target_address != null && trajfound == false)
@@ -237,14 +249,21 @@ namespace PGTAWPF
                                     if (traj.Exists(x => x.TargetAdress == newcat21.Target_address))
                                     {
                                         traj.Find(x => x.TargetAdress == newcat21.Target_address).ADDCAT21(newcat21);
+                                        TrajectoriestoCompute traject = traj.Find(x => x.TargetAdress == newcat21.Target_address);
                                         trajfound = true;
                                     }
                                 }
-                                if (newcat21.Track_Number != -1 && trajfound == false)
+                                if (newcat21.Track_Number != -1 )//&& trajfound == false)
                                 {
                                     if (traj.Exists(x => x.TrackNumber == newcat21.Track_Number))
                                     {
                                         traj.Find(x => x.TrackNumber == newcat21.Track_Number).ADDCAT21(newcat21);
+                                        TrajectoriestoCompute traject = traj.Find(x => x.TrackNumber == newcat21.Track_Number);
+                                        if(trajfound==false)
+                                        {
+                                            traject.ADDCAT21(newcat21);
+                                        }
+  
                                         trajfound = true;
                                     }
                                 }
@@ -288,6 +307,7 @@ namespace PGTAWPF
                         traject.SetZones(lib);
                         traject.ComputePrecissionADSBinterpoled(this.data, PIC);
                         traject.ComputePDADSBInterpoled(this.data);
+                        traject.ComputePFI(this.data);
                         if (SavePositions == true)
                         {
                             traject.SaveMarkers(listMarkers);
@@ -302,20 +322,20 @@ namespace PGTAWPF
                 traj = new List<TrajectoriestoCompute>();
                 GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
                 // return 1;
-            }
-            catch
-            {
-                GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
-                namesastadsb[s + 1] = "Can't Compute this file!!!";
-            }
+            //}
+            //catch
+            //{
+            //    GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
+            //    namesastadsb[s + 1] = "Can't Compute this file!!!";
+            //}
 
         }
 
         public void ComputeFileDGPS(string path, int s)
         {
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
-            try
-            {
+            //try
+            //{
                 PICS.Clear();
                 bool first = true;
                 double firsttime = 0;
@@ -362,22 +382,37 @@ namespace PGTAWPF
                         {
 
                             bool trajfound = false;
-                            if (newcat10.Target_Identification != null)
+                            if(newcat10.Track_Number!=-1)
                             {
-                                if (trajdgps.Exists(x => x.TargetIdentification == newcat10.Target_Identification))
+                                TrajectoriestoCompute traject = trajdgps.Find(x => x.TargetIdentification == newcat10.Target_Identification);
+                                if (traject != null)
                                 {
-                                    trajdgps.Find(x => x.TargetIdentification == newcat10.Target_Identification).ADDCAT10(newcat10);
-                                    trajfound = true;
+                                    if (traject.ListMLAT.Count() > 0 && traject.ListMLAT[traject.ListMLAT.Count() - 1].Time_of_day_sec >= newcat10.Time_of_day_sec - 25 && traject.ListMLAT[traject.ListMLAT.Count() - 1].Time_of_day_sec <= newcat10.Time_of_day_sec + 25)
+                                    {
+                                        traject.ADDCAT10(newcat10);
+                                        trajfound = true;
+                                    }
+                                    else
+                                    {
+                                        if (newcat10.Target_Identification != null)
+                                        {
+                                            if (trajdgps.Exists(x => x.TargetIdentification == newcat10.Target_Identification))
+                                            {
+                                                trajdgps.Find(x => x.TargetIdentification == newcat10.Target_Identification).ADDCAT10(newcat10);
+                                                trajfound = true;
+                                            }
+                                        }
+                                        else if (newcat10.Target_Address != null && trajfound == false)
+                                        {
+                                            if (trajdgps.Exists(x => x.TargetAdress == newcat10.Target_Address))
+                                            {
+                                                trajdgps.Find(x => x.TargetAdress == newcat10.Target_Address).ADDCAT10(newcat10);
+                                                trajfound = true;
+                                            }
+                                        }
+                                    }
                                 }
-                            }
-                            else if (newcat10.Target_Address != null && trajfound == false)
-                            {
-                                if (trajdgps.Exists(x => x.TargetAdress == newcat10.Target_Address))
-                                {
-                                    trajdgps.Find(x => x.TargetAdress == newcat10.Target_Address).ADDCAT10(newcat10);
-                                    trajfound = true;
-                                }
-                            }
+                            }                  
                             if (first == true)
                             {
                                 first = false;
@@ -394,8 +429,9 @@ namespace PGTAWPF
                     //if (Excluded == false)
                     //{
                         traject.SetZones(lib);
-                        traject.ComputePrecissionADSBinterpoledDGPS(this.data);
+                        traject.ComputePrecissionMLATinterpoledDGPS(this.data);
                         traject.ComputePDADSBInterpoled(this.data);
+                        traject.ComputePFI(this.data);
                         if (SavePositions == true)
                         {
                             traject.SaveMarkers(listMarkers);
@@ -408,12 +444,12 @@ namespace PGTAWPF
                 namesastdgps[s + 1] = "Computed!";
                 GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
                // return 1;
-            }
-            catch
-            {
-                GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
-                namesastdgps[s + 1] = "Can't Compute this file!!!";
-            }
+            //}
+            //catch
+            //{
+            //    GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
+            //    namesastdgps[s + 1] = "Can't Compute this file!!!";
+            //}
         }
 
         
@@ -556,81 +592,6 @@ namespace PGTAWPF
                         }
                      //   MessageBox.Show(Convert.ToString(newtraj.ListDGPS.Count));
                     }
-                    //if (values [0]>=-90 && values [0]<=90 && values[1] >=-180 && values [1]<=180 && time>=0 && time<=86400 )
-                    //{
-                    //    for (int i = 1; i < lines.Length; i++)
-                    //    {
-                    //        try
-                    //        {
-                    //            parameters = lines[i].Split(new Char[] { ' ', '\t' });
-                    //            parameters2 = new List<string>();
-                    //            for (int a=0; a<parameters.Length; a++)
-                    //            {
-                    //                parameters[a] = parameters[a].Trim(' ');
-                    //                if (parameters[a] != "") { parameters2.Add(parameters[a]); }
-                    //            }
-                    //            values = new List<double>();
-                    //            list = new int[] { 1, 2, 7, 8, 9 };
-                    //        for (int e = 0; e < list.Length; e++)
-                    //            {
-                    //                try
-                    //                {
-                    //                    string par = parameters2[list[e]];
-                    //                    string par2 = par.Replace('.', ',');
-                    //                    values.Add(Convert.ToDouble(par2));
-                    //                }
-                    //                catch {; }
-                    //            }
-
-                    //            PointLatLng p = new PointLatLng(values[0], values[1]);
-                    //            Point Pxy = lib.ComputeCartesianFromWGS84(p);
-                    //            if ((time>3600 && time<70000) || ( time >87000))
-                    //            {
-                    //                int a = 0;
-                    //            }    
-                    //            time = (values[2] * 3600 + values[3] * 60 + values[4]);
-                    //            MarkerDGPS DGPS = new MarkerDGPS(p, Pxy, time);
-                    //            newtraj.ADDDGPS(DGPS);
-                    //            if (time<1)
-                    //            {
-                    //                int a = 0;
-                    //            }
-                    //            //   MessageBox.Show(Convert.ToString(p.Lat) + "  " + Convert.ToString(p.Lng) + "  " + Convert.ToString(time));
-                    //        }
-                    //        catch {; }
-                    //        namestxt[s + 1] = "Computing message " + Convert.ToString(i) + " of " + Convert.ToString(lines.Length) + " messages...";
-                    //    }
-                       
-                    //}
-                    //else
-                    //{
-                    //    for (int i = 1; i < lines.Length; i++)
-                    //    {
-                    //        try
-                    //        {
-                    //            parameters = lines[i].Split(new Char[] { ' ', '\t' });
-                    //            values = new List<double>();
-                    //            foreach (string par in parameters)
-                    //            {
-                    //                try
-                    //                {
-                    //                    string par2 = par.Replace('.', ',');
-                    //                    values.Add(Convert.ToDouble(par2));
-                    //                }
-                    //                catch {; }
-                    //            }
-
-                    //            PointLatLng p = new PointLatLng(values[0], values[1]);
-                    //            Point Pxy = lib.ComputeCartesianFromWGS84(p);
-                    //            time = (values[2] * 3600 + values[3] * 60 + values[4]);
-                    //            MarkerDGPS DGPS = new MarkerDGPS(p, Pxy, time);
-                    //            newtraj.ADDDGPS(DGPS);
-                    //            //   MessageBox.Show(Convert.ToString(p.Lat) + "  " + Convert.ToString(p.Lng) + "  " + Convert.ToString(time));
-                    //        }
-                    //        catch {; }
-                    //        namestxt[s + 1] = "Computing message " + Convert.ToString(i) + " of " + Convert.ToString(lines.Length) + " messages...";
-                    //    }
-                    //}
                     trajdgps.Add(newtraj);
                    // MessageBox.Show(Convert.ToString(newtraj.ListDGPS.Count));
                     namestxt[s + 1] = "Computed!";

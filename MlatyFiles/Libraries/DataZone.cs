@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management.Instrumentation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
@@ -30,6 +31,12 @@ namespace PGTA_WPF
         public int PDwrong = 0;
         public int DGPSMessagesUsed;
 
+        public int CorrectDetection = 0;
+        public int FalseDetection = 0;
+
+
+        public int CorrectIdentification = 0;
+        public int FalseIdentification = 0;
 
         public DataZone(string name)
         {
@@ -79,6 +86,32 @@ namespace PGTA_WPF
                 PDwrong += listzones[e].PDwrong;
             }
         }
+
+        public void CreateTotalPFD(int[] list, List<DataZone> listzones)
+        {
+            CorrectDetection = 0;
+            FalseDetection = 0;
+            for (int i = 0; i < list.Count(); i++)
+            {
+                int e = list[i];
+                CorrectDetection += listzones[e].CorrectDetection;
+                FalseDetection += listzones[e].FalseDetection;
+            }
+        }
+
+        public void CreateTotalPFI(int[] list, List<DataZone> listzones)
+        {
+            CorrectIdentification = 0;
+            FalseIdentification = 0;
+            for (int i = 0; i < list.Count(); i++)
+            {
+                int e = list[i];
+                CorrectIdentification += listzones[e].CorrectIdentification;
+                FalseIdentification += listzones[e].FalseIdentification;
+            }
+        }
+
+
 
         public string GetUR()
         {
@@ -197,6 +230,46 @@ namespace PGTA_WPF
                 }
                 double desviation = Math.Sqrt(sum / count);
                 return (String.Format("{0:0.00}", desviation));
+            }
+            else
+            {
+                return "Uncomputed";
+            }
+        }
+
+        public string GetPFD()
+        {
+            if (FalseDetection+CorrectDetection > 1)
+            {
+                if(FalseDetection == 0)
+                {
+                    return ("0 %");
+                }
+                else
+                {
+                    double prob = ((Convert.ToDouble(FalseDetection) / Convert.ToDouble(CorrectDetection+FalseDetection))*100);
+                    return $"{String.Format("{0:0.00}", prob)} %";
+                }
+            }
+            else
+            {
+                return "Uncomputed";
+            }
+        }
+
+        public string GetPFI()
+        {
+            if (CorrectIdentification + FalseIdentification > 1)
+            {
+                if (FalseIdentification == 0)
+                {
+                    return ("0 %");
+                }
+                else
+                {
+                    double prob = ((Convert.ToDouble(FalseIdentification) / Convert.ToDouble(CorrectIdentification + FalseIdentification)) * 100);
+                    return $"{String.Format("{0:0.00}", prob)} %";
+                }
             }
             else
             {

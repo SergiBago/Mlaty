@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PGTAWPF"
         mc:Ignorable="d"
-        Title="Mlaty" Height="800" Width="1300" Background="#FF323232" Loaded="Main_Load" MinHeight="700" MinWidth="650" WindowStyle="None" BorderBrush="Black" OpacityMask="Black">
+        Title="Mlaty" Height="900" Width="1300" Background="#FF323232" Loaded="Main_Load" MinHeight="700" MinWidth="650" WindowStyle="None" BorderBrush="Black" OpacityMask="Black">
     <Window.Resources>
         <Style x:Key="MyContextStyle" TargetType="ContextMenu">
             <Setter Property="OverridesDefaultStyle" Value="True"/>
@@ -90,6 +90,8 @@
             <RowDefinition Height="50"/>
             <RowDefinition Height="50"/>
             <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
             <RowDefinition Height="80"/>
             <RowDefinition Height="80"/>
             <RowDefinition Height="*"/>
@@ -97,10 +99,10 @@
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" Padding=" 0,8,0,0" Text="Mlaty" FontFamily="Microsoft YaHei UI" FontSize="22" FontWeight="Light" VerticalAlignment="Center" TextAlignment="Left" Margin="20,0,0,5" Foreground="White" Background="#FF282828"/>
         
-        <Border Background="#464646" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="6" Grid.RowSpan="14" />
-        <Border Background="#191919" Grid.Column="5" Grid.Row="2" Grid.RowSpan="12"/>
+        <Border Background="#464646" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="6" Grid.RowSpan="16" />
+        <Border Background="#191919" Grid.Column="5" Grid.Row="2" Grid.RowSpan="14"/>
 
-        <Frame x:Name="PanelChildForm" Grid.Column="6" Grid.Row="1" Grid.ColumnSpan="10" Grid.RowSpan="14" Background="#FFFDF9F9" ContentRendered="PanelChildForm_ContentRendered" />
+        <Frame x:Name="PanelChildForm" Grid.Column="6" Grid.Row="1" Grid.ColumnSpan="10" Grid.RowSpan="16" Background="#FFFDF9F9" ContentRendered="PanelChildForm_ContentRendered" />
         <TextBlock x:Name="FormTitle" Text="Home" Grid.Column="8" Grid.Row="0" FontFamily="Microsoft YaHei" FontSize="20" Padding="6,7,0,0" FontStyle="Italic" Foreground="#FFC2B8B2"/>
         <Image x:Name="FormIco" Source="images/Casa Color.png" Height="30" Grid.Column="7" Grid.Row="0" Margin="0,5"/>
         <Image x:Name="CloseButton" Source="images/Close.png" Grid.Column="14" Grid.Row="0" Cursor="Hand" MouseLeftButtonUp="Close_click" />
@@ -116,8 +118,12 @@
         <Border Grid.Column="0" Grid.Row="6" x:Name="ListPanel"/>
         <Border Grid.Column="0" Grid.Row="7" x:Name="PrecissionPanel"/>
         <Border Grid.Column="0" Grid.Row="8" x:Name="URPanel"/>
-        <Border Grid.Column="0" Grid.Row="11" x:Name="MapPanel"/>
-        <Border Grid.Column="0" Grid.Row="12" x:Name="HelpPanel"/>
+        <Border Grid.Column="0" Grid.Row="9" x:Name="PFDPanel"/>
+        <Border Grid.Column="0" Grid.Row="10" x:Name="PFIPanel"/>
+        <Border Grid.Column="0" Grid.Row="11" x:Name="ExportTablesPanel"/>
+        <Border Grid.Column="0" Grid.Row="12" x:Name="ExportAccuracyPanel"/>
+        <Border Grid.Column="0" Grid.Row="13" x:Name="MapPanel"/>
+        <Border Grid.Column="0" Grid.Row="14" x:Name="HelpPanel"/>
 
         <TextBlock Grid.Row="2" Grid.Column="3" x:Name="HomeLabel" Text="Home" FontFamily="Microsoft YaHei" FontSize="20" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0,15,0" Padding="0,30,0,0" MouseLeftButtonUp="Home_Click"  Cursor="Hand"/>
         <TextBlock Grid.Row="3" Grid.Column="3" x:Name="LoadFilesLabel" Text="Manage Data" FontFamily="Microsoft YaHei" FontSize="20" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0,15,0" Padding="0,30,0,0"  Cursor="Hand"/>
@@ -126,11 +132,14 @@
         <TextBlock Grid.Row="6" Grid.Column="3" x:Name="ListLabel" Text="Results" FontFamily="Microsoft YaHei" FontSize="20" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0,15,0" Padding="0,30,0,0"  Cursor="Hand"  />
         <TextBlock Grid.Row="7" Grid.Column="3" x:Name="Precision" Text="Accuracy" FontFamily="Microsoft YaHei" FontSize="16" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0,0,0" Padding="0,14,0,0"   Cursor="Hand"/>
         <TextBlock Grid.Row="8" Grid.Column="3" x:Name="UpdateRate" Text="Update Rate" FontFamily="Microsoft YaHei" FontSize="16" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0,0,0" Padding="0,14,0,0"    Cursor="Hand"/>
-        <TextBlock Grid.Row="9" Grid.Column="3" x:Name="ExportLabel" Text="Export Tables" FontFamily="Microsoft YaHei" FontSize="16" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0,0,0" Padding="0,14,0,0"    Cursor="Hand"/>
-        <TextBlock Grid.Row="10" Grid.Column="3" x:Name="ExportAccuLabel" Text="Export Accuaracy val." FontFamily="Microsoft YaHei" FontSize="16" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0,0,0" Padding="0,14,0,0"    Cursor="Hand"/>
+        <TextBlock Grid.Row="9" Grid.Column="3" x:Name="PFD" Text="PFD" FontFamily="Microsoft YaHei" FontSize="16" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0,0,0" Padding="0,14,0,0"   Cursor="Hand"/>
+        <TextBlock Grid.Row="10" Grid.Column="3" x:Name="PFI" Text="PFI" FontFamily="Microsoft YaHei" FontSize="16" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0,0,0" Padding="0,14,0,0"    Cursor="Hand"/>
 
-        <TextBlock Grid.Row="11" Grid.Column="3" x:Name="MapLabel" Text="Map View" FontFamily="Microsoft YaHei" FontSize="20" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0,15,0" Padding="0,30,0,0"  Cursor="Hand"/>
-        <TextBlock Grid.Row="12" Grid.Column="3" x:Name="HelpLabel" Text="Info" FontFamily="Microsoft YaHei" FontSize="20" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0,15,0" Padding="0,30,0,0"  Cursor="Hand"/>
+        <TextBlock Grid.Row="11" Grid.Column="3" x:Name="ExportLabel" Text="Export Tables" FontFamily="Microsoft YaHei" FontSize="16" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0,0,0" Padding="0,14,0,0"    Cursor="Hand"/>
+        <TextBlock Grid.Row="12" Grid.Column="3" x:Name="ExportAccuLabel" Text="Export Accuaracy val." FontFamily="Microsoft YaHei" FontSize="16" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0,0,0" Padding="0,14,0,0"    Cursor="Hand"/>
+
+        <TextBlock Grid.Row="13" Grid.Column="3" x:Name="MapLabel" Text="Map View" FontFamily="Microsoft YaHei" FontSize="20" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0,15,0" Padding="0,30,0,0"  Cursor="Hand"/>
+        <TextBlock Grid.Row="14" Grid.Column="3" x:Name="HelpLabel" Text="Info" FontFamily="Microsoft YaHei" FontSize="20" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0,15,0" Padding="0,30,0,0"  Cursor="Hand"/>
        
         
         <Image x:Name="HomeIco1" Grid.Column="1" Grid.Row="2" Height="50" Grid.ColumnSpan="2" Source="images/Casa Blanca.png" MouseLeftButtonUp="Home_Click"  Cursor="Hand" Margin="0,15" IsEnabled="False" />
@@ -140,11 +149,13 @@
         <Image x:Name="ListIco1" Grid.Column="1" Grid.Row="6" Height="50" Grid.ColumnSpan="2" Source="images/Lista Blanco.png" Margin="0,15"  />
         <Image x:Name="PrecisionIco" Grid.Column="2" Grid.Row="7" Height="20"    Cursor="Hand" Margin="0,15" Source="images/Flecha Blanca.png"/>
         <Image x:Name="URIco" Grid.Column="2" Grid.Row="8" Height="20"   Cursor="Hand" Margin="0,15" Source="images/Flecha Blanca.png"/>
-        <Image x:Name="ExportIco" Grid.Column="2" Grid.Row="9" Height="20"   Cursor="Hand" Margin="0,15" Source="images/Flecha Blanca.png"/>
-        <Image x:Name="ExportAccuIco" Grid.Column="2" Grid.Row="10" Height="20"   Cursor="Hand" Margin="0,15" Source="images/Flecha Blanca.png"/>
+        <Image x:Name="PFDIco" Grid.Column="2" Grid.Row="9" Height="20"    Cursor="Hand" Margin="0,15" Source="images/Flecha Blanca.png"/>
+        <Image x:Name="PFIIco" Grid.Column="2" Grid.Row="10" Height="20"   Cursor="Hand" Margin="0,15" Source="images/Flecha Blanca.png"/>
+        <Image x:Name="ExportIco" Grid.Column="2" Grid.Row="11" Height="20"   Cursor="Hand" Margin="0,15" Source="images/Flecha Blanca.png"/>
+        <Image x:Name="ExportAccuIco" Grid.Column="2" Grid.Row="12" Height="20"   Cursor="Hand" Margin="0,15" Source="images/Flecha Blanca.png"/>
 
-        <Image x:Name="MapIco1" Grid.Column="1" Grid.Row="11" Height="50" Grid.ColumnSpan="2" Source="images/Mapa Blanco.png"    Cursor="Hand" Margin="0,15"/>
-        <Image x:Name="HelpIco1" Grid.Column="1" Grid.Row="12" Height="50" Grid.ColumnSpan="2" Source="images/InfoBlanco.png"    Cursor="Hand" Margin="0,15"/>
+        <Image x:Name="MapIco1" Grid.Column="1" Grid.Row="13" Height="50" Grid.ColumnSpan="2" Source="images/Mapa Blanco.png"    Cursor="Hand" Margin="0,15"/>
+        <Image x:Name="HelpIco1" Grid.Column="1" Grid.Row="14" Height="50" Grid.ColumnSpan="2" Source="images/InfoBlanco.png"    Cursor="Hand" Margin="0,15"/>
 
         
         <Image x:Name="HomeIco2" Visibility="Hidden" Grid.Column="4" Grid.Row="2" Height="45"  Source="images/Casa Color.png" Margin="0,17,10,17" MouseLeftButtonUp="Home_Click"   Cursor="Hand"/>
@@ -154,11 +165,14 @@
         <Image x:Name="ListIco2" Visibility="Hidden" Grid.Column="4" Grid.Row="6" Height="45" Source="images/Lista Color.png" Margin="0,17,10,17" />
         <Image x:Name="PrecissionIco2" Source="images/Flecha Color.png" Visibility="Hidden"  Grid.Column="4" Grid.Row="7" Height="20"   Cursor="Hand" Margin="0,15"/>
         <Image x:Name="URIco2"  Source="images/Flecha Color.png" Visibility="Hidden" Grid.Column="4" Grid.Row="8" Height="20"   Cursor="Hand" Margin="0,15"/>
-        <Image x:Name="ExportIco2"  Source="images/Flecha Color.png" Visibility="Hidden" Grid.Column="4" Grid.Row="9" Height="20"   Cursor="Hand" Margin="0,15"/>
-        <Image x:Name="ExportAccuIco2"  Source="images/Flecha Color.png" Visibility="Hidden" Grid.Column="4" Grid.Row="10" Height="20"   Cursor="Hand" Margin="0,15"/>
+        <Image x:Name="PFDIco2" Source="images/Flecha Color.png" Visibility="Hidden"  Grid.Column="4" Grid.Row="9" Height="20"   Cursor="Hand" Margin="0,15"/>
+        <Image x:Name="PFIIco2"  Source="images/Flecha Color.png" Visibility="Hidden" Grid.Column="4" Grid.Row="10" Height="20"   Cursor="Hand" Margin="0,15"/>
 
-        <Image x:Name="MapIco2" Visibility="Hidden" Grid.Column="4" Grid.Row="11" Height="45"  Source="images/MapColor.png" Margin="0,17,10,17"  Cursor="Hand"/>
-        <Image x:Name="HelpIco2" Visibility="Hidden" Grid.Column="4" Grid.Row="12" Height="45"  Source="images/InfoColor.png" Margin="0,17,10,17"  Cursor="Hand"/>
+        <Image x:Name="ExportIco2"  Source="images/Flecha Color.png" Visibility="Hidden" Grid.Column="4" Grid.Row="11" Height="20"   Cursor="Hand" Margin="0,15"/>
+        <Image x:Name="ExportAccuIco2"  Source="images/Flecha Color.png" Visibility="Hidden" Grid.Column="4" Grid.Row="12" Height="20"   Cursor="Hand" Margin="0,15"/>
+
+        <Image x:Name="MapIco2" Visibility="Hidden" Grid.Column="4" Grid.Row="13" Height="45"  Source="images/MapColor.png" Margin="0,17,10,17"  Cursor="Hand"/>
+        <Image x:Name="HelpIco2" Visibility="Hidden" Grid.Column="4" Grid.Row="14" Height="45"  Source="images/InfoColor.png" Margin="0,17,10,17"  Cursor="Hand"/>
 
 
         <Border Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="5" Background="#FF464646"  Opacity="0" Visibility="Visible" MouseLeftButtonUp="Home_Click" Cursor="Hand"/>
@@ -167,10 +181,12 @@
         <Border Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="5" Cursor="Hand" MouseLeftButtonUp="DGPSFiles" Background="#FF646464" Opacity="0" Visibility="Visible"/>
         <Border Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="5" Cursor="Hand" MouseLeftButtonUp="PrecisIonclick" Background="#FF646464" Opacity="0" Visibility="Visible"/>
         <Border Grid.Column="0" Grid.Row="8" Grid.ColumnSpan="5" Cursor="Hand" MouseLeftButtonUp="UpdateRateClick" Background="#FF646464" Opacity="0" Visibility="Visible"/>
-        <Border Grid.Column="0" Grid.Row="9" Grid.ColumnSpan="5" Cursor="Hand" MouseLeftButtonUp="ExportClick" Background="#FF646464" Opacity="0" Visibility="Visible"/>
-        <Border Grid.Column="0" Grid.Row="10" Grid.ColumnSpan="5" Cursor="Hand" MouseLeftButtonUp="ExportAccuracyClick" Background="#FF646464" Opacity="0" Visibility="Visible"/>
-        <Border Grid.Column="0" Grid.Row="11" Grid.ColumnSpan="5" Cursor="Hand" MouseLeftButtonUp="MapClick"  Background="#FF646464" Opacity="0" Visibility="Visible" MouseRightButtonUp="MapRioghtClick"/>
-        <Border Grid.Column="0" Grid.Row="12" Grid.ColumnSpan="5" Cursor="Hand"  Background="#FF646464" Opacity="0" Visibility="Visible" MouseLeftButtonUp="InfoClick"/>
-        <Border x:Name="PanelDisableButons" Grid.Column="0" Grid.Row="1" Grid.RowSpan="13" Grid.ColumnSpan="5" Background="#FF646464" Opacity="0.6" Visibility="Hidden"/>
+        <Border Grid.Column="0" Grid.Row="9" Grid.ColumnSpan="5" Cursor="Hand" MouseLeftButtonUp="PFDClick" Background="#FF646464" Opacity="0" Visibility="Visible"/>
+        <Border Grid.Column="0" Grid.Row="10" Grid.ColumnSpan="5" Cursor="Hand" MouseLeftButtonUp="PFIClick" Background="#FF646464" Opacity="0" Visibility="Visible"/>
+        <Border Grid.Column="0" Grid.Row="11" Grid.ColumnSpan="5" Cursor="Hand" MouseLeftButtonUp="ExportClick" Background="#FF646464" Opacity="0" Visibility="Visible"/>
+        <Border Grid.Column="0" Grid.Row="12" Grid.ColumnSpan="5" Cursor="Hand" MouseLeftButtonUp="ExportAccuracyClick" Background="#FF646464" Opacity="0" Visibility="Visible"/>
+        <Border Grid.Column="0" Grid.Row="13" Grid.ColumnSpan="5" Cursor="Hand" MouseLeftButtonUp="MapClick"  Background="#FF646464" Opacity="0" Visibility="Visible" MouseRightButtonUp="MapRioghtClick"/>
+        <Border Grid.Column="0" Grid.Row="14" Grid.ColumnSpan="5" Cursor="Hand"  Background="#FF646464" Opacity="0" Visibility="Visible" MouseLeftButtonUp="InfoClick"/>
+        <Border x:Name="PanelDisableButons" Grid.Column="0" Grid.Row="1" Grid.RowSpan="15" Grid.ColumnSpan="5" Background="#FF646464" Opacity="0.6" Visibility="Hidden"/>
     </Grid>
 </Window>

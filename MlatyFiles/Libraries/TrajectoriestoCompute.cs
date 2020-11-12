@@ -5,13 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
 using System.Data.Entity.Core.Metadata.Edm;
+using System.Windows;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
+
 
 namespace PGTAWPF
 {
@@ -22,7 +23,7 @@ namespace PGTAWPF
         public List<MarkerDGPS> ListDGPS = new List<MarkerDGPS>();
         public string TargetIdentification;
         public string TargetAdress;
-        public int TrackNumber;
+        public int TrackNumber=-1;
 
         public bool aircraftMLAT = false;
         public bool aircraftADSB = false;
@@ -35,6 +36,7 @@ namespace PGTAWPF
 
         public TrajectoriestoCompute(CAT10 message)
         {
+            ListMLAT.Add(message);
             if (message.Target_Identification != null)
             {
                 this.TargetIdentification = message.Target_Identification;
@@ -52,6 +54,7 @@ namespace PGTAWPF
 
         public TrajectoriestoCompute(CAT21vs21 message)
         {
+            ListADSB.Add(message);
             if (message.Target_Identification != null)
             {
                 this.TargetIdentification = message.Target_Identification;
@@ -80,11 +83,35 @@ namespace PGTAWPF
         public void ADDCAT21(CAT21vs21 message)
         {
             ListADSB.Add(message);
+            if(TrackNumber==-1)
+            {
+                TrackNumber = message.Track_Number;
+            }
+            if(TargetAdress==null)
+            {
+                TargetAdress = message.Target_address;
+            }
+            if(TargetIdentification==null)
+            {
+                TargetIdentification = message.Target_Identification;
+            }
         }
 
         public void ADDCAT10(CAT10 message)
         {
             ListMLAT.Add(message);
+            if (TrackNumber == -1)
+            {
+                TrackNumber = message.Track_Number;
+            }
+            if (TargetAdress == null)
+            {
+                TargetAdress = message.Target_Address;
+            }
+            if (TargetIdentification == null)
+            {
+                TargetIdentification = message.Target_Identification;
+            }
         }
 
         public void ADDDGPS(MarkerDGPS marker)
@@ -376,6 +403,7 @@ namespace PGTAWPF
                     if (MLAT.TOT == "Aircraft")
                     {
                         aircraftMLAT = true;
+                        break;
                     }
                 }
                 foreach (CAT21vs21 ADSB in ListADSB)
@@ -383,6 +411,7 @@ namespace PGTAWPF
                     if (ADSB.ECAT == "Light aircraft" || ADSB.ECAT == "Small aircraft" || ADSB.ECAT == "Medium aircraft" || ADSB.ECAT == "Heavy aircraft")
                     {
                         aircraftADSB = true;
+                        break;
                     }
                 }
                 int zone = 0;
@@ -427,6 +456,7 @@ namespace PGTAWPF
                 if (MLAT.TOT == "Aircraft")
                 {
                     aircraftMLAT = true;
+                    break;
                 }
             }
             foreach (CAT21vs21 ADSB in ListADSB)
@@ -434,6 +464,7 @@ namespace PGTAWPF
                 if (ADSB.ECAT == "Light aircraft" || ADSB.ECAT == "Small aircraft" || ADSB.ECAT == "Medium aircraft" || ADSB.ECAT == "Heavy aircraft")
                 {
                     aircraftMLAT = true;
+                    break;
                 }
             }
             if (ListDGPS.Count>0) { aircraftMLAT = true; }
@@ -473,6 +504,109 @@ namespace PGTAWPF
             }
         }
 
+        public void ComputePFI(Data data)
+        {
+            if (ListMLAT.Count() > 1)
+            {
+                foreach (CAT10 MLAT in ListMLAT)
+                {
+                    if (MLAT.TOT == "Aircraft")
+                    {
+                        aircraftMLAT = true;
+                        break;
+                    }
+                }
+                foreach (CAT21vs21 ADSB in ListADSB)
+                {
+                    if (ADSB.ECAT == "Light aircraft" || ADSB.ECAT == "Small aircraft" || ADSB.ECAT == "Medium aircraft" || ADSB.ECAT == "Heavy aircraft")
+                    {
+                        aircraftMLAT = true;
+                        break;
+                    }
+                }
+                if (ListDGPS.Count > 0) { aircraftMLAT = true; }
+                if (aircraftMLAT)
+                {
+                    List<CAT10> ListMLATOrdered = ListMLAT.OrderBy(x => x.Time_milisec).ToList();
+                    double time = ListMLATOrdered[0].Time_milisec;
+                    double endTime = ListMLATOrdered[ListMLATOrdered.Count() - 1].Time_milisec;
+                    int numberwindows = Convert.ToInt32((endTime - time) / 5);
+                    int index = 0;
+                    string TargetIdentification = this.TargetIdentification;
+                    int same = 0;
+                    int dif = 0;
+                    //foreach(CAT10 MLAT in ListMLATOrdered)
+                    //{
+                    //    int zone = MLAT.zone;
+                    //    if (zone != -1)
+                    //    {
+                    //        data.ListZones[zone - 1].CorrectIdentification++;
+                    //    }
+                    //}
+                    for (int i = 1; i < numberwindows; i++)
+                    {
+                        int zone = ListMLATOrdered[index].zone;
+                        bool Continue = true;
+                        while (zone == -1 && Continue==true)
+                        {
+                            if (index < ListMLATOrdered.Count())
+                            {
+                                zone = ListMLATOrdered[index].zone;
+                            }
+                            index++;
+
+                            if (index >= ListMLATOrdered.Count() - 1)
+                            {
+                                Continue= false;
+                                break;
+                                
+                            }
+                        }
+                        if(Continue==false)
+                        {
+                            break;
+                        }
+
+                        double StartTime = ListMLATOrdered[index].Time_milisec;
+                        List<CAT10> ThisWindowList = new List<CAT10>();
+                        double endWindowTime = StartTime + 5;
+                        if (index < ListMLATOrdered.Count() - 1)
+                        {
+                            while (ListMLATOrdered[index].Time_milisec < endWindowTime)
+                            {
+                                ThisWindowList.Add(ListMLATOrdered[index]);
+                                index++;
+                                if (index == ListMLATOrdered.Count() - 1)
+                                {
+                                    break;
+                                }
+                            }
+                            bool Error = false;
+                            foreach (CAT10 MLAT in ThisWindowList)
+                            {
+                                if (MLAT.Target_Identification != TargetIdentification)
+                                {
+                                    Error = true;
+                                    break;
+                                }
+                            }
+                            if (Error == true)
+                            {
+                                data.ListZones[zone - 1].FalseIdentification++;
+                            }
+                            else
+                            {
+                                data.ListZones[zone - 1].CorrectIdentification++;
+                            }
+
+                        }
+                    }
+
+                }
+
+            }
+        }
+
         public void ComputePrecissionADSBinterpoled(Data data,int PIC)
         {
             foreach (CAT10 MLAT in ListMLAT)
@@ -480,22 +614,27 @@ namespace PGTAWPF
                 if (MLAT.TOT == "Aircraft")
                 {
                     aircraftMLAT = true;
+                    break;
                 }
             }
             foreach (CAT21vs21 ADSB in ListADSB)
             {
                 if (ADSB.ECAT == "Light aircraft" || ADSB.ECAT == "Small aircraft" || ADSB.ECAT == "Medium aircraft" || ADSB.ECAT == "Heavy aircraft")
                 {
-                    aircraftADSB = true;
+                    aircraftMLAT = true;
+                    break;
                 }
             }
-            if (ListMLAT.Count > 9 && ListADSB.Count > 9)
+            if (ListDGPS.Count > 0) { aircraftMLAT = true; }
+            if (aircraftMLAT)
             {
+                if (ListMLAT.Count > 9 && ListADSB.Count > 9)
+                {
                 foreach (CAT10 MLAT in ListMLAT)
                 {
-                    if ((ComputeDistance(MLAT, ARPCoords) < 20000) && MLAT.zone!=-1)
+                    if ( MLAT.zone!=-1)
                     {
-                        double time = MLAT.Time_milisec;
+                        //double time = MLAT.Time_milisec;
                         CAT21vs21 Before = new CAT21vs21();
                         CAT21vs21 After = new CAT21vs21();
                         bool Correct = false;
@@ -541,9 +680,10 @@ namespace PGTAWPF
                 }
             }
         }
+        }
 
         
-        public void ComputePrecissionADSBinterpoledDGPS(Data data)
+        public void ComputePrecissionMLATinterpoledDGPS(Data data)
         {
 
             if (ListMLAT.Count > 9 && ListDGPS.Count > 9)
@@ -616,11 +756,28 @@ namespace PGTAWPF
                 double dist = ComputeDistanceXY(MLATp, p);
               //  PointLatLng p = ComputePosition(Before, After, MLAT);
                 double difH = ComputeHeightDif(Before, After, MLAT);
-               // double dist = ComputeDistance(MLAT, p);
-
+                // double dist = ComputeDistance(MLAT, p);
+                double PFDdist = 50;/////DISTANCE IN FUNCTION OF ZONE
+                int zone = MLAT.zone;
+                if (zone ==9|| zone == 10 || zone == 11)
+                {
+                    PFDdist = 80;
+                }
+                else if( zone==12 || zone == 13 || zone == 14)
+                {
+                    PFDdist = 160;
+                }
+                if (dist>PFDdist)
+                {
+                    data.ListZones[zone - 1].FalseDetection++;
+                }
+                else
+                {
+                    data.ListZones[zone - 1].CorrectDetection++;
+                }
                 if (dist < 500)
                 {
-                    int zone = MLAT.zone;
+                    
 
                     data.ListZones[zone - 1].MLATPrecision.Add(dist);
                     data.ListZones[zone - 1].MLATMessagesUsed++;
@@ -653,19 +810,29 @@ namespace PGTAWPF
                 Point p = ComputePositionXY(Before, After, MLAT);
                 Point MLATp = new Point(MLAT.X_Component_map, MLAT.Y_Component_map);
                 double dist = ComputeDistanceXY(MLATp, p);
-                //  PointLatLng p = ComputePosition(Before, After, MLAT);
-             //   double difH = ComputeHeightDif(Before, After, MLAT);
-                // double dist = ComputeDistance(MLAT, p);
+                double PFDdist = 50;
+                int zone = MLAT.zone;
+                if (zone == 9 || zone == 10 || zone == 11)
+                {
+                    PFDdist = 80;
+                }
+                else if (zone == 12 || zone == 13 || zone == 14)
+                {
+                    PFDdist = 160;
+                }
+                if (dist > PFDdist)
+                {
+                    data.ListZones[zone - 1].FalseDetection++;
+                }
+                else
+                {
+                    data.ListZones[zone - 1].CorrectDetection++;
+                }
 
                 if (dist < 500)
-                {
-                    int zone = MLAT.zone;
-
+                {                 
                     data.ListZones[zone - 1].MLATPrecision.Add(dist);
                     data.ListZones[zone - 1].MLATMessagesUsed++;
-                    //data.ListZones[zone - 1].NAC += After.NAC;
-                    //data.ListZones[zone - 1].NAC += Before.NAC;
-                    //data.ListZones[zone - 1].NACused += 2;
                     Before.used = true;
                     After.used = true;
                     MLAT.used = true;
@@ -673,15 +840,7 @@ namespace PGTAWPF
                     double ErrorLocalY = MLAT.Y_Component_map - p.Y;
                     PrecissionPoint pressP = new PrecissionPoint(TargetIdentification, MLAT.X_Component_map, MLAT.Y_Component_map, 53.321, p.X, p.Y, 0, ErrorLocalX, ErrorLocalY, dist, MLAT.zone, MLAT.GroundBit,MLAT.Time_milisec);
                     data.PrecissionPoints.Add(pressP);
-                    //if (difH != -999)
-                    //{
-                    //    data.ListZones[zone - 1].totalMLATPrecissionheight.Add(difH);
-                    //  //  data.ListZones[zone - 1].MLATMessagesUsedheight++;
-                    //}
-                }
-                else
-                {
-                    int a = 0;
+
                 }
             }
         }

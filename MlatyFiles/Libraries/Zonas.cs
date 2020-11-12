@@ -37,34 +37,9 @@ namespace PGTA_WPF
             Define_Apron_T1();
             Define_Apron_T2();
             Define_TaxyZone();
-            // Define_Interesction_RW25L_Air02();
-            //  Define_Area_de_Maniobras_25L_07R_1();
-            //  Define_Area_de_Maniobras_25L_07R_2();
-            //  Define_Area_de_Maniobras_25L_07R_3();
-            //  Define_Area_de_Maniobras_25L_07R_4();
-            //  Define_Area_de_Maniobras_25L_07R_5();
-            //  Define_Area_de_Maniobras_02_20_1();
-            //  Define_Area_de_Maniobras_02_20_2();
-            //  Define_Area_de_Maniobras_25R_07L();
-            //  Define_Stand_T1_1();
-            //  Define_Stand_T1_2();
-            //  Define_Stand_T1_3();
-            //  Define_Apron_T1_1();
-            //  Define_Apron_T1_2();
-            //  Define_Apron_T1_3();
-            //  Define_Apron_T1_4();
-            //  Define_Stand_T2_1();
-            //  Define_Stand_T2_2();
-            //  Define_Stand_T2_3();
-            //  Define_Stand_T2_4();
-            //  Define_Stand_T2_5();
-            //  Define_Apron_T2_1();
-            //  Define_Apron_T2_2();
-            //  Define_Apron_T2_3();
             Define_25R2_0_25_NM();
             Define_02_0_25_NM();
             Define_25L_0_25_NM();
-            //  Define_25R_0_25_NM();
             Define_20_0_25_NM();
             Define_07L_0_25_NM();
             Define_07R_0_25_NM();
@@ -77,16 +52,6 @@ namespace PGTA_WPF
             Define_25R_0_25_NM();
         }
 
-        //private void Define_Interesction_RW25L_Air02()
-        //{
-        //    List<Point> Area_de_Maniobras_25L_07R_1 = new List<Point>();
-        //    Area_de_Maniobras_25L_07R_1.Add(new Point(320, - 1380));
-        //    Area_de_Maniobras_25L_07R_1.Add(new Point(524.5, - 1287));
-        //    Area_de_Maniobras_25L_07R_1.Add(new Point(536, - 1206));
-        //    Area_de_Maniobras_25L_07R_1.Add(new Point(372.5, - 1280));
-        //    Polygon pol = new Polygon("Ruynway 25L/07R", Area_de_Maniobras_25L_07R_1);
-        //    IntersectionRW25LAir02.Add(pol);
-        //}
 
         private void Define_RW25L()
         {

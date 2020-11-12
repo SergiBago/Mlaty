@@ -523,20 +523,20 @@ namespace PGTAWPF
             geoUtils = null;
             double X = MarkerCartesian.X;
             double Y = MarkerCartesian.Y;
-            //double lon2 = Platlng.Lng;
-            //double lat2 = Platlng.Lat;
-            //PointLatLng ARPBarcelona = new PointLatLng(41.2970767, 2.07846278);
-            //double lat = ARPBarcelona.Lat;
-            //double lon = ARPBarcelona.Lng;
-            //double dist = 6371000 * (Math.Acos(Math.Cos((Math.PI / 180) * (90 - lat)) * Math.Cos((Math.PI / 180) * (90 - lat2)) + Math.Sin((Math.PI / 180) * (90 - lat)) * Math.Sin((Math.PI / 180) * (90 - lat2)) * Math.Cos((Math.PI / 180) * (lon - lon2))));
-            //lat = lat * Math.PI / 180;
-            //lat2 = lat2 * Math.PI / 180;
-            //lon = lon * Math.PI / 180;
-            //lon2 = lon2 * Math.PI / 180;
-            //double dir = Math.Atan2(Math.Sin(lon2 - lon) * Math.Cos(lat2), Math.Cos(lat) * Math.Sin(lat2) - Math.Sin(lat) * Math.Cos(lat2) * Math.Cos(lon2 - lon));
-            //dir = (Math.PI / 2) - dir;
-            //double X = dist * (Math.Cos(dir));
-            //double Y = dist * (Math.Sin(dir));
+            Point p = new Point(X, Y);
+            return p;
+        }
+
+        public Point ComputeCartesianFromWGS84(PointLatLng Platlng,double Height,double ARPHeight)
+        {
+
+            CoordinatesWGS84 ObjectCoordinates = new CoordinatesWGS84((Math.PI / 180) * Platlng.Lat, Platlng.Lng * (Math.PI / 180),Height);
+            CoordinatesWGS84 RadarCoordinates = new CoordinatesWGS84(41.2970767 * (Math.PI / 180), 2.07846278 * (Math.PI / 180),ARPHeight);
+            GeoUtils geoUtils = new GeoUtils();
+            CoordinatesXYZ MarkerCartesian = geoUtils.change_geodesic2system_cartesian(ObjectCoordinates, RadarCoordinates);
+            geoUtils = null;
+            double X = MarkerCartesian.X;
+            double Y = MarkerCartesian.Y;
             Point p = new Point(X, Y);
             return p;
         }
