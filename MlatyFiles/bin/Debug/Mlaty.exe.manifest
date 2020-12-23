@@ -146,7 +146,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>rqASV9zmXBbrjbGL2yWUfJ5qXN8qu6Y+4kxuCVIvw0A=</dsig:DigestValue>
+        <dsig:DigestValue>7XmEdt7zjpdYK+vfIi1mb/l11jr9Jtt2RJ6fSoLFAo8=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -186,13 +186,13 @@
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="Accord.dll.config" size="213">
+  <file name="Accord.dll.config" size="220">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>MEnoP5t/qShagvs8d0DpwiW2ajH4BdNYKpv9NLXdjm4=</dsig:DigestValue>
+      <dsig:DigestValue>rXk1gk79Wcezlt/jAmK/WsVZR0elUxDKDqpL2eQSvj4=</dsig:DigestValue>
     </hash>
   </file>
   <file name="ICON.ico" size="370070">

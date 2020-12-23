@@ -168,7 +168,7 @@ namespace PGTAWPF
                 return codelist[code - 1];
         }
 
-        public int GetVersion (string[] message)
+        public int GetVersion(string[] message)
         {
             string[] mensaje = message;
             string FSPEC1 = this.FSPEC(mensaje);

@@ -227,8 +227,8 @@ namespace PGTAWPF
                     }
                     else if (CAT == 21)
                     {
-                        if (lib.GetVersion(arraystring) != 0)
-                        {
+                     //   if (lib.GetVersion(arraystring) != 0)
+                   //     {
                             CAT21vs21 newcat21 = new CAT21vs21(arraystring, firsttime, lib);
                             if (computePIC == true) { PICS.Add(newcat21.PIC); }
 
@@ -278,7 +278,7 @@ namespace PGTAWPF
                                     firsttime = newcat21.Time_milisec;
                                 }
                             }
-                        }
+                      //  }
                     }
                 }
 
