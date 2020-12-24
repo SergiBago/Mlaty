@@ -14,6 +14,7 @@ namespace PGTA_WPF
         public PointLatLng p;
         public Point Pxy;
         public double Time;
+        public double Height;
         public int zone;
         public bool used = false;
         public bool saved = false;
@@ -24,6 +25,15 @@ namespace PGTA_WPF
             this.Pxy = Pxy;
             this.Time = t;
         }
+
+        public MarkerDGPS(PointLatLng p, Point Pxy, double t,double Height)
+        {
+            this.p = p;
+            this.Pxy = Pxy;
+            this.Time = t;
+            this.Height = Height;
+        }
+
         public MarkerDGPS()
         {
         }

@@ -190,40 +190,40 @@ namespace PGTA_WPF
             AddHeatherPFI("--- RUNWAYS ---");
             for (int i = 0; i < 3; i++)
             {
-                AddRowPFI(ListZones[i],0.0001);
+                AddRowPFI(ListZones[i],0.1);
             }
             int[] list1 = new int[] { 0, 1, 2 };
-            AddTotalPFI(ListZones[14], list1, 0.0001);
+            AddTotalPFI(ListZones[14], list1, 0.1);
             AddHeatherPFI("--- STANDS ---");
             for (int i = 3; i < 5; i++)
             {
-                AddRowPFI(ListZones[i], 0.0001);
+                AddRowPFI(ListZones[i], 0.1);
             }
             list1 = new int[] { 3, 4 };
-            AddTotalPFI(ListZones[15], list1, 0.0001);
+            AddTotalPFI(ListZones[15], list1, 0.1);
             AddHeatherPFI("--- APRONS ---");
             for (int i = 5; i < 7; i++)
             {
-                AddRowPFI(ListZones[i], 0.0001);
+                AddRowPFI(ListZones[i], 0.1);
             }
             list1 = new int[] { 5, 6 };
-            AddTotalPFI(ListZones[16], list1, 0.0001);
+            AddTotalPFI(ListZones[16], list1, 0.1);
             AddHeatherPFI("--- TAXI ---");
-            AddRowPFI(ListZones[7], 0.0001);
+            AddRowPFI(ListZones[7], 0.1);
             AddHeatherPFI("-- AIRBORNE 0-2.5NM --");
             for (int i = 8; i < 11; i++)
             {
-                AddRowPFI(ListZones[i], 0.0001);
+                AddRowPFI(ListZones[i], 0.1);
             }
             list1 = new int[] { 8, 9, 10 };
-            AddTotalPFI(ListZones[17], list1, 0.0001);
+            AddTotalPFI(ListZones[17], list1, 0.1);
             AddHeatherPFI("-- AIRBORNE 2.5-5NM --");
             for (int i = 11; i < 14; i++)
             {
-                AddRowPFI(ListZones[i], 0.0001);
+                AddRowPFI(ListZones[i], 0.1);
             }
             list1 = new int[] { 11, 12, 13 };
-            AddTotalPFI(ListZones[18], list1, 0.0001);
+            AddTotalPFI(ListZones[18], list1, 0.1);
         }
 
 

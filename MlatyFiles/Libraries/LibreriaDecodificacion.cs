@@ -527,6 +527,20 @@ namespace PGTAWPF
             return p;
         }
 
+        public Point ComputeCartesianFromWGS84(PointLatLng Platlng, double height)
+        {
+
+            CoordinatesWGS84 ObjectCoordinates = new CoordinatesWGS84((Math.PI / 180) * Platlng.Lat, Platlng.Lng * (Math.PI / 180),height);
+            CoordinatesWGS84 RadarCoordinates = new CoordinatesWGS84(41.2970767 * (Math.PI / 180), 2.07846278 * (Math.PI / 180), 53.321);
+            GeoUtils geoUtils = new GeoUtils();
+            CoordinatesXYZ MarkerCartesian = geoUtils.change_geodesic2system_cartesian(ObjectCoordinates, RadarCoordinates);
+            geoUtils = null;
+            double X = MarkerCartesian.X;
+            double Y = MarkerCartesian.Y;
+            Point p = new Point(X, Y);
+            return p;
+        }
+
         public Point ComputeCartesianFromWGS84(PointLatLng Platlng,double Height,double ARPHeight)
         {
 

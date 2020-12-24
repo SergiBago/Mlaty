@@ -9,6 +9,8 @@ using System.Windows.Forms;
 using System.Collections;
 using PGTA_WPF;
 using MessageBox = System.Windows.MessageBox;
+using Accord.Math;
+using System.Threading.Tasks;
 
 namespace PGTAWPF
 {
@@ -465,7 +467,7 @@ namespace PGTAWPF
                 string[] attributes = Heather.Split(',');
                 TrajectoriestoCompute newtraj = new TrajectoriestoCompute();
 
-                if (attributes.Length > 1 && lines.Count()>1)
+                if (attributes.Length > 1 && lines.Count() > 1)
                 {
                     double firsttime = 0;
                     bool first = true;
@@ -481,29 +483,36 @@ namespace PGTAWPF
                     double time = 0;
                     try
                     {
-                        string[] parameters = lines[1].Split(new Char[] { ' ', '\t' });
-                        List<double> parameters2 = new List<double>();
-                        for (int a = 1; a < parameters.Length; a++)
+                        if (lines[1].Substring(0, 1) == "#")
                         {
-                            parameters[a] = parameters[a].Trim(' ');
-                            if (parameters[a] != "")
-                            {
-                                parameters[a] = parameters[a].Replace('.', ',');
-                                parameters2.Add(Convert.ToDouble(parameters[a]));
-                            }
+                            type = 2;
                         }
-                       
-                        try
+                        else
                         {
-                            double lat = parameters2[0];
-                            double lon = parameters2[1];
-                            time = (parameters2[6]) * 3600 + (parameters2[7]) * 60 + (parameters2[8]);
-                            if (lat >= -90 && lat <= 90 && lon >= -180 && lon<= 180 && time >= 0 && time <= 86400)
+                            string[] parameters = lines[1].Split(new Char[] { ' ', '\t' });
+                            List<double> parameters2 = new List<double>();
+                            for (int a = 1; a < parameters.Length; a++)
                             {
-                                type = 1;
+                                parameters[a] = parameters[a].Trim(' ');
+                                if (parameters[a] != "")
+                                {
+                                    parameters[a] = parameters[a].Replace('.', ',');
+                                    parameters2.Add(Convert.ToDouble(parameters[a]));
+                                }
                             }
+
+                            try
+                            {
+                                double lat = parameters2[0];
+                                double lon = parameters2[1];
+                                time = (parameters2[6]) * 3600 + (parameters2[7]) * 60 + (parameters2[8]);
+                                if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180 && time >= 0 && time <= 86400)
+                                {
+                                    type = 1;
+                                }
+                            }
+                            catch { time = -1; }
                         }
-                        catch { time = -1; }
                     }
                     catch {; }
                     if (type == 1)
@@ -530,9 +539,9 @@ namespace PGTAWPF
                                 PointLatLng p = new PointLatLng(lat, lon);
                                 Point Pxy = lib.ComputeCartesianFromWGS84(p);
                                 time = (parameters2[6]) * 3600 + (parameters2[7]) * 60 + (parameters2[8]);
-                                if (first==false)
+                                if (first == false)
                                 {
-                                    if (time<firsttime)
+                                    if (time < firsttime)
                                     {
                                         time += 86400;
                                     }
@@ -550,7 +559,7 @@ namespace PGTAWPF
                         }
                     }
 
-                    else
+                    else if (type == 0)
                     {
                         for (int i = 1; i < lines.Length; i++)
                         {
@@ -590,25 +599,128 @@ namespace PGTAWPF
                             catch {; }
                             namestxt[s + 1] = "Computing message " + Convert.ToString(i) + " of " + Convert.ToString(lines.Length) + " messages...";
                         }
-                     //   MessageBox.Show(Convert.ToString(newtraj.ListDGPS.Count));
+                        //   MessageBox.Show(Convert.ToString(newtraj.ListDGPS.Count));
+
+
+                        //   MessageBox.Show(Convert.ToString(newtraj.ListDGPS.Count()) + "  " + Convert.ToString(newtraj.ListDGPS[newtraj.ListDGPS.Count - 1].Time));
+
+                    }
+                    else
+                    {
+                        namestxt[s + 1] = "Decodifying file...";
+                        //      string[] lines = File.ReadAllLines(path);
+                        //string Heather = lines[0];
+                        //string[] attributes = Heather.Split(',');
+                        //TrajectoriestoCompute newtraj = new TrajectoriestoCompute();
+
+                        for (int i = 1; i < lines.Length; i++)
+                        {
+                            //try
+                            //{
+                            if (lines[i] != "" && lines[i].Substring(0, 1) != "#")
+                            {
+                                char[] Splitter = new Char[] { ' ', '\t' };
+                                string[] parameters = lines[i].Split(Splitter, StringSplitOptions.RemoveEmptyEntries);
+                                if (parameters[0] != ":")
+                                {
+
+                                    List<string> parameters2 = new List<string>();
+                                    for (int f = 0; f < parameters.Length; f++)
+                                    {
+                                        if (parameters[f] != "O")
+                                        {
+                                            parameters2.Add(parameters[f]);
+                                        }
+                                    }
+                                    parameters = parameters2.ToArray();
+                                    parameters2.Clear();
+
+                                    string[] TimeParam = parameters[1].Split(':');
+                                    double hours = Convert.ToDouble(TimeParam[0]);
+                                    double min = Convert.ToDouble(TimeParam[1]);
+                                    double seconds = Convert.ToDouble(TimeParam[2].Replace('.', ','));
+                                    double height = (Convert.ToDouble(parameters[2].Replace('.', ',')) * 0.3048);
+
+
+                                    double lat = ComputeLat(parameters[4]);
+                                    double lon = ComputeLon(parameters[5]);
+                                    PointLatLng p = new PointLatLng(lat, lon);
+                                    Point Pxy = lib.ComputeCartesianFromWGS84(p, height);
+                                    time = (hours) * 3600 + (min) * 60 + (seconds);
+                                    if (first == false)
+                                    {
+                                        if (time < firsttime)
+                                        {
+                                            time += 86400;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        firsttime = time;
+                                        first = false;
+                                    }
+                                    MarkerDGPS DGPS = new MarkerDGPS(p, Pxy, time,height);
+                                    newtraj.ADDDGPS(DGPS);
+                                    //}
+                                    //catch {; }
+                                    namestxt[s + 1] = "Computing message " + Convert.ToString(i) + " of " + Convert.ToString(lines.Length) + " messages...";
+
+                                }
+                            }
+                        }
+                            //   MessageBox.Show(Convert.ToString(newtraj.ListDGPS.Count));
+
+                     //       trajdgps.Add(newtraj);
+                            // MessageBox.Show(Convert.ToString(newtraj.ListDGPS.Count));
+                     //       namestxt[s + 1] = "Computed!";
+                        
                     }
                     trajdgps.Add(newtraj);
-                   // MessageBox.Show(Convert.ToString(newtraj.ListDGPS.Count));
+                    // MessageBox.Show(Convert.ToString(newtraj.ListDGPS.Count));
                     namestxt[s + 1] = "Computed!";
-                 //   MessageBox.Show(Convert.ToString(newtraj.ListDGPS.Count()) + "  " + Convert.ToString(newtraj.ListDGPS[newtraj.ListDGPS.Count - 1].Time));
 
                 }
                 else
                 {
-                    namestxt[s + 1] = "Can't Compute this file!!!";
-                }
+                    namestxt[s + 1] = "No flight identification in this file";
 
+                }
             }
+
             catch
             {
                 namestxt[s + 1] = "Can't Compute this file!!!";
             }
 
         }
+
+        private double ComputeLat(string Lat)
+        {
+            string[] latParam = Lat.Split('?');
+            double latDeg = Convert.ToDouble(latParam[0].Substring(0, latParam[0].Length - 1));
+            double latMin = Convert.ToDouble(latParam[1].Substring(0, latParam[1].Length - 1));
+            double latSec = Convert.ToDouble(latParam[2].Substring(0, latParam[2].Length - 1).Replace('.',','));
+            double Latitude = latDeg + (latMin / 60) + (latSec / 3600);
+            if(latParam[3]=="S")
+            {
+                Latitude = -Latitude;
+            }
+            return Latitude;
+        }
+
+        private double ComputeLon(string Lon)
+        {
+            string[] lonParam = Lon.Split('?');
+            double lonDeg = Convert.ToDouble(lonParam[0].Substring(0, lonParam[0].Length - 1));
+            double lonMin = Convert.ToDouble(lonParam[1].Substring(0, lonParam[1].Length - 1));
+            double lonSec = Convert.ToDouble(lonParam[2].Substring(0, lonParam[2].Length - 1).Replace('.', ','));
+            double Longitude = lonDeg + (lonMin / 60) + (lonSec / 3600);
+            if (lonParam[3] == "W")
+            {
+                Longitude = -Longitude;
+            }
+            return Longitude;
+        }
+
     }
 }

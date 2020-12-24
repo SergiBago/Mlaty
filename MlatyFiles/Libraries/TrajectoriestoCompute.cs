@@ -584,7 +584,7 @@ namespace PGTAWPF
                             bool Error = false;
                             foreach (CAT10 MLAT in ThisWindowList)
                             {
-                                if (MLAT.Target_Identification != TargetIdentification)
+                                if (((MLAT.Target_Address != null || MLAT.Target_Address!="") && MLAT.Target_Address!=TargetAdress) && ((MLAT.Target_Identification != null || MLAT.Target_Identification != "") && MLAT.Target_Identification != TargetIdentification))
                                 {
                                     Error = true;
                                     break;
@@ -751,7 +751,7 @@ namespace PGTAWPF
         {
             if (MLAT.zone != -1)
             {
-                Point p = ComputePositionXY(Before, After, MLAT);
+                PointWithHeight p = ComputePositionXY(Before, After, MLAT);
                 Point MLATp = new Point(MLAT.X_Component_map, MLAT.Y_Component_map);
                 double dist = ComputeDistanceXY(MLATp, p);
               //  PointLatLng p = ComputePosition(Before, After, MLAT);
@@ -790,7 +790,7 @@ namespace PGTAWPF
 
                     double ErrorLocalX = MLAT.X_Component_map - p.X;
                     double ErrorLocalY = MLAT.Y_Component_map - p.Y;
-                    PrecissionPoint pressP = new PrecissionPoint(TargetIdentification, MLAT.X_Component_map, MLAT.Y_Component_map, 53.321, p.X, p.Y, 0, ErrorLocalX, ErrorLocalY, dist, MLAT.zone, MLAT.GroundBit, MLAT.Time_milisec);
+                    PrecissionPoint pressP = new PrecissionPoint(TargetIdentification, MLAT.X_Component_map, MLAT.Y_Component_map, 53.321, p.X, p.Y, p.Z, ErrorLocalX, ErrorLocalY, dist, MLAT.zone, MLAT.GroundBit, MLAT.Time_milisec);
                     data.PrecissionPoints.Add(pressP);
 
 
@@ -803,11 +803,24 @@ namespace PGTAWPF
             }
         }
 
+        private class PointWithHeight
+        {
+            public double X;
+            public double Y;
+            public double Z;
+            public PointWithHeight(double x, double y, double z)
+            {
+                X = x;
+                Y = y;
+                Z = z;
+            }
+        }
+
         private void ComputeMLATPrecission(CAT10 MLAT, MarkerDGPS Before, MarkerDGPS After, Data data)
         {
             if (MLAT.zone != -1)
             {
-                Point p = ComputePositionXY(Before, After, MLAT);
+                PointWithHeight p = ComputePositionXY(Before, After, MLAT);
                 Point MLATp = new Point(MLAT.X_Component_map, MLAT.Y_Component_map);
                 double dist = ComputeDistanceXY(MLATp, p);
                 double PFDdist = 50;
@@ -838,7 +851,7 @@ namespace PGTAWPF
                     MLAT.used = true;
                     double ErrorLocalX = MLAT.X_Component_map - p.X;
                     double ErrorLocalY = MLAT.Y_Component_map - p.Y;
-                    PrecissionPoint pressP = new PrecissionPoint(TargetIdentification, MLAT.X_Component_map, MLAT.Y_Component_map, 53.321, p.X, p.Y, 0, ErrorLocalX, ErrorLocalY, dist, MLAT.zone, MLAT.GroundBit,MLAT.Time_milisec);
+                    PrecissionPoint pressP = new PrecissionPoint(TargetIdentification, MLAT.X_Component_map, MLAT.Y_Component_map, 53.321, p.X, p.Y, p.Z, ErrorLocalX, ErrorLocalY, dist, MLAT.zone, MLAT.GroundBit,MLAT.Time_milisec);
                     data.PrecissionPoints.Add(pressP);
 
                 }
@@ -890,7 +903,7 @@ namespace PGTAWPF
         }
 
 
-        private Point ComputePositionXY(CAT21vs21 Before, CAT21vs21 After, CAT10 MLAT)
+        private PointWithHeight ComputePositionXY(CAT21vs21 Before, CAT21vs21 After, CAT10 MLAT)
         {
             double X0 = Before.X_Component_map;
             double Y0 = Before.Y_Component_map;
@@ -920,11 +933,17 @@ namespace PGTAWPF
                 Xfin = X0 + moveddist * Math.Cos(dir);
                 Yfin = Y0 + moveddist * Math.Sin(dir);
             }
-            Point p = new Point(Xfin, Yfin);
+            double Height = 0;
+            if (Before.Geometric_Height != -999 && After.Geometric_Height != -999)
+            {
+                double verticalSpeed = (After.Geometric_Height  - Before.Geometric_Height) / timeBefore_After;
+                Height = Before.Geometric_Height + (verticalSpeed * Vtime);
+            }
+            PointWithHeight p = new PointWithHeight(Xfin, Yfin,Height);
             return p;
         }
 
-        private Point ComputePositionXY(MarkerDGPS Before, MarkerDGPS After, CAT10 MLAT)
+        private PointWithHeight ComputePositionXY(MarkerDGPS Before, MarkerDGPS After, CAT10 MLAT)
         {
             double X0 = Before.Pxy.X;
             double Y0 = Before.Pxy.Y;
@@ -946,7 +965,14 @@ namespace PGTAWPF
                 Xfin = X0 + moveddist * Math.Cos(dir);
                 Yfin = Y0 + moveddist * Math.Sin(dir);
             }
-            Point p = new Point(Xfin, Yfin);
+            double Height = 0;
+            if( Before.Height!=0 && After.Height!=0)
+            {
+                double verticalSpeed = (After.Height - Before.Height)/timeBefore_After;
+                Height=Before.Height+(verticalSpeed*Vtime);
+
+            }
+            PointWithHeight p = new PointWithHeight(Xfin, Yfin,Height);
             return p;
         }
 
@@ -1042,7 +1068,7 @@ namespace PGTAWPF
 
 
 
-        private double ComputeDistanceXY(Point MLAT, Point ADSB)
+        private double ComputeDistanceXY(Point MLAT, PointWithHeight ADSB)
         {
             double X = MLAT.X - ADSB.X;
             double Y = MLAT.Y - ADSB.Y;
