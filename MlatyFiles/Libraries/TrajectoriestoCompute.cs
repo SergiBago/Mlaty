@@ -584,6 +584,7 @@ namespace PGTAWPF
                             bool Error = false;
                             foreach (CAT10 MLAT in ThisWindowList)
                             {
+                                //if ((MLAT.Target_Address != null || MLAT.Target_Address != "") && MLAT.Target_Address != TargetAdress)
                                 if (((MLAT.Target_Address != null || MLAT.Target_Address!="") && MLAT.Target_Address!=TargetAdress) && ((MLAT.Target_Identification != null || MLAT.Target_Identification != "") && MLAT.Target_Identification != TargetIdentification))
                                 {
                                     Error = true;

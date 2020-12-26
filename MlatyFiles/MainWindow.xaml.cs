@@ -51,10 +51,10 @@ namespace PGTAWPF
         public MainWindow()
         {
             InitializeComponent();
-            ActiveButtons = new List<System.Windows.Controls.Image> { HomeIco2, LoadIco2, ListIco2,URIco2,PrecissionIco2,PFDIco2,PFIIco2 ,MapIco2, ExportIco2,ExportAccuIco2, HelpIco2,DGPSIco2, ADSBIco2};
-            UnActiveButtons = new List<System.Windows.Controls.Image> { HomeIco1, LoadIco1, ListIco1, URIco,PrecisionIco,MapIco1, HelpIco1, DGPSIco1, ADSBIco1, ExportIco,ExportAccuIco,PFDIco,PFIIco};
-            ListPanels = new List<Border> { HomePanel, LoadPanel, ListPanel, PrecissionPanel, URPanel, MapPanel, HelpPanel, LoadADSBMLATPanel, LoadMLATDGPSPanel,ExportAccuracyPanel,ExportTablesPanel,PFDPanel,PFIPanel };
-            ListLabels = new List<TextBlock> { HomeLabel, LoadFilesLabel, ListLabel, MapLabel, Precision,UpdateRate , HelpLabel, LoadADSBMLATLabel, LoadDGPSMLATLabel,PFD,PFI  };
+            ActiveButtons = new List<System.Windows.Controls.Image> { HomeIco2, LoadIco2, ListIco2,URIco2,PrecissionIco2,PFDIco2,PFIIco2 ,MapIco2, ExportIco2,ExportAccuIco2, HelpIco2,DGPSIco2, ADSBIco2,PDIco2,PIIco2};
+            UnActiveButtons = new List<System.Windows.Controls.Image> { HomeIco1, LoadIco1, ListIco1, URIco,PrecisionIco,MapIco1, HelpIco1, DGPSIco1, ADSBIco1, ExportIco,ExportAccuIco,PFDIco,PFIIco,PDIco,PIIco};
+            ListPanels = new List<Border> { HomePanel, LoadPanel, ListPanel, PrecissionPanel, URPanel, MapPanel, HelpPanel, LoadADSBMLATPanel, LoadMLATDGPSPanel,ExportAccuracyPanel,ExportTablesPanel,PFDPanel,PFIPanel, PDPanel, PIPanel };
+            ListLabels = new List<TextBlock> { HomeLabel, LoadFilesLabel, ListLabel, MapLabel, Precision,UpdateRate , HelpLabel, LoadADSBMLATLabel, LoadDGPSMLATLabel,PFD,PFI ,ProbabilityDetection, PI };
             this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
             Archivo.data.CreatePDTable();
             Archivo.data.CreatePrecissionTable();
@@ -65,8 +65,8 @@ namespace PGTAWPF
         private void Main_Load(object sender, RoutedEventArgs e)
         {
             DisableButtons();
-            HomeLabel.HorizontalAlignment = HorizontalAlignment.Right;
-            HomeIco1.Visibility = Visibility.Hidden;
+            HomeLabel.TextAlignment = TextAlignment.Right;
+            HomeIco1.Visibility = Visibility.Collapsed;
             HomeIco2.Visibility = Visibility.Visible;
             HomePanel.Background = new SolidColorBrush(RGBColors.color1);
             FormTitle.Text = "Home";
@@ -83,7 +83,11 @@ namespace PGTAWPF
             foreach (System.Windows.Controls.Image im in ActiveButtons) { im.Visibility = Visibility.Hidden; }
             foreach (System.Windows.Controls.Image im in UnActiveButtons) { im.Visibility = Visibility.Visible; }
             foreach (Border bor in ListPanels) { bor.Background = new SolidColorBrush(RGBColors.color6); }
-            foreach (TextBlock text in ListLabels) { text.HorizontalAlignment = HorizontalAlignment.Left;  text.Foreground = new SolidColorBrush(RGBColors.color7); }
+            foreach (TextBlock text in ListLabels) 
+            {
+                text.TextAlignment = TextAlignment.Left;
+                text.Foreground = new SolidColorBrush(RGBColors.color7);
+            }
         }
 
         public void LoadDisableButtons()
@@ -112,8 +116,8 @@ namespace PGTAWPF
         private void Home_Click(object sender, RoutedEventArgs e)
         {
             DisableButtons();
-            HomeLabel.HorizontalAlignment = HorizontalAlignment.Right;
-            HomeIco1.Visibility = Visibility.Hidden;
+            HomeLabel.TextAlignment = TextAlignment.Right;
+            HomeIco1.Visibility = Visibility.Collapsed;
             HomeIco2.Visibility = Visibility.Visible;
             HomePanel.Background = new SolidColorBrush(RGBColors.color1);
             FormTitle.Text = "Home";
@@ -161,8 +165,8 @@ namespace PGTAWPF
         {
 
             DisableButtons();
-            LoadFilesLabel.HorizontalAlignment = HorizontalAlignment.Right;
-            LoadIco1.Visibility = Visibility.Hidden;
+            LoadFilesLabel.TextAlignment = TextAlignment.Right;
+            LoadIco1.Visibility = Visibility.Collapsed;
             LoadIco2.Visibility = Visibility.Visible;
             LoadPanel.Background = new SolidColorBrush(RGBColors.color2);
             FormTitle.Text = "Manage Data";
@@ -173,8 +177,8 @@ namespace PGTAWPF
 
         private void ActiveLoadDGPSButton()
         {
-            LoadDGPSMLATLabel.HorizontalAlignment = HorizontalAlignment.Right;
-            DGPSIco1.Visibility = Visibility.Hidden;
+            LoadDGPSMLATLabel.TextAlignment = TextAlignment.Right;
+            DGPSIco1.Visibility = Visibility.Collapsed;
             DGPSIco2.Visibility = Visibility.Visible;
             LoadDGPSMLATLabel.Foreground = new SolidColorBrush(RGBColors.color2);
 
@@ -182,8 +186,8 @@ namespace PGTAWPF
 
         private void ActiveLoadADSBButton()
         {
-            LoadADSBMLATLabel.HorizontalAlignment = HorizontalAlignment.Right;
-            ADSBIco1.Visibility = Visibility.Hidden;
+            LoadADSBMLATLabel.TextAlignment = TextAlignment.Right;
+            ADSBIco1.Visibility = Visibility.Collapsed;
             ADSBIco2.Visibility = Visibility.Visible;
             LoadADSBMLATLabel.Foreground = new SolidColorBrush(RGBColors.color2);
 
@@ -192,11 +196,11 @@ namespace PGTAWPF
         private void activeSeeprecissionbutton()
         {
             DisableButtons();
-            ListLabel.HorizontalAlignment = HorizontalAlignment.Right;
-            Precision.HorizontalAlignment = HorizontalAlignment.Right;
-            PrecisionIco.Visibility = Visibility.Hidden;
+            ListLabel.TextAlignment = TextAlignment.Right;
+            Precision.TextAlignment = TextAlignment.Right;
+            PrecisionIco.Visibility = Visibility.Collapsed;
             PrecissionIco2.Visibility = Visibility.Visible;
-            ListIco1.Visibility = Visibility.Hidden;
+            ListIco1.Visibility = Visibility.Collapsed;
             ListIco2.Visibility = Visibility.Visible;
             ListPanel.Background = new SolidColorBrush(RGBColors.color3);
             FormTitle.Text = "Results";
@@ -210,11 +214,11 @@ namespace PGTAWPF
         private void activeSeeURbutton()
         {
             DisableButtons();
-            ListLabel.HorizontalAlignment = HorizontalAlignment.Right;
-            UpdateRate.HorizontalAlignment = HorizontalAlignment.Right;
-            URIco.Visibility = Visibility.Hidden;
+            ListLabel.TextAlignment = TextAlignment.Right;
+            UpdateRate.TextAlignment = TextAlignment.Right;
+            URIco.Visibility = Visibility.Collapsed;
             URIco2.Visibility = Visibility.Visible;
-            ListIco1.Visibility = Visibility.Hidden;
+            ListIco1.Visibility = Visibility.Collapsed;
             ListIco2.Visibility = Visibility.Visible;
             ListPanel.Background = new SolidColorBrush(RGBColors.color3);
             FormTitle.Text = "Results";
@@ -224,14 +228,48 @@ namespace PGTAWPF
             FormIco.Source = new BitmapImage(new Uri(@"images/Lista Color.png", UriKind.Relative));
         }
 
+        private void activeSeePDbutton()
+        {
+            DisableButtons();
+            ListLabel.TextAlignment = TextAlignment.Right;
+            ProbabilityDetection.TextAlignment = TextAlignment.Right;
+            PDIco.Visibility = Visibility.Collapsed;
+            PDIco2.Visibility = Visibility.Visible;
+            ListIco1.Visibility = Visibility.Collapsed;
+            ListIco2.Visibility = Visibility.Visible;
+            ListPanel.Background = new SolidColorBrush(RGBColors.color3);
+            FormTitle.Text = "Results";
+            FormTitle.Foreground = new SolidColorBrush(RGBColors.color3);
+            ListLabel.Foreground = new SolidColorBrush(RGBColors.color3);
+            ProbabilityDetection.Foreground = new SolidColorBrush(RGBColors.color3);
+            FormIco.Source = new BitmapImage(new Uri(@"images/Lista Color.png", UriKind.Relative));
+        }
+
+        private void activeSeePIbutton()
+        {
+            DisableButtons();
+            ListLabel.TextAlignment = TextAlignment.Right;
+            PI.TextAlignment = TextAlignment.Right;
+            PIIco.Visibility = Visibility.Collapsed;
+            PIIco2.Visibility = Visibility.Visible;
+            ListIco1.Visibility = Visibility.Collapsed;
+            ListIco2.Visibility = Visibility.Visible;
+            ListPanel.Background = new SolidColorBrush(RGBColors.color3);
+            FormTitle.Text = "Results";
+            FormTitle.Foreground = new SolidColorBrush(RGBColors.color3);
+            ListLabel.Foreground = new SolidColorBrush(RGBColors.color3);
+            PI.Foreground = new SolidColorBrush(RGBColors.color3);
+            FormIco.Source = new BitmapImage(new Uri(@"images/Lista Color.png", UriKind.Relative));
+        }
+
         private void activeSeePFIbutton()
         {
             DisableButtons();
-            ListLabel.HorizontalAlignment = HorizontalAlignment.Right;
-            PFI.HorizontalAlignment = HorizontalAlignment.Right;
-            PFIIco.Visibility = Visibility.Hidden;
+            ListLabel.TextAlignment = TextAlignment.Right;
+            PFI.TextAlignment = TextAlignment.Right;
+            PFIIco.Visibility = Visibility.Collapsed;
             PFIIco2.Visibility = Visibility.Visible;
-            ListIco1.Visibility = Visibility.Hidden;
+            ListIco1.Visibility = Visibility.Collapsed;
             ListIco2.Visibility = Visibility.Visible;
             ListPanel.Background = new SolidColorBrush(RGBColors.color3);
             FormTitle.Text = "Results";
@@ -244,11 +282,11 @@ namespace PGTAWPF
         private void activeSeePFDbutton()
         {
             DisableButtons();
-            ListLabel.HorizontalAlignment = HorizontalAlignment.Right;
-            PFD.HorizontalAlignment = HorizontalAlignment.Right;
-            PFDIco.Visibility = Visibility.Hidden;
+            ListLabel.TextAlignment = TextAlignment.Right;
+            PFD.TextAlignment = TextAlignment.Right;
+            PFDIco.Visibility = Visibility.Collapsed;
             PFDIco2.Visibility = Visibility.Visible;
-            ListIco1.Visibility = Visibility.Hidden;
+            ListIco1.Visibility = Visibility.Collapsed;
             ListIco2.Visibility = Visibility.Visible;
             ListPanel.Background = new SolidColorBrush(RGBColors.color3);
             FormTitle.Text = "Results";
@@ -277,6 +315,11 @@ namespace PGTAWPF
             PanelChildForm.Navigate(view);
         }
 
+        private void PDClick(object sender, MouseButtonEventArgs e)
+        {
+            activeSeePDbutton();
+        }
+
         private void PFDClick(object sender, MouseButtonEventArgs e)
         {
             activeSeePFDbutton();
@@ -293,11 +336,14 @@ namespace PGTAWPF
             PanelChildForm.Navigate(view);
         }
 
+        private void PIClick(object sender, MouseButtonEventArgs e)
+        {
+            activeSeePIbutton();
+        }
+
         private void ExportClick(object sender, MouseButtonEventArgs e)
         {
-            //activeExportbutton();
             ExportResults();
-            //ExportTable();
         }
 
         private void ExportAccuracyClick(object sender, MouseButtonEventArgs e)
@@ -538,8 +584,8 @@ namespace PGTAWPF
         private void ActiveMapButton()
         {
             DisableButtons();
-            MapLabel.HorizontalAlignment = HorizontalAlignment.Right;
-            MapIco1.Visibility = Visibility.Hidden;
+            MapLabel.TextAlignment = TextAlignment.Right;
+            MapIco1.Visibility = Visibility.Collapsed;
             MapIco2.Visibility = Visibility.Visible;
             FormTitle.Text = "Map View";
             FormTitle.Foreground = new SolidColorBrush(RGBColors.color4);
@@ -565,8 +611,8 @@ namespace PGTAWPF
         private void ActiveInfoButton()
         {
             DisableButtons();
-            HelpLabel.HorizontalAlignment = HorizontalAlignment.Right;
-            HelpIco1.Visibility = Visibility.Hidden;
+            HelpLabel.TextAlignment=TextAlignment.Right;
+            HelpIco1.Visibility = Visibility.Collapsed;
             HelpIco2.Visibility = Visibility.Visible;
             FormTitle.Text = "Info";
             FormTitle.Foreground = new SolidColorBrush(RGBColors.color5);

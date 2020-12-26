@@ -112,3 +112,4 @@ C:\Users\Sergi\Desktop\Mlaty\MlatyFiles\obj\Debug\Mlaty.application
 C:\Users\Sergi\Desktop\Mlaty\MlatyFiles\obj\Debug\Mlaty.csproj.CopyComplete
 C:\Users\Sergi\Desktop\Mlaty\MlatyFiles\obj\Debug\Mlaty.exe
 C:\Users\Sergi\Desktop\Mlaty\MlatyFiles\obj\Debug\Mlaty.pdb
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\obj\Debug\App.baml
