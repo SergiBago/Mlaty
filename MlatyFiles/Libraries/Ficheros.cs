@@ -158,130 +158,283 @@ namespace PGTAWPF
                     namesastadsb[s + 1] = "Computing message " + Convert.ToString(q) + " of " + Convert.ToString(listahex.Count) + " messages...";
                     string[] arraystring = listahex[q];
                     int CAT = int.Parse(arraystring[0], System.Globalization.NumberStyles.HexNumber);
-                    if (CAT == 10)
+                if (CAT == 10)
+                {
+                    CAT10 newcat10 = new CAT10(arraystring, firsttime, lib);
+                    if (newcat10.TYP == "Mode S MLAT")
                     {
-                        CAT10 newcat10 = new CAT10(arraystring, firsttime, lib);
-                        if (newcat10.TYP == "Mode S MLAT")
+                        if (newcat10.Target_Identification != null)
                         {
-                            if(newcat10.Target_Identification!=null)
-                            {
-                                int a = 0;
-                            }
+                            int a = 0;
+                        }
 
-                            bool trajfound = false;
-                            
-                            if (newcat10.Track_Number != -1)// && trajfound == false)
-                            {
-                                if (traj.Exists(x => x.TrackNumber == newcat10.Track_Number))
-                                {
+                        bool trajfound = false;
 
-                                    TrajectoriestoCompute traject= traj.Find(x => x.TrackNumber == newcat10.Track_Number);
-         
-                                    if(traject.ListMLAT.Count() > 0 && traject.ListMLAT[traject.ListMLAT.Count()-1].Time_of_day_sec>=newcat10.Time_of_day_sec-25 && traject.ListMLAT[traject.ListMLAT.Count() - 1].Time_of_day_sec <= newcat10.Time_of_day_sec + 25)
-                                    {
-                                        traject.ADDCAT10(newcat10);
-                                        trajfound = true;
-                                    }
-                                    else
-                                    {
-                                        TrajectoriestoCompute newtraj = new TrajectoriestoCompute(newcat10);
-                                        traj.Add(newtraj);
-                                        trajfound = true;
+                        //if (newcat10.Track_Number != -1)// && trajfound == false)
+                        //{
+                        //    if (traj.Exists(x => x.TrackNumber == newcat10.Track_Number))
+                        //    {
 
-                                    }
-                                    trajfound = true;
-                                }
-                            }
-                            if (trajfound == false)
+                        //        TrajectoriestoCompute traject= traj.Find(x => x.TrackNumber == newcat10.Track_Number);
+
+                        //        if(traject.ListMLAT.Count() > 0 && traject.ListMLAT[traject.ListMLAT.Count()-1].Time_of_day_sec>=newcat10.Time_of_day_sec-25 && traject.ListMLAT[traject.ListMLAT.Count() - 1].Time_of_day_sec <= newcat10.Time_of_day_sec + 25)
+                        //        {
+                        //            traject.ADDCAT10(newcat10);
+                        //            trajfound = true;
+                        //        }
+                        //        else
+                        //        {
+                        //            TrajectoriestoCompute newtraj = new TrajectoriestoCompute(newcat10);
+                        //            traj.Add(newtraj);
+                        //            trajfound = true;
+
+                        //        }
+                        //        trajfound = true;
+                        //    }
+                        //}
+                        //if (trajfound == false)
+                        //{
+                        //if (newcat10.Target_Identification != null)
+                        //{
+                        //    if (traj.Exists(x => x.TargetIdentification == newcat10.Target_Identification))
+                        //    {
+                        //        traj.Find(x => x.TargetIdentification == newcat10.Target_Identification).ADDCAT10(newcat10);
+                        //        trajfound = true;
+                        //    }
+                        //}
+                        //else if (newcat10.Target_Address != null && trajfound == false)
+                        //{
+                        //    if (traj.Exists(x => x.TargetAdress == newcat10.Target_Address))
+                        //    {
+                        //        TrajectoriestoCompute traject = traj.Find(x => x.TargetAdress == newcat10.Target_Address);
+                        //        if (traject.TrackNumber == newcat10.Track_Number && traject.TargetIdentification != newcat10.Target_Identification)
+                        //        {
+                        //        }
+                        //        trajfound = true;
+                        //    }
+                        //}
+                        if (newcat10.Target_Address != null && newcat10.Target_Identification != null && newcat10.Track_Number != -1)
+                        {
+                            if (traj.Exists(x => (x.TargetAdress == newcat10.Target_Address && x.TargetIdentification == newcat10.Target_Identification && newcat10.Track_Number == x.TrackNumber)))
                             {
-                            if (newcat10.Target_Identification != null)
-                            {
-                                if (traj.Exists(x => x.TargetIdentification == newcat10.Target_Identification))
-                                {
-                                    traj.Find(x => x.TargetIdentification == newcat10.Target_Identification).ADDCAT10(newcat10);
-                                    trajfound = true;
-                                }
+                                TrajectoriestoCompute traject = traj.Find(x => (x.TargetAdress == newcat10.Target_Address && x.TargetIdentification == newcat10.Target_Identification && newcat10.Track_Number == x.TrackNumber));
+                                //  if (traject.TrackNumber == newcat10.Track_Number && traject.TargetIdentification != newcat10.Target_Identification)
+                                //   {
+                                traject.ADDCAT10(newcat10);
+                                trajfound = true;
+
+                                //    }
                             }
-                            else if (newcat10.Target_Address != null && trajfound == false)
+                            //    else if(traj.Exists(x => (x.TargetAdress == newcat10.Target_Address && x.TargetIdentification == newcat10.Target_Identification)))
+                            //{
+                            //    TrajectoriestoCompute traject = traj.Find(x => (x.TargetAdress == newcat10.Target_Address && x.TargetIdentification == newcat10.Target_Identification));
+                            //    //  if (traject.TrackNumber == newcat10.Track_Number && traject.TargetIdentification != newcat10.Target_Identification)
+                            //    //   {
+                            //    traject.ADDCAT10(newcat10);
+                            //    trajfound = true;
+                            //}
+                        }
+                        if (newcat10.Target_Address != null && !trajfound)
+                        {
+                            if (traj.Exists(x => x.TargetAdress == newcat10.Target_Address))
                             {
-                                if (traj.Exists(x => x.TargetAdress == newcat10.Target_Address))
-                                {
-                                    TrajectoriestoCompute traject = traj.Find(x => x.TargetAdress == newcat10.Target_Address);
-                                    if (traject.TrackNumber == newcat10.Track_Number && traject.TargetIdentification != newcat10.Target_Identification)
-                                    {
-                                    }
-                                    trajfound = true;
-                                }
+                                TrajectoriestoCompute traject = traj.Find(x => x.TargetAdress == newcat10.Target_Address);
+                                traject.ADDCAT10(newcat10);
+                                trajfound = true;
                             }
+                        }
+                        if (newcat10.Track_Number != -1 && trajfound == false)
+                        {
+                            if (traj.Exists(x => x.TrackNumber == newcat10.Track_Number))
+                            {
+
+                                TrajectoriestoCompute traject = traj.Find(x => x.TrackNumber == newcat10.Track_Number);
+
+                                //if (traject.ListMLAT.Count() > 0 && traject.ListMLAT[traject.ListMLAT.Count() - 1].Time_of_day_sec >= newcat10.Time_of_day_sec - 25 && traject.ListMLAT[traject.ListMLAT.Count() - 1].Time_of_day_sec <= newcat10.Time_of_day_sec + 25)
+                                //{
+                                traject.ADDCAT10(newcat10);
+                                trajfound = true;
+                                //}
+                                //else
+                                //{
+                                //    TrajectoriestoCompute newtraj = new TrajectoriestoCompute(newcat10);
+                                //      traj.Add(newtraj);
+                                //  trajfound = true;
+
+                                //}
+                                //trajfound = true;
+                            }
+                        }
+                        //if (trajfound == false)
+                        //{
+                        //    //if (newcat10.Target_Identification != null)
+                        //    //{
+                        //    //    if (traj.Exists(x => x.TargetIdentification == newcat10.Target_Identification))
+                        //    //    {
+                        //    //        traj.Find(x => x.TargetIdentification == newcat10.Target_Identification).ADDCAT10(newcat10);
+                        //    //        trajfound = true;
+                        //    //    }
+                        //    //}
+                        //    if (newcat10.Target_Address != null)
+                        //    {
+                        //        if (traj.Exists(x => x.TargetAdress == newcat10.Target_Address))
+                        //        {
+                        //            TrajectoriestoCompute traject = traj.Find(x => x.TargetAdress == newcat10.Target_Address);
+                        //            traject.ADDCAT10(newcat10);
+                        //            trajfound = true;
+                        //        }
+                        //    }
                             if (!trajfound)
                             {
 
                                 TrajectoriestoCompute newtraj = new TrajectoriestoCompute(newcat10);
                                 traj.Add(newtraj);
                             }
-                            }
-                            if (first == true)
-                            {
-                                first = false;
-                                firsttime = newcat10.Time_milisec;
-                            }
+                            //}
+       
+                        //}
+                        if (first == true)
+                        {
+                            first = false;
+                            firsttime = newcat10.Time_milisec;
                         }
                     }
-                    else if (CAT == 21)
-                    {
-                     //   if (lib.GetVersion(arraystring) != 0)
-                   //     {
-                            CAT21vs21 newcat21 = new CAT21vs21(arraystring, firsttime, lib);
-                            if (computePIC == true) { PICS.Add(newcat21.PIC); }
+                }
+                else if (CAT == 21)
+                {
+                    //   if (lib.GetVersion(arraystring) != 0)
+                    //     {
+                    CAT21vs21 newcat21 = new CAT21vs21(arraystring, firsttime, lib);
+                    if (computePIC == true) { PICS.Add(newcat21.PIC); }
 
-                            if (newcat21.MOPSversion == 2)
+                    if (newcat21.MOPSversion == 2)
+                    {
+                        bool trajfound = false;
+                        //if (newcat21.Target_Identification != null)
+                        //{
+                        //    if (traj.Exists(x => x.TargetIdentification == newcat21.Target_Identification))
+                        //    {
+                        //        traj.Find(x => x.TargetIdentification == newcat21.Target_Identification).ADDCAT21(newcat21);
+                        //        trajfound = true;
+                        //        TrajectoriestoCompute traject = traj.Find(x => x.TargetIdentification == newcat21.Target_Identification);
+                        //    }
+                        //}
+                        //if (newcat21.Target_address != null && trajfound == false)
+                        //{
+                        //    if (traj.Exists(x => x.TargetAdress == newcat21.Target_address))
+                        //    {
+                        //        traj.Find(x => x.TargetAdress == newcat21.Target_address).ADDCAT21(newcat21);
+                        //        TrajectoriestoCompute traject = traj.Find(x => x.TargetAdress == newcat21.Target_address);
+                        //        trajfound = true;
+                        //    }
+                        //}
+                        //if (newcat21.Track_Number != -1)//&& trajfound == false)
+                        //{
+                        //    if (traj.Exists(x => x.TrackNumber == newcat21.Track_Number))
+                        //    {
+                        //        traj.Find(x => x.TrackNumber == newcat21.Track_Number).ADDCAT21(newcat21);
+                        //        TrajectoriestoCompute traject = traj.Find(x => x.TrackNumber == newcat21.Track_Number);
+                        //        if (trajfound == false)
+                        //        {
+                        //            traject.ADDCAT21(newcat21);
+                        //        }
+
+                        //        trajfound = true;
+                        //    }
+                        //}
+                        //if (trajfound == false)
+                        //{
+                        //    TrajectoriestoCompute newtraj = new TrajectoriestoCompute(newcat21);
+                        //    traj.Add(newtraj);
+                        //}
+                        if (newcat21.Target_address != null && newcat21.Target_Identification != null && newcat21.Track_Number != -1)
+                        {
+                            if (traj.Exists(x => (x.TargetAdress == newcat21.Target_address && x.TargetIdentification == newcat21.Target_Identification && newcat21.Track_Number == x.TrackNumber)))
                             {
-                                bool trajfound = false;
-                                if (newcat21.Target_Identification != null)
-                                {
-                                    if (traj.Exists(x => x.TargetIdentification == newcat21.Target_Identification))
-                                    {
-                                        traj.Find(x => x.TargetIdentification == newcat21.Target_Identification).ADDCAT21(newcat21);
-                                        trajfound = true;
-                                        TrajectoriestoCompute traject = traj.Find(x => x.TargetIdentification == newcat21.Target_Identification);
-                                    }
-                                }
-                                if (newcat21.Target_address != null && trajfound == false)
-                                {
-                                    if (traj.Exists(x => x.TargetAdress == newcat21.Target_address))
-                                    {
-                                        traj.Find(x => x.TargetAdress == newcat21.Target_address).ADDCAT21(newcat21);
-                                        TrajectoriestoCompute traject = traj.Find(x => x.TargetAdress == newcat21.Target_address);
-                                        trajfound = true;
-                                    }
-                                }
-                                if (newcat21.Track_Number != -1 )//&& trajfound == false)
-                                {
-                                    if (traj.Exists(x => x.TrackNumber == newcat21.Track_Number))
-                                    {
-                                        traj.Find(x => x.TrackNumber == newcat21.Track_Number).ADDCAT21(newcat21);
-                                        TrajectoriestoCompute traject = traj.Find(x => x.TrackNumber == newcat21.Track_Number);
-                                        if(trajfound==false)
-                                        {
-                                            traject.ADDCAT21(newcat21);
-                                        }
-  
-                                        trajfound = true;
-                                    }
-                                }
-                                if (trajfound == false)
-                                {
-                                    TrajectoriestoCompute newtraj = new TrajectoriestoCompute(newcat21);
-                                    traj.Add(newtraj);
-                                }
-                                if (first == true)
-                                {
-                                    first = false;
-                                    firsttime = newcat21.Time_milisec;
-                                }
+                                TrajectoriestoCompute traject = traj.Find(x => (x.TargetAdress == newcat21.Target_address && x.TargetIdentification == newcat21.Target_Identification && newcat21.Track_Number == x.TrackNumber));
+                                //  if (traject.TrackNumber == newcat10.Track_Number && traject.TargetIdentification != newcat10.Target_Identification)
+                                //   {
+                                traject.ADDCAT21(newcat21);
+                                trajfound = true;
+
+                                //    }
                             }
-                      //  }
+                            //    else if(traj.Exists(x => (x.TargetAdress == newcat10.Target_Address && x.TargetIdentification == newcat10.Target_Identification)))
+                            //{
+                            //    TrajectoriestoCompute traject = traj.Find(x => (x.TargetAdress == newcat10.Target_Address && x.TargetIdentification == newcat10.Target_Identification));
+                            //    //  if (traject.TrackNumber == newcat10.Track_Number && traject.TargetIdentification != newcat10.Target_Identification)
+                            //    //   {
+                            //    traject.ADDCAT10(newcat10);
+                            //    trajfound = true;
+                            //}
+                        }
+                        if (newcat21.Target_address != null && !trajfound)
+                        {
+                            if (traj.Exists(x => x.TargetAdress == newcat21.Target_address))
+                            {
+                                TrajectoriestoCompute traject = traj.Find(x => x.TargetAdress == newcat21.Target_address);
+                                traject.ADDCAT21(newcat21);
+                                trajfound = true;
+                            }
+                        }
+                        if (newcat21.Track_Number != -1 && !trajfound )
+                        {
+                            if (traj.Exists(x => x.TrackNumber == newcat21.Track_Number))
+                            {
+
+                                TrajectoriestoCompute traject = traj.Find(x => x.TrackNumber == newcat21.Track_Number);
+
+                                //if (traject.ListMLAT.Count() > 0 && traject.ListMLAT[traject.ListMLAT.Count() - 1].Time_of_day_sec >= newcat10.Time_of_day_sec - 25 && traject.ListMLAT[traject.ListMLAT.Count() - 1].Time_of_day_sec <= newcat10.Time_of_day_sec + 25)
+                                //{
+                                traject.ADDCAT21(newcat21);
+                                trajfound = true;
+                                //}
+                                //else
+                                //{
+                                //    TrajectoriestoCompute newtraj = new TrajectoriestoCompute(newcat10);
+                                //      traj.Add(newtraj);
+                                //  trajfound = true;
+
+                                //}
+                                //trajfound = true;
+                            }
+                        }
+                        //if (trajfound == false)
+                        //{
+                        //    //if (newcat10.Target_Identification != null)
+                        //    //{
+                        //    //    if (traj.Exists(x => x.TargetIdentification == newcat10.Target_Identification))
+                        //    //    {
+                        //    //        traj.Find(x => x.TargetIdentification == newcat10.Target_Identification).ADDCAT10(newcat10);
+                        //    //        trajfound = true;
+                        //    //    }
+                        //    //}
+                        //    if (newcat21.Target_address != null)
+                        //    {
+                        //        if (traj.Exists(x => x.TargetAdress == newcat21.Target_address))
+                        //        {
+                        //            TrajectoriestoCompute traject = traj.Find(x => x.TargetAdress == newcat21.Target_address);
+                        //            traject.ADDCAT21(newcat21);
+                        //            trajfound = true;
+                        //        }
+                        //    }
+                            if (!trajfound)
+                            {
+
+                                TrajectoriestoCompute newtraj = new TrajectoriestoCompute(newcat21);
+                                traj.Add(newtraj);
+                            }
+                            //}
+     
+                        //}
+                        if (first == true)
+                        {
+                            first = false;
+                            firsttime = newcat21.Time_milisec;
+                        }
                     }
+                    //  }
+                }
                 }
 
                 namesastadsb[s + 1] = "Computing Parameters...";
@@ -308,8 +461,9 @@ namespace PGTAWPF
                     {
                         traject.SetZones(lib);
                         traject.ComputePrecissionADSBinterpoled(this.data, PIC);
-                        traject.ComputePDADSBInterpoled(this.data);
+                        traject.ComputePDUD(this.data);
                         traject.ComputePFI(this.data);
+                        traject.ComputePI(this.data);
                         if (SavePositions == true)
                         {
                             traject.SaveMarkers(listMarkers);
@@ -432,8 +586,10 @@ namespace PGTAWPF
                     //{
                         traject.SetZones(lib);
                         traject.ComputePrecissionMLATinterpoledDGPS(this.data);
-                        traject.ComputePDADSBInterpoled(this.data);
+                        traject.ComputePDUD(this.data);
                         traject.ComputePFI(this.data);
+                        traject.ComputePI(this.data);
+
                         if (SavePositions == true)
                         {
                             traject.SaveMarkers(listMarkers);

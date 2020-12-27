@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\sergi\Desktop\Mlaty GitHub repository\Mlaty\MlatyFiles\obj\Debug\
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\obj\Debug\
 Mlaty
 none
 false
 DEBUG;TRACE
-C:\Users\sergi\Desktop\Mlaty GitHub repository\Mlaty\MlatyFiles\App.xaml
-9-8238282
-11503573144
-31185392932
-28-671907974
-Info.xaml;LoadDGPS.xaml;LoadADSB.xaml;Intro.xaml;MapWindow.xaml;MainWindow.xaml;MAP.xaml;MessageboxYesNo.xaml;ViewPrecission.xaml;
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\App.xaml
+111291584402
+184655632
+34-1006771484
+30-1850346919
+AccuracyCharts.xaml;Info.xaml;LoadDGPS.xaml;LoadADSB.xaml;Intro.xaml;ChartsWindow.xaml;MapWindow.xaml;MainWindow.xaml;MAP.xaml;MessageboxYesNo.xaml;ViewPrecission.xaml;
 
 True
 

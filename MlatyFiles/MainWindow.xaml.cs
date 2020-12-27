@@ -21,6 +21,7 @@ using System.IO;
 using System.Reflection;
 using PGTA_WPF;
 using Microsoft.Win32;
+using Mlaty;
 
 namespace PGTAWPF
 {
@@ -43,23 +44,35 @@ namespace PGTAWPF
         LoadADSB loadADSB;
         LoadDGPS loadDGPS;
         DataTable PD = new DataTable();
+        DataTable UP = new DataTable();
         DataTable Precission = new DataTable();
         DataTable PFITable = new DataTable();
+        DataTable PITable = new DataTable();
         DataTable PFDTable = new DataTable();
 
 
         public MainWindow()
         {
             InitializeComponent();
-            ActiveButtons = new List<System.Windows.Controls.Image> { HomeIco2, LoadIco2, ListIco2,URIco2,PrecissionIco2,PFDIco2,PFIIco2 ,MapIco2, ExportIco2,ExportAccuIco2, HelpIco2,DGPSIco2, ADSBIco2,PDIco2,PIIco2};
-            UnActiveButtons = new List<System.Windows.Controls.Image> { HomeIco1, LoadIco1, ListIco1, URIco,PrecisionIco,MapIco1, HelpIco1, DGPSIco1, ADSBIco1, ExportIco,ExportAccuIco,PFDIco,PFIIco,PDIco,PIIco};
-            ListPanels = new List<Border> { HomePanel, LoadPanel, ListPanel, PrecissionPanel, URPanel, MapPanel, HelpPanel, LoadADSBMLATPanel, LoadMLATDGPSPanel,ExportAccuracyPanel,ExportTablesPanel,PFDPanel,PFIPanel, PDPanel, PIPanel };
-            ListLabels = new List<TextBlock> { HomeLabel, LoadFilesLabel, ListLabel, MapLabel, Precision,UpdateRate , HelpLabel, LoadADSBMLATLabel, LoadDGPSMLATLabel,PFD,PFI ,ProbabilityDetection, PI };
+            ActiveButtons = new List<System.Windows.Controls.Image> { HomeIco2, LoadIco2, ListIco2,URIco2,PrecissionIco2,PFDIco2,PFIIco2 ,MapIco2, ExportIco2,ExportAccuIco2, HelpIco2,DGPSIco2, ADSBIco2,PDIco2,PIIco2,PrecissionChartsIco2};
+            UnActiveButtons = new List<System.Windows.Controls.Image> { HomeIco1, LoadIco1, ListIco1, URIco,PrecisionIco,MapIco1, HelpIco1, DGPSIco1, ADSBIco1, ExportIco,ExportAccuIco,PFDIco,PFIIco,PDIco,PIIco,PrecisionChartsIco};
+            ListPanels = new List<Border> { HomePanel, LoadPanel, ListPanel, PrecissionPanel, URPanel, MapPanel, HelpPanel, LoadADSBMLATPanel, LoadMLATDGPSPanel,ExportAccuracyPanel,ExportTablesPanel,PFDPanel,PFIPanel, PDPanel, PIPanel, PrecisionChartsPanel };
+            ListLabels = new List<TextBlock> { HomeLabel, LoadFilesLabel, ListLabel, MapLabel, Precision,UpdateRate , HelpLabel, LoadADSBMLATLabel, LoadDGPSMLATLabel,PFD,PFI ,ProbabilityDetection, PI ,PrecisionCharts};
             this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
             Archivo.data.CreatePDTable();
             Archivo.data.CreatePrecissionTable();
+            Archivo.data.CreateUPTable();
+            Archivo.data.CreatePFITable();
+            Archivo.data.CreatePFDTable();
+            Archivo.data.CreatePITable();
+
             PD = Archivo.data.PD;
             Precission = Archivo.data.parameters;
+            UP = Archivo.data.UP;
+            PFITable = Archivo.data.PFI;
+            PFDTable = Archivo.data.PFD;
+            PITable = Archivo.data.PI;
+
         }
 
         private void Main_Load(object sender, RoutedEventArgs e)
@@ -297,6 +310,23 @@ namespace PGTAWPF
         }
 
 
+        private void activeSeePrecisionChartsbutton()
+        {
+            DisableButtons();
+            ListLabel.TextAlignment = TextAlignment.Right;
+            PrecisionCharts.TextAlignment = TextAlignment.Right;
+            PrecisionChartsIco.Visibility = Visibility.Collapsed;
+            PrecissionChartsIco2.Visibility = Visibility.Visible;
+            ListIco1.Visibility = Visibility.Collapsed;
+            ListIco2.Visibility = Visibility.Visible;
+            ListPanel.Background = new SolidColorBrush(RGBColors.color3);
+            FormTitle.Text = "Results";
+            FormTitle.Foreground = new SolidColorBrush(RGBColors.color3);
+            ListLabel.Foreground = new SolidColorBrush(RGBColors.color3);
+            PrecisionCharts.Foreground = new SolidColorBrush(RGBColors.color3);
+            FormIco.Source = new BitmapImage(new Uri(@"images/Lista Color.png", UriKind.Relative));
+        }
+
 
         private void PrecisIonclick(object sender, MouseButtonEventArgs e)
         {
@@ -311,13 +341,16 @@ namespace PGTAWPF
         {
             activeSeeURbutton();
             ViewPrecission view = new ViewPrecission();
-            view.GetData(PD);
+            view.GetData(UP);
             PanelChildForm.Navigate(view);
         }
 
         private void PDClick(object sender, MouseButtonEventArgs e)
         {
             activeSeePDbutton();
+            ViewPrecission view = new ViewPrecission();
+            view.GetData(PD);
+            PanelChildForm.Navigate(view);
         }
 
         private void PFDClick(object sender, MouseButtonEventArgs e)
@@ -339,6 +372,9 @@ namespace PGTAWPF
         private void PIClick(object sender, MouseButtonEventArgs e)
         {
             activeSeePIbutton();
+            ViewPrecission view = new ViewPrecission();
+            view.GetData(PITable);
+            PanelChildForm.Navigate(view);
         }
 
         private void ExportClick(object sender, MouseButtonEventArgs e)
@@ -350,23 +386,21 @@ namespace PGTAWPF
         {
             ExportTable();
         }
-
-        private void activeExportbutton()
+        
+        AccuracyCharts chartsPage; 
+        private void PrecisionChartsclick(object sender, MouseButtonEventArgs e)
         {
-            DisableButtons();
-            ListLabel.HorizontalAlignment = HorizontalAlignment.Right;
-            ExportLabel.HorizontalAlignment = HorizontalAlignment.Right;
-            ExportIco.Visibility = Visibility.Hidden;
-            ExportIco2.Visibility = Visibility.Visible;
-            ListIco1.Visibility = Visibility.Hidden;
-            ListIco2.Visibility = Visibility.Visible;
-            ListPanel.Background = new SolidColorBrush(RGBColors.color3);
-            FormTitle.Text = "Export Results";
-            FormTitle.Foreground = new SolidColorBrush(RGBColors.color3);
-            ListLabel.Foreground = new SolidColorBrush(RGBColors.color3);
-            ExportLabel.Foreground = new SolidColorBrush(RGBColors.color3);
-            FormIco.Source = new BitmapImage(new Uri(@"images/Lista Color.png", UriKind.Relative));
+            activeSeePrecisionChartsbutton();
+            if (chartsPage == null)
+            {
+                chartsPage = new AccuracyCharts();
+                chartsPage.GetValues(Archivo.data.PrecissionPoints);
+            }
+            PanelChildForm.Navigate(chartsPage);
+
         }
+
+
 
         private void ExportResults()
         {
@@ -414,12 +448,18 @@ namespace PGTAWPF
 
                     StringBuilder sb = new StringBuilder();
                     StringBuilder ColumnsNames = new StringBuilder();
-                 //   string Heather = "Precision;;;;;;, , , , , , , , UP & PD";
-           //         sb.AppendLine(Heather);
+                    //   string Heather = "Precision;;;;;;, , , , , , , , UP & PD";
+                    //         sb.AppendLine(Heather);
                     foreach (DataColumn col in Precission.Columns)
                     {
                             string Name = col.ColumnName.Replace('\n', ' ');
                             ColumnsNames.Append(Name + ";");                      
+                    }
+                    ColumnsNames.Append(";");
+                    foreach (DataColumn col in UP.Columns)
+                    {
+                        string Name = col.ColumnName.Replace('\n', ' ');
+                        ColumnsNames.Append(Name + ";");
                     }
                     ColumnsNames.Append(";");
                     foreach (DataColumn col in PD.Columns)
@@ -429,6 +469,12 @@ namespace PGTAWPF
                     }
                     ColumnsNames.Append(";");
                     foreach (DataColumn col in PFDTable.Columns)
+                    {
+                        string Name = col.ColumnName.Replace('\n', ' ');
+                        ColumnsNames.Append(Name + ";");
+                    }
+                    ColumnsNames.Append(";");
+                    foreach (DataColumn col in PITable.Columns)
                     {
                         string Name = col.ColumnName.Replace('\n', ' ');
                         ColumnsNames.Append(Name + ";");
@@ -450,16 +496,28 @@ namespace PGTAWPF
                         {
                             DataRow row = Precission.Rows[i];
                             string data = row[column].ToString();
+                            data = ReturnCorrectData(data);
                             data = data.Replace(",", ".");
                             RowData.Append(data);
                             RowData.Append(";");
 
                         }
                         RowData.Append(";");
+                        foreach (DataColumn column in UP.Columns)
+                        {
+                            DataRow row = UP.Rows[i];
+                            string data = row[column].ToString();
+                            data = ReturnCorrectData(data);
+                            data = data.Replace(",", ".");
+                            RowData.Append(data);
+                            RowData.Append(";");
+                        }
+                        RowData.Append(";");
                         foreach (DataColumn column in PD.Columns)
                         {
                             DataRow row = PD.Rows[i];
                             string data = row[column].ToString();
+                            data = ReturnCorrectData(data);
                             data = data.Replace(",", ".");
                             RowData.Append(data);
                             RowData.Append(";");
@@ -469,16 +527,28 @@ namespace PGTAWPF
                         {
                             DataRow row = PFDTable.Rows[i];
                             string data = row[column].ToString();
+                            data = ReturnCorrectData(data);
                             data = data.Replace(",", ".");
                             RowData.Append(data);
                             RowData.Append(";");
 
                         }
                         RowData.Append(";");
+                        foreach (DataColumn column in PITable.Columns)
+                        {
+                            DataRow row = PITable.Rows[i];
+                            string data = row[column].ToString();
+                            data = ReturnCorrectData(data);
+                            data = data.Replace(",", ".");
+                            RowData.Append(data);
+                            RowData.Append(";");
+                        }
+                        RowData.Append(";");
                         foreach (DataColumn column in PFITable.Columns)
                         {
                             DataRow row = PFITable.Rows[i];
                             string data = row[column].ToString();
+                            data = ReturnCorrectData(data);
                             data = data.Replace(",", ".");
                             RowData.Append(data);
                             RowData.Append(";");
@@ -493,6 +563,15 @@ namespace PGTAWPF
                     Mouse.OverrideCursor = null;
                 }
             }
+        }
+
+        private string ReturnCorrectData(string data)
+        {
+            if (data.Length > 0 && data.Substring(0, 1) == "<")
+            {
+                data = data.Substring(1, data.Length - 1);
+            }
+            return data;
         }
 
         private void ExportTable()
@@ -601,6 +680,13 @@ namespace PGTAWPF
             newMap.Show();
         }
 
+        private void OpenChartsNewWindowClick(object sender, RoutedEventArgs e)
+        {
+            ChartsWindow newChart = new ChartsWindow();
+            newChart.GetArchivo(Archivo);
+            newChart.Show();
+        }
+
         private void InfoClick(object sender, MouseButtonEventArgs e)
         {
             ActiveInfoButton();
@@ -631,13 +717,18 @@ namespace PGTAWPF
             this.Archivo = file;
             Archivo.data.CreatePDTable();
             Archivo.data.CreatePrecissionTable();
+            Archivo.data.CreateUPTable();
             Archivo.data.CreatePFDTable();
             Archivo.data.CreatePFITable();
+            Archivo.data.CreatePITable();
             PD = Archivo.data.PD;
+            UP = Archivo.data.UP;
             Precission = Archivo.data.parameters;
             PFDTable = Archivo.data.PFD;
             PFITable = Archivo.data.PFI;
+            PITable = Archivo.data.PI;
             mapstarted = false;
+            chartsPage = null;
         }
 
 
@@ -678,14 +769,16 @@ namespace PGTAWPF
             this.WindowState = WindowState.Minimized;
         }
 
-
-
-        private void MapRioghtClick(object sender, MouseButtonEventArgs e)
+        private void MapRightClick(object sender, MouseButtonEventArgs e)
         {
-            
-            ContextMenu cm = this.FindResource("cmButton") as ContextMenu;
-            //b.IsEnabled = true;
-            //b.Visibility = Visibility.Visible;
+            ContextMenu cm = this.FindResource("cmButton") as ContextMenu;;
+            cm.PlacementTarget = sender as Button;
+            cm.IsOpen = true;
+        }
+
+        private void ChartsRightClick(object sender, MouseButtonEventArgs e)
+        {
+            ContextMenu cm = this.FindResource("cmButtonCharts") as ContextMenu; ;
             cm.PlacementTarget = sender as Button;
             cm.IsOpen = true;
         }

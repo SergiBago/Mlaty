@@ -7,14 +7,14 @@
     <framework targetVersion="4.7.2" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="Mlaty.exe.manifest" size="11966">
+    <dependentAssembly dependencyType="install" codebase="Mlaty.exe.manifest" size="13320">
       <assemblyIdentity name="Mlaty.exe" version="1.0.0.135" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="amd64" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>dJ96bMuTb0D1kpu2HgXBlt3NgqJkqp//NnHcU/wfzt4=</dsig:DigestValue>
+        <dsig:DigestValue>0BVG53dXX8HcQZEKDByZdlhhKSRH7PJPzdsp4IRbvHU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

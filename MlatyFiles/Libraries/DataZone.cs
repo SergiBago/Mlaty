@@ -38,6 +38,9 @@ namespace PGTA_WPF
         public int CorrectIdentification = 0;
         public int FalseIdentification = 0;
 
+        public int CorrectPI = 0;
+        public int IncorrectPI = 0;
+
         public DataZone(string name)
         {
             this.name = name;
@@ -71,8 +74,6 @@ namespace PGTA_WPF
         {
             ExpectedMessagesPD = 0;
             MissedMLATSPD = 0;
-            ExpectedMessagesUP = 0;
-            MissedMLATSUP = 0;
             expected_PDok = 0;
             PDwrong = 0;
             for (int i = 0; i < list.Count(); i++)
@@ -80,10 +81,20 @@ namespace PGTA_WPF
                 int e = list[i];
                 ExpectedMessagesPD += listzones[e].ExpectedMessagesPD;
                 MissedMLATSPD += listzones[e].MissedMLATSPD;
-                ExpectedMessagesUP += listzones[e].ExpectedMessagesUP;
-                MissedMLATSUP += listzones[e].MissedMLATSUP;
                 expected_PDok += listzones[e].expected_PDok;
                 PDwrong += listzones[e].PDwrong;
+            }
+        }
+
+        public void CreateTotalUP(int[] list, List<DataZone> listzones)
+        {
+            ExpectedMessagesUP = 0;
+            MissedMLATSUP = 0;
+            for (int i = 0; i < list.Count(); i++)
+            {
+                int e = list[i];
+                ExpectedMessagesUP += listzones[e].ExpectedMessagesUP;
+                MissedMLATSUP += listzones[e].MissedMLATSUP;
             }
         }
 
@@ -96,6 +107,19 @@ namespace PGTA_WPF
                 int e = list[i];
                 CorrectDetection += listzones[e].CorrectDetection;
                 FalseDetection += listzones[e].FalseDetection;
+            }
+        }
+
+
+        public void CreateTotalPI(int[] list, List<DataZone> listzones)
+        {
+            CorrectPI = 0;
+            IncorrectPI = 0;
+            for (int i = 0; i < list.Count(); i++)
+            {
+                int e = list[i];
+                CorrectPI += listzones[e].CorrectPI;
+                IncorrectPI += listzones[e].IncorrectPI;
             }
         }
 
@@ -113,7 +137,7 @@ namespace PGTA_WPF
 
 
 
-        public string GetUR()
+        public string GetUR(double min)
         {
             if (ExpectedMessagesUP == 0)
             {
@@ -121,7 +145,11 @@ namespace PGTA_WPF
             }
             else if (MissedMLATSUP != 0)
             {
-                double UR = (100 - ((100/Convert.ToDouble(ExpectedMessagesUP)) * Convert.ToDouble(MissedMLATSUP)));
+                double UR = 100-((Convert.ToDouble(MissedMLATSUP) / Convert.ToDouble(MissedMLATSUP + ExpectedMessagesUP)) * 100);
+                if (UR < min)
+                {
+                    return ("<" + String.Format("{0:0.00}", UR) + "%");
+                }
                 return (String.Format("{0:0.00}", UR) + "%");
             }
             else
@@ -130,7 +158,7 @@ namespace PGTA_WPF
             }
         }
 
-        public string GetPD() // ACABAR
+        public string GetPD(double min) // ACABAR
         {
             if (ExpectedMessagesPD == 0)
             {
@@ -138,8 +166,12 @@ namespace PGTA_WPF
             }
             else if (MissedMLATSPD != 0)
             {
-                double UR = (100 - ((100 / Convert.ToDouble(ExpectedMessagesPD)) * Convert.ToDouble(MissedMLATSPD)));
-                return (String.Format("{0:0.00}", UR) + "%");
+                double PD = 100-((Convert.ToDouble(MissedMLATSPD) / Convert.ToDouble(MissedMLATSPD + ExpectedMessagesPD)) * 100); 
+                if (PD/100 < min)
+                {
+                    return ("<"+String.Format("{0:0.00}", PD) + "%");
+                }
+                return (String.Format("{0:0.00}", PD) + "%");
             }
             else
             {
@@ -147,7 +179,7 @@ namespace PGTA_WPF
             }
         }
 
-        public string get95()
+        public string get95(double max95)
         {
             if (MLATPrecision.Count > 20)
             {
@@ -155,14 +187,31 @@ namespace PGTA_WPF
                 // int len = MLATPrecision.Count();
                 double pos = (MLATPrecision.Count() * 0.95);
                 int position = Convert.ToInt32(pos);
-                return (String.Format("{0:0.00}", MLATPrecision[position])+"m");
+                double press = MLATPrecision[position];
+                if (max95 > 0)
+                {
+                    if (press > max95)
+                    {
+                        return ("<"+String.Format("{0:0.00}", MLATPrecision[position]) + "m");
+                    }
+                    else
+                    {
+                        return (String.Format("{0:0.00}", MLATPrecision[position]) + "m");
+
+                    }
+                }
+                else
+                {
+                    return (String.Format("{0:0.00}", MLATPrecision[position]) + "m");
+
+                }
             }
             else
             {
                 return "Uncomputed";
             }
         }
-        public string get99()
+        public string get99(double max99)
         {
             if (MLATPrecision.Count > 100)
             {
@@ -170,8 +219,32 @@ namespace PGTA_WPF
                 // int len = MLATPrecision.Count();
                 double pos = (MLATPrecision.Count()  * 0.99);
                 int position = Convert.ToInt32(pos);
-                if (position == MLATPrecision.Count()) { return (String.Format("{0:0.00}", MLATPrecision[position-1]) + "m"); }
-                else { return (String.Format("{0:0.00}", MLATPrecision[position]) + "m"); }
+                double press = 0;
+                if (position == MLATPrecision.Count())
+                { 
+                    press = MLATPrecision[position - 1];
+                }
+                else
+                {
+                    press = MLATPrecision[position];
+                }
+                if(max99>0)
+                {
+                    if(press>max99)
+                    {
+                        return ("<"+String.Format("{0:0.00}", MLATPrecision[position]) + "m");
+
+                    }
+                    else
+                    {
+                        return (String.Format("{0:0.00}", MLATPrecision[position]) + "m");
+
+                    }
+                }
+                else 
+                {
+                    return (String.Format("{0:0.00}", MLATPrecision[position]) + "m");
+                }
             }
             else
             {
@@ -237,9 +310,9 @@ namespace PGTA_WPF
             }
         }
 
-        public string GetPFD()
+        public string GetPFD(double min)
         {
-            if (FalseDetection+CorrectDetection > 1)
+            if (FalseDetection+CorrectDetection > 0)
             {
                 if(FalseDetection == 0)
                 {
@@ -248,6 +321,10 @@ namespace PGTA_WPF
                 else
                 {
                     double prob = ((Convert.ToDouble(FalseDetection) / Convert.ToDouble(CorrectDetection+FalseDetection))*100);
+                    if(prob/100>min)
+                    {
+                        return $"<{String.Format("{0:0.00}", prob)} %";
+                    }
                     return $"{String.Format("{0:0.00}", prob)} %";
                 }
             }
@@ -257,9 +334,9 @@ namespace PGTA_WPF
             }
         }
 
-        public string GetPFI()
+        public string GetPFI(double minPFI)
         {
-            if (CorrectIdentification + FalseIdentification > 1)
+            if (CorrectIdentification + FalseIdentification > 0)
             {
                 if (FalseIdentification == 0)
                 {
@@ -268,6 +345,36 @@ namespace PGTA_WPF
                 else
                 {
                     double prob = ((Convert.ToDouble(FalseIdentification) / Convert.ToDouble(CorrectIdentification + FalseIdentification)) * 100);
+                    if(prob/100<minPFI)
+                    {
+                        return $"<{String.Format("{0:0.00}", prob)} %";
+
+                    }
+                    return $"{String.Format("{0:0.00}", prob)} %";
+                }
+            }
+            else
+            {
+                return "Uncomputed";
+            }
+        }
+
+        public string GetPI(double minPI)
+        {
+            if (CorrectPI + IncorrectPI > 0)
+            {
+                if (IncorrectPI == 0)
+                {
+                    return ("100 %");
+                }
+                else
+                {
+                    double prob = ((Convert.ToDouble(CorrectPI) / Convert.ToDouble(CorrectPI + IncorrectPI)) * 100);
+                    if(prob/100<minPI)
+                    {
+                        return $"<{String.Format("{0:0.00}", prob)} %";
+
+                    }
                     return $"{String.Format("{0:0.00}", prob)} %";
                 }
             }

@@ -1,4 +1,5 @@
-﻿using PGTAWPF;
+﻿using Mlaty;
+using PGTAWPF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,8 @@ namespace PGTA_WPF
     public partial class MessageboxYesNo : Window
     {
 
-        MainWindow Form = new MainWindow();
+        MainWindow Form;
+        AccuracyCharts chartsPage;
         public MessageboxYesNo()
         {
             InitializeComponent();
@@ -32,21 +34,49 @@ namespace PGTA_WPF
             this.Form = form;
         }
 
+        public void getChartsPage(AccuracyCharts form)
+        {
+            this.chartsPage= form;
+        }
+
         private void CancelClick(object sender, RoutedEventArgs e)
         {
-            Form.getaction(false);
+            if (Form != null)
+            {
+                Form.getaction(false);
+            }
+            else
+            {
+                chartsPage.getaction(false);
+            }
             this.Close();
         }
 
         private void CalculateClick(object sender, RoutedEventArgs e)
         {
-            Form.getaction(true);
+            if (Form != null)
+            {
+                Form.getaction(true);
+            }
+            else
+            {
+                chartsPage.getaction(true);
+
+            }
             this.Close();
         }
 
         private void CancelClick(object sender, MouseButtonEventArgs e)
         {
-            Form.getaction(false);
+            if (Form != null)
+            {
+                Form.getaction(false);
+            }
+            else
+            {
+                chartsPage.getaction(false);
+
+            }
             this.Close();
         }
 

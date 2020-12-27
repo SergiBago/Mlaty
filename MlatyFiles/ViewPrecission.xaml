@@ -7,6 +7,9 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ViewPrecission">
+    <!--<Page.Resources>
+        <local:NameToBrushConverter x:Key="NameToBrushConverter"/>
+    </Page.Resources>-->
 
     <Grid  x:Name="Grid" Background="#FF464646" Loaded="ViewLoaded">
         <Grid.ColumnDefinitions>
@@ -15,7 +18,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <DataGrid Grid.Row="0" Margin="0,15,0,0" Grid.Column="0" HorizontalAlignment="Center" EnableRowVirtualization="True" VerticalGridLinesBrush="#404040" x:Name="DatagridView"   SelectionUnit="FullRow" Background="#FF464646" FontFamily="Microsoft Tai Le" FontSize="14" Cursor="Arrow" HeadersVisibility="Column" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" BorderBrush="{x:Null}" Foreground="#FFFAF8D4">
+        <DataGrid Grid.Row="0" Margin="0,15,0,0" Grid.Column="0" VirtualizingStackPanel.IsVirtualizing="False" HorizontalAlignment="Center" EnableRowVirtualization="False" VerticalGridLinesBrush="#404040" x:Name="DatagridView"   SelectionUnit="FullRow" Background="#FF464646" FontFamily="Microsoft Tai Le" FontSize="14" Cursor="Arrow" HeadersVisibility="Column" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" BorderBrush="{x:Null}" Foreground="#FFFAF8D4">
             <DataGrid.CellStyle>
                 <Style TargetType="DataGridCell" >
                     <Setter Property="Foreground" Value="#FFFAF8D4"/>
@@ -43,7 +46,13 @@
                     </Style.Triggers>-->
                 </Style>
             </DataGrid.CellStyle>
-
+            <!--<DataGridTextColumn Binding="{Binding Name}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Background" Value="{Binding Name, Converter={StaticResource NameToBrushConverter}}"/>
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>-->
             <DataGrid.Resources>
                 <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}" >
                     <Setter Property="Background" Value="#282828"/>

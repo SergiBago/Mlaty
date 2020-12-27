@@ -113,3 +113,14 @@ C:\Users\Sergi\Desktop\Mlaty\MlatyFiles\obj\Debug\Mlaty.csproj.CopyComplete
 C:\Users\Sergi\Desktop\Mlaty\MlatyFiles\obj\Debug\Mlaty.exe
 C:\Users\Sergi\Desktop\Mlaty\MlatyFiles\obj\Debug\Mlaty.pdb
 C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\obj\Debug\App.baml
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\obj\Debug\AccuracyCharts.g.cs
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\obj\Debug\AccuracyCharts.baml
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\bin\Debug\LiveCharts.dll
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\bin\Debug\LiveCharts.Wpf.dll
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\bin\Debug\LiveCharts.pdb
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\bin\Debug\LiveCharts.xml
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\bin\Debug\LiveCharts.Wpf.pdb
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\bin\Debug\LiveCharts.Wpf.xml
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\obj\Debug\ChartsWindow.g.cs
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\obj\Debug\ChartsWindow.baml

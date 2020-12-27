@@ -98,6 +98,12 @@
     <Reference Include="GMap.NET.WindowsPresentation, Version=1.7.0.0, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
       <HintPath>..\packages\GMap.Net.WPF.1.0.0.1\lib\GMap.NET.WindowsPresentation.dll</HintPath>
     </Reference>
+    <Reference Include="LiveCharts, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiveCharts.0.9.7\lib\net45\LiveCharts.dll</HintPath>
+    </Reference>
+    <Reference Include="LiveCharts.Wpf, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiveCharts.Wpf.0.9.7\lib\net45\LiveCharts.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -131,6 +137,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AccuracyCharts.xaml.cs">
+      <DependentUpon>AccuracyCharts.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Libraries\ControlsClass.cs" />
     <Compile Include="Libraries\GeneralMatrix.cs" />
     <Compile Include="Libraries\GeoUtils.cs" />
     <Compile Include="Info.xaml.cs">
@@ -151,6 +161,9 @@
     </Compile>
     <Compile Include="Libraries\Ficheros.cs" />
     <Compile Include="Libraries\LibreriaDecodificacion.cs" />
+    <Compile Include="ChartsWindow.xaml.cs">
+      <DependentUpon>ChartsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MapWindow.xaml.cs">
       <DependentUpon>MapWindow.xaml</DependentUpon>
     </Compile>
@@ -169,6 +182,10 @@
       <DependentUpon>ViewPrecission.xaml</DependentUpon>
     </Compile>
     <Compile Include="Libraries\Zonas.cs" />
+    <Page Include="AccuracyCharts.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Info.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -184,6 +201,10 @@
     <Page Include="Intro.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChartsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="MapWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -325,6 +346,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="images\Error.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\SaveIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\SaveBlackIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
