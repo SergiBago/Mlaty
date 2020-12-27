@@ -172,7 +172,9 @@ namespace Mlaty
             };
             LiveChartScatter.DisableAnimations = true;
             LiveChartScatter.Hoverable = false;
-            LiveChartScatter.DataTooltip = null;
+            //  var tooltip = (LiveCharts.Defaults.t)LiveChartScatter.DataTooltip;
+           // LiveChartScatter.DataTooltip.Visibility = Visibility.Collapsed;// LiveCharts.TooltipSelectionMode.OnlySender;
+            LiveChartScatter.DataTooltip =null;
             LiveChartScatter.Zoom = ZoomingOptions.Xy;
             LiveChartScatter.LegendLocation = LegendLocation.Right;
             LiveChartScatter.ChartLegend.Foreground = new SolidColorBrush(Color.FromArgb(255, (byte)249, (byte)249, (byte)249));
@@ -991,6 +993,19 @@ namespace Mlaty
                     }
                     Circle40mSeries.Visibility = Visibility.Collapsed;
                 }
+            }
+        }
+
+        private void Resize(object sender, SizeChangedEventArgs e)
+        {
+            UpdateLayout();            
+            if (PageScrollViewer.ComputedVerticalScrollBarVisibility == Visibility.Visible && PageScrollViewer.ComputedHorizontalScrollBarVisibility == Visibility.Visible)
+            {
+                ScrollBorder.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                ScrollBorder.Visibility = Visibility.Collapsed;
             }
         }
     }

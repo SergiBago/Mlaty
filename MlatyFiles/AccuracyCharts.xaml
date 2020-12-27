@@ -9,7 +9,7 @@
       d:DesignHeight="1200" d:DesignWidth="1700"
       Title="AccuracyCharts" >
 
-    <Grid  x:Name="Grid" Background="#FF464646" Loaded="ChartsPageLoaded">
+    <Grid  x:Name="Grid" Background="#FF464646" Loaded="ChartsPageLoaded" SizeChanged="Resize">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
@@ -19,7 +19,8 @@
         <ScrollViewer VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Auto"
                       Grid.Column="0"
-                      Grid.Row="0">
+                      Grid.Row="0"
+                      x:Name="PageScrollViewer" >
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <StackPanel Orientation="Vertical">
                     <TextBlock  Text="HORIZONTAL ERROR OF MLAT MESSAGES" Foreground="White" FontFamily="Microsoft Sans Serif" HorizontalAlignment="Center" FontSize="28" Margin="20,5,20,0"></TextBlock>
@@ -92,5 +93,7 @@
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
+        <Border x:Name="ScrollBorder" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="#FF464646" Width="20" Height="20"/>
+
     </Grid>
 </Page>

@@ -122,6 +122,7 @@ namespace PGTAWPF
             public static Color color5 = Color.FromRgb(194, 184, 178);
             public static Color color6 = Color.FromRgb(70, 70, 70);
             public static Color color7 = Color.FromRgb(255, 255, 255);
+            public static Color color8 = Color.FromRgb(200, 240, 200);
 
         }
 
@@ -313,18 +314,18 @@ namespace PGTAWPF
         private void activeSeePrecisionChartsbutton()
         {
             DisableButtons();
-            ListLabel.TextAlignment = TextAlignment.Right;
+           // ListLabel.TextAlignment = TextAlignment.Right;
             PrecisionCharts.TextAlignment = TextAlignment.Right;
             PrecisionChartsIco.Visibility = Visibility.Collapsed;
             PrecissionChartsIco2.Visibility = Visibility.Visible;
-            ListIco1.Visibility = Visibility.Collapsed;
-            ListIco2.Visibility = Visibility.Visible;
-            ListPanel.Background = new SolidColorBrush(RGBColors.color3);
-            FormTitle.Text = "Results";
-            FormTitle.Foreground = new SolidColorBrush(RGBColors.color3);
-            ListLabel.Foreground = new SolidColorBrush(RGBColors.color3);
-            PrecisionCharts.Foreground = new SolidColorBrush(RGBColors.color3);
-            FormIco.Source = new BitmapImage(new Uri(@"images/Lista Color.png", UriKind.Relative));
+            // ListIco1.Visibility = Visibility.Collapsed;
+            // ListIco2.Visibility = Visibility.Visible;
+            PrecisionChartsPanel.Background = new SolidColorBrush(RGBColors.color8);
+            FormTitle.Text = "Accuracy Chart";
+            FormTitle.Foreground = new SolidColorBrush(RGBColors.color8);
+         //   ListLabel.Foreground = new SolidColorBrush(RGBColors.color3);
+            PrecisionCharts.Foreground = new SolidColorBrush(RGBColors.color8);
+            FormIco.Source = new BitmapImage(new Uri(@"images/ChartIco2.png", UriKind.Relative));
         }
 
 
@@ -673,6 +674,53 @@ namespace PGTAWPF
             FormIco.Source = new BitmapImage(new Uri(@"images/MapColor.png", UriKind.Relative));
         }
 
+
+        private void MapRightClick(object sender, MouseButtonEventArgs e)
+        {
+            ContextMenu cm = this.FindResource("cmButton") as ContextMenu; ;
+            cm.PlacementTarget = sender as Button;
+            cm.IsOpen = true;
+        }
+
+        private void ChartsRightClick(object sender, MouseButtonEventArgs e)
+        {
+            ContextMenu cm = this.FindResource("cmButtonCharts") as ContextMenu; ;
+            cm.PlacementTarget = sender as Button;
+            cm.IsOpen = true;
+        }
+
+        private void TablesRightClick(object sender, MouseButtonEventArgs e)
+        {
+            string name = (sender as StackPanel).Name;
+            if (name == "PrecisionStackPanel")
+            {
+                NewWindowTable = Precission;
+            }
+            else if(name=="URStackPanel")
+            {
+                NewWindowTable = UP;
+            }
+            else if (name == "PDStackPanel")
+            {
+                NewWindowTable = PD;
+            }
+            else if (name == "PFDStackPanel")
+            {
+                NewWindowTable = PFDTable;
+            }
+            else if (name == "PIStackPanel")
+            {
+                NewWindowTable = PITable;
+            }
+            else if (name == "PFIStackPanel")
+            {
+                NewWindowTable = PFITable;
+            }
+            ContextMenu cm = this.FindResource("cmButtonTables") as ContextMenu; ;
+            cm.PlacementTarget = sender as Button;
+            cm.IsOpen = true;
+        }
+
         private void OpenMapNewWindowClick(object sender, RoutedEventArgs e)
         {
             MapWindow newMap = new MapWindow();
@@ -685,6 +733,14 @@ namespace PGTAWPF
             ChartsWindow newChart = new ChartsWindow();
             newChart.GetArchivo(Archivo);
             newChart.Show();
+        }
+
+        DataTable NewWindowTable = new DataTable();
+        private void OpenTablesNewWindowClick(object sender, RoutedEventArgs e)
+        {
+            ViewTablesWindow newTables = new ViewTablesWindow();
+            newTables.GetArchivo(NewWindowTable);
+            newTables.Show();
         }
 
         private void InfoClick(object sender, MouseButtonEventArgs e)
@@ -767,20 +823,6 @@ namespace PGTAWPF
         private void Minimize_click(object sender, MouseButtonEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
-        }
-
-        private void MapRightClick(object sender, MouseButtonEventArgs e)
-        {
-            ContextMenu cm = this.FindResource("cmButton") as ContextMenu;;
-            cm.PlacementTarget = sender as Button;
-            cm.IsOpen = true;
-        }
-
-        private void ChartsRightClick(object sender, MouseButtonEventArgs e)
-        {
-            ContextMenu cm = this.FindResource("cmButtonCharts") as ContextMenu; ;
-            cm.PlacementTarget = sender as Button;
-            cm.IsOpen = true;
         }
 
 

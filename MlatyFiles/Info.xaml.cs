@@ -36,6 +36,7 @@ namespace PGTA_WPF
 
         private void Resize(object sender, SizeChangedEventArgs e)
         {
+
             Label.Width = Column.ActualWidth - 100;
         }
     }

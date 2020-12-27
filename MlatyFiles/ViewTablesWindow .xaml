@@ -1,11 +1,11 @@
-﻿<Window x:Class="PGTAWPF.ChartsWindow"
+﻿<Window x:Class="PGTAWPF.ViewTablesWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PGTAWPF"
         mc:Ignorable="d"
-        Title="Accuracy Chart" Height="740" Width="1300" Background="#FF323232"  MinHeight="700" MinWidth="650" WindowStyle="None" BorderBrush="Black" OpacityMask="Black" Loaded="WindowLoad">
+        Title="Table" Height="740" Width="1300" Background="#FF323232"  MinHeight="700" MinWidth="650" WindowStyle="None" BorderBrush="Black" OpacityMask="Black" Loaded="WindowLoad">
     <Window.Resources>
         <!--<BitmapImage x:Key="FletchaBlanca" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="C:\Users\Sergi\Desktop\PGTAWPF\PGTAWPF\Flecha Blanca.png"/>-->
     </Window.Resources>

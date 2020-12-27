@@ -351,5 +351,26 @@ namespace PGTAWPF
             }).Start();
             //Archivo.ComputeValues(LoadFilesList);
         }
+
+        private void Resize(object sender, SizeChangedEventArgs e)
+        {
+            UpdateLayout();
+            if (this.ActualWidth < 1050)
+            {
+                PageGrid.MaxWidth = 850;
+            }
+            else
+            {
+                PageGrid.MaxWidth = this.ActualWidth - 200;
+            }
+            if (PageScrollViewer.ComputedVerticalScrollBarVisibility == Visibility.Visible && PageScrollViewer.ComputedHorizontalScrollBarVisibility == Visibility.Visible)
+            {
+                ScrollBorder.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                ScrollBorder.Visibility = Visibility.Collapsed;
+            }
+        }
     }
 }

@@ -52,6 +52,9 @@
         <ContextMenu x:Key="cmButtonCharts"   Background="#FF282828" >
             <MenuItem Header="Open in new Window" Foreground="#FFF9F9F9"  Background="#FF282828" Click="OpenChartsNewWindowClick"  Cursor="Hand" Focusable="False" FontFamily="Microsoft Sans Serif" FontSize="13"  />
         </ContextMenu>
+        <ContextMenu x:Key="cmButtonTables"   Background="#FF282828" >
+            <MenuItem Header="Open in new Window" Foreground="#FFF9F9F9"  Background="#FF282828" Click="OpenTablesNewWindowClick"  Cursor="Hand" Focusable="False" FontFamily="Microsoft Sans Serif" FontSize="13"  />
+        </ContextMenu>
         <Button x:Key="Button" Background="#FF282828" >
             <TextBlock Text="Open in new window" FontFamily="Microsoft Sans Serif" FontSize="15" />
         </Button>
@@ -86,7 +89,7 @@
         <Border Background="#464646" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Grid.RowSpan="3" />
         <Border Background="#191919" Grid.Column="2" Grid.Row="2" Grid.RowSpan="14"/>
 
-        <Frame x:Name="PanelChildForm" Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="11" Grid.RowSpan="16" Background="#FFFDF9F9" ContentRendered="PanelChildForm_ContentRendered" />
+        <Frame x:Name="PanelChildForm" Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="11" Grid.RowSpan="16" Background="Black" ContentRendered="PanelChildForm_ContentRendered" />
         <TextBlock x:Name="FormTitle" Text="Home" Grid.Column="6" Grid.Row="0" FontFamily="Microsoft YaHei" FontSize="20" Padding="6,7,0,0" FontStyle="Italic" Foreground="#FFC2B8B2"/>
         <Image x:Name="FormIco" Source="images/Casa Color.png" Height="30" Grid.Column="5" Grid.Row="0" Margin="0,5"/>
         <Image x:Name="CloseButton" Source="images/Close.png" Grid.Column="12" Grid.Row="0" Cursor="Hand" MouseLeftButtonUp="Close_click" />
@@ -135,49 +138,44 @@
                         <TextBlock Grid.Row="6" Grid.Column="3" x:Name="ListLabel" Text="Results" Width="135" FontFamily="Microsoft YaHei" FontSize="20" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0" Padding="0,30,0,0"  Cursor="Hand"  />
                         <Image x:Name="ListIco2" Visibility="Hidden" Grid.Column="4" Grid.Row="6" Height="45" Source="images/Lista Color.png" Margin="0,17,10,17" />
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Cursor="Hand" MouseLeftButtonUp="PrecisIonclick">
+                    <StackPanel x:Name="PrecisionStackPanel" Orientation="Horizontal" Cursor="Hand" MouseLeftButtonUp="PrecisIonclick" MouseRightButtonUp="TablesRightClick">
                         <Border Width="10" x:Name="PrecissionPanel"/>
                         <Image x:Name="PrecisionIco" Grid.Column="2" Grid.Row="7" Height="20"    Cursor="Hand" Margin="0,15" Source="images/Flecha Blanca.png"/>
                         <TextBlock Grid.Row="7" Grid.Column="3" x:Name="Precision" Text="Accuracy" Width="155" FontFamily="Microsoft YaHei" FontSize="16" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0" Padding="0,14,0,0"   Cursor="Hand"/>
                         <Image x:Name="PrecissionIco2" Source="images/Flecha Color.png" Visibility="Hidden"  Grid.Column="4" Grid.Row="7" Height="20"   Cursor="Hand" Margin="0,15"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Cursor="Hand" MouseLeftButtonUp="PrecisionChartsclick"  MouseRightButtonUp="ChartsRightClick">
-                        <Border Width="10" x:Name="PrecisionChartsPanel"/>
-                        <Image x:Name="PrecisionChartsIco" Grid.Column="2" Grid.Row="7" Height="20"    Cursor="Hand" Margin="0,15" Source="images/Flecha Blanca.png"/>
-                        <TextBlock Grid.Row="7" Grid.Column="3" x:Name="PrecisionCharts" Text="Accuracy Charts" Width="155" FontFamily="Microsoft YaHei" FontSize="16" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0" Padding="0,14,0,0"   Cursor="Hand"/>
-                        <Image x:Name="PrecissionChartsIco2" Source="images/Flecha Color.png" Visibility="Hidden"  Grid.Column="4" Grid.Row="7" Height="20"   Cursor="Hand" Margin="0,15"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Cursor="Hand" MouseLeftButtonUp="UpdateRateClick">
+
+                    <StackPanel x:Name="URStackPanel" Orientation="Horizontal" Cursor="Hand" MouseLeftButtonUp="UpdateRateClick" MouseRightButtonUp="TablesRightClick">
                         <Border Width="10" x:Name="URPanel"/>
                         <Image x:Name="URIco" Grid.Column="2" Grid.Row="8" Height="20"   Cursor="Hand" Margin="0,15" Source="images/Flecha Blanca.png"/>
                         <TextBlock Grid.Row="8" Grid.Column="3" x:Name="UpdateRate" Text="Update Rate" Width="155" FontFamily="Microsoft YaHei" FontSize="16" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0" Padding="0,14,0,0"    Cursor="Hand"/>
                         <Image x:Name="URIco2"  Source="images/Flecha Color.png" Visibility="Hidden" Grid.Column="4" Grid.Row="8" Height="20"   Cursor="Hand" Margin="0,15"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Cursor="Hand" MouseLeftButtonUp="PDClick">
+                    <StackPanel x:Name="PDStackPanel" Orientation="Horizontal" Cursor="Hand" MouseLeftButtonUp="PDClick" MouseRightButtonUp="TablesRightClick">
                         <Border Width="10" x:Name="PDPanel"/>
                         <Image x:Name="PDIco" Grid.Column="2" Grid.Row="8" Height="20"   Cursor="Hand" Margin="0,15" Source="images/Flecha Blanca.png"/>
                         <TextBlock Grid.Row="8" Grid.Column="3" x:Name="ProbabilityDetection" Text="Prob. of Detection" Width="155" FontFamily="Microsoft YaHei" FontSize="16" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0" Padding="0,14,0,0"    Cursor="Hand"/>
                         <Image x:Name="PDIco2"  Source="images/Flecha Color.png" Visibility="Hidden" Grid.Column="4" Grid.Row="8" Height="20"   Cursor="Hand" Margin="0,15"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Cursor="Hand" MouseLeftButtonUp="PFDClick">
+                    <StackPanel x:Name="PFDStackPanel" Orientation="Horizontal" Cursor="Hand" MouseLeftButtonUp="PFDClick" MouseRightButtonUp="TablesRightClick">
                         <Border Width="10" x:Name="PFDPanel"/>
                         <Image x:Name="PFDIco" Grid.Column="2" Grid.Row="9" Height="20"    Cursor="Hand" Margin="0,15" Source="images/Flecha Blanca.png"/>
                         <TextBlock Grid.Row="9" Grid.Column="3" x:Name="PFD" Text="PFD" Width="155" FontFamily="Microsoft YaHei" FontSize="16" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0" Padding="0,14,0,0"   Cursor="Hand"/>
                         <Image x:Name="PFDIco2" Source="images/Flecha Color.png" Visibility="Hidden"  Grid.Column="4" Grid.Row="9" Height="20"   Cursor="Hand" Margin="0,15"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Cursor="Hand" MouseLeftButtonUp="PIClick">
+                    <StackPanel x:Name="PIStackPanel" Orientation="Horizontal" Cursor="Hand" MouseLeftButtonUp="PIClick" MouseRightButtonUp="TablesRightClick">
                         <Border Width="10" x:Name="PIPanel" />
                         <Image x:Name="PIIco" Grid.Column="2" Grid.Row="10" Height="20"   Cursor="Hand" Margin="0,15" Source="images/Flecha Blanca.png"/>
                         <TextBlock Grid.Row="10" Grid.Column="3" x:Name="PI" Text="Prob. Identification" Width="155" FontFamily="Microsoft YaHei" FontSize="16" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0" Padding="0,14,0,0"    Cursor="Hand"/>
                         <Image x:Name="PIIco2"  Source="images/Flecha Color.png" Visibility="Hidden" Grid.Column="4" Grid.Row="10" Height="20"   Cursor="Hand" Margin="0,15"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Cursor="Hand" MouseLeftButtonUp="PFIClick">
+                    <StackPanel x:Name="PFIStackPanel" Orientation="Horizontal" Cursor="Hand" MouseLeftButtonUp="PFIClick" MouseRightButtonUp="TablesRightClick">
                         <Border Width="10" x:Name="PFIPanel" />
                         <Image x:Name="PFIIco" Grid.Column="2" Grid.Row="10" Height="20"   Cursor="Hand" Margin="0,15" Source="images/Flecha Blanca.png"/>
                         <TextBlock Grid.Row="10" Grid.Column="3" x:Name="PFI" Text="PFI" Width="155" FontFamily="Microsoft YaHei" FontSize="16" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0" Padding="0,14,0,0"    Cursor="Hand"/>
                         <Image x:Name="PFIIco2"  Source="images/Flecha Color.png" Visibility="Hidden" Grid.Column="4" Grid.Row="10" Height="20"   Cursor="Hand" Margin="0,15"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Cursor="Hand" MouseLeftButtonUp="ExportClick">
+                    <StackPanel Orientation="Horizontal" Cursor="Hand" MouseLeftButtonUp="ExportClick" >
                         <Border Width="10" x:Name="ExportTablesPanel"/>
                         <Image x:Name="ExportIco" Grid.Column="2" Grid.Row="11" Height="20"   Cursor="Hand" Margin="0,15" Source="images/Flecha Blanca.png"/>
                         <TextBlock Grid.Row="11" Grid.Column="3" x:Name="ExportLabel" Text="Export Tables" FontFamily="Microsoft YaHei" FontSize="16" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0" Padding="0,14,0,0"    Cursor="Hand"/>
@@ -189,9 +187,15 @@
                         <TextBlock Grid.Row="12" Grid.Column="3" x:Name="ExportAccuLabel" Text="Export Accuaracy val." FontFamily="Microsoft YaHei" FontSize="16" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0" Padding="0,14,0,0"    Cursor="Hand"/>
                         <Image x:Name="ExportAccuIco2"  Source="images/Flecha Color.png" Visibility="Hidden" Grid.Column="4" Grid.Row="12" Height="20"   Cursor="Hand" Margin="0,15"/>
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal" Cursor="Hand" MouseLeftButtonUp="PrecisionChartsclick"  MouseRightButtonUp="ChartsRightClick">
+                        <Border Width="10" x:Name="PrecisionChartsPanel"/>
+                        <Image x:Name="PrecisionChartsIco"  Height="50"    Cursor="Hand" Margin="0,15" Source="images/ChartIco.png"/>
+                        <TextBlock Grid.Row="7" Grid.Column="3" x:Name="PrecisionCharts" Text="Acc. Chart" Width="135" FontFamily="Microsoft YaHei" FontSize="20" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0" Padding="0,30,0,0"   Cursor="Hand"/>
+                        <Image x:Name="PrecissionChartsIco2" Source="images/ChartIco2.png" Visibility="Hidden"  Grid.Column="4" Grid.Row="7" Height="50"   Cursor="Hand" Margin="0,17,10,17"/>
+                    </StackPanel>
                     <StackPanel Orientation="Horizontal" Cursor="Hand" MouseLeftButtonUp="MapClick" MouseRightButtonUp="MapRightClick">
                         <Border Width="10" x:Name="MapPanel"/>
-                        <Image x:Name="MapIco1" Grid.Column="1" Grid.Row="13" Height="50" Grid.ColumnSpan="2" Source="images/Mapa Blanco.png"    Cursor="Hand" Margin="0,15"/>
+                        <Image x:Name="MapIco1" Height="50" Grid.ColumnSpan="2" Source="images/Mapa Blanco.png"    Cursor="Hand" Margin="0,15"/>
                         <TextBlock Grid.Row="13" Grid.Column="3" x:Name="MapLabel" Text="Map View" Width="135" FontFamily="Microsoft YaHei" FontSize="20" FontStyle="Italic" Foreground="#FFF9F9F9" HorizontalAlignment="Left" Margin="10,0" Padding="0,30,0,0"  Cursor="Hand"/>
                         <Image x:Name="MapIco2" Visibility="Hidden" Grid.Column="4" Grid.Row="13" Height="45"  Source="images/MapColor.png" Margin="0,17,10,17"  Cursor="Hand"/>
                     </StackPanel>
@@ -202,8 +206,9 @@
                         <Image x:Name="HelpIco2" Visibility="Hidden" Grid.Column="4" Grid.Row="14" Height="45"  Source="images/InfoColor.png" Margin="0,17,10,17"  Cursor="Hand"/>
                     </StackPanel>
                 </StackPanel>
-                <Border x:Name="PanelDisableButons" Grid.Column="0" Grid.Row="0" Background="#FF646464" Opacity="0.6" Visibility="Hidden"/>
             </Grid>
         </ScrollViewer>
+        <Border x:Name="PanelDisableButons" Grid.Column="0"  Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="2" Background="#FF646464" Opacity="0.6" Visibility="Hidden"/>
+
     </Grid>
 </Window>

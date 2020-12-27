@@ -164,6 +164,9 @@
     <Compile Include="ChartsWindow.xaml.cs">
       <DependentUpon>ChartsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewTablesWindow .xaml.cs">
+      <DependentUpon>ViewTablesWindow .xaml</DependentUpon>
+    </Compile>
     <Compile Include="MapWindow.xaml.cs">
       <DependentUpon>MapWindow.xaml</DependentUpon>
     </Compile>
@@ -203,6 +206,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ChartsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ViewTablesWindow .xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -352,6 +359,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="images\SaveBlackIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\ChartIco.png" />
+    <Resource Include="images\ChartIco2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
