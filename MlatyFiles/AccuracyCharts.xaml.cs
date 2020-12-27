@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -24,13 +25,15 @@ namespace Mlaty
     /// <summary>
     /// Lógica de interacción para AccuracyCharts.xaml
     /// </summary>
+    /// 
+    
+
     public partial class AccuracyCharts : Page
     {
         public AccuracyCharts()
         {
             InitializeComponent();
 
-            var r = new Random();
             Runway02 = new ChartValues<ObservablePoint>();
             Runway25L = new ChartValues<ObservablePoint>();
             Runway25R = new ChartValues<ObservablePoint>();
@@ -52,23 +55,23 @@ namespace Mlaty
             Circle40m = new ChartValues<ObservablePoint>();
 
 
+
+
             Runway02Series = new ScatterSeries
             {
                 Title = "Runway 02",
-                Width = 1,
 
                 Values = Runway02
             };
             Runway25LSeries = new ScatterSeries
             {
                 Title = "Runway 25L",
-                
+
                 Values = Runway25L
             };
             Runway25RSeries = new ScatterSeries
             {
                 Title = "Runway 25R",
-                Width = 1,
 
                 Values = Runway25R
             };
@@ -120,14 +123,14 @@ namespace Mlaty
             Airborne25R5Series = new ScatterSeries
             {
                 Title = "Airborne 25R 2.5-5NM",
-                MaxPointShapeDiameter=0.5,
+                MaxPointShapeDiameter = 0.5,
 
                 Values = Airborne25R5
             };
             Airborne25L5Series = new ScatterSeries
             {
                 Title = "Ariborne 25L 2.5-5NM",
-               
+
                 Values = Airborn25L5
             };
             Circle75mSeries = new LineSeries
@@ -142,13 +145,13 @@ namespace Mlaty
             };
             Circle12mSeries = new LineSeries
             {
-                Title= "Error < 12m",
-                StrokeThickness=2,
+                Title = "Error < 12m",
+                StrokeThickness = 2,
                 PointGeometry = DefaultGeometries.None,
 
                 Stroke = new SolidColorBrush(Color.FromArgb(255, (byte)180, (byte)0, (byte)0)),
                 Fill = new SolidColorBrush(Color.FromArgb(10, (byte)255, (byte)0, (byte)0)),
-                Values =Circle12m
+                Values = Circle12m
             };
 
             Circle20mSeries = new LineSeries
@@ -165,16 +168,15 @@ namespace Mlaty
             {
                 Title = "Error < 40m",
                 StrokeThickness = 2,
-                PointGeometry=DefaultGeometries.None,
+                PointGeometry = DefaultGeometries.None,
                 Stroke = new SolidColorBrush(Color.FromArgb(255, (byte)80, (byte)0, (byte)0)),
                 Fill = new SolidColorBrush(Color.FromArgb(10, (byte)255, (byte)0, (byte)0)),
                 Values = Circle40m
             };
+
             LiveChartScatter.DisableAnimations = true;
             LiveChartScatter.Hoverable = false;
-            //  var tooltip = (LiveCharts.Defaults.t)LiveChartScatter.DataTooltip;
-           // LiveChartScatter.DataTooltip.Visibility = Visibility.Collapsed;// LiveCharts.TooltipSelectionMode.OnlySender;
-            LiveChartScatter.DataTooltip =null;
+            LiveChartScatter.DataTooltip = null;
             LiveChartScatter.Zoom = ZoomingOptions.Xy;
             LiveChartScatter.LegendLocation = LegendLocation.Right;
             LiveChartScatter.ChartLegend.Foreground = new SolidColorBrush(Color.FromArgb(255, (byte)249, (byte)249, (byte)249));
@@ -212,6 +214,8 @@ namespace Mlaty
         }
 
 
+
+
         public LineSeries Circle12mSeries { get; set; }
         public LineSeries Circle75mSeries { get; set; }
         public LineSeries Circle20mSeries { get; set; }
@@ -239,7 +243,6 @@ namespace Mlaty
         public ChartValues<ObservablePoint> Circle75m { get; set; }
 
         public ChartValues<ObservablePoint> Circle20m { get; set; }
-
         public ChartValues<ObservablePoint> Circle40m { get; set; }
 
 
@@ -412,15 +415,6 @@ namespace Mlaty
                 SetAxis(minX, maxX, minY, maxY);
             
             CreateCircles();
-
-           
-
-            //Airborne25L25Series.Visibility = Visibility.Hidden;
-            //Airborne0225Series.Visibility = Visibility.Hidden;
-            //Airborne25R25Series.Visibility = Visibility.Hidden;
-            //Airborne25L5Series.Visibility = Visibility.Hidden;
-            //Airborne025Series.Visibility = Visibility.Hidden;
-            //Airborne25R5Series.Visibility = Visibility.Hidden;
 
 
         }

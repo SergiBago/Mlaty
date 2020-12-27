@@ -47,13 +47,13 @@
             </Style.Triggers>
         </Style>
         <ContextMenu x:Key="cmButton"   Background="#FF282828" >
-            <MenuItem Header="Open in new Window" Foreground="#FFF9F9F9"  Background="#FF282828" Click="OpenMapNewWindowClick"  Cursor="Hand" Focusable="False" FontFamily="Microsoft Sans Serif" FontSize="13"  />
+            <MenuItem Header="Open in new Window" Foreground="#FFF9F9F9"  Background="#FF282828" Click="OpenMapNewWindowClick"  Cursor="Hand"  FontFamily="Microsoft Sans Serif" Margin="0,2,0,0" FontSize="14"  />
         </ContextMenu>
         <ContextMenu x:Key="cmButtonCharts"   Background="#FF282828" >
-            <MenuItem Header="Open in new Window" Foreground="#FFF9F9F9"  Background="#FF282828" Click="OpenChartsNewWindowClick"  Cursor="Hand" Focusable="False" FontFamily="Microsoft Sans Serif" FontSize="13"  />
+            <MenuItem Header="Open in new Window" Foreground="#FFF9F9F9"  Background="#FF282828" Click="OpenChartsNewWindowClick"  Cursor="Hand"  FontFamily="Microsoft Sans Serif" FontSize="14" Margin="0,2,0,0" />
         </ContextMenu>
         <ContextMenu x:Key="cmButtonTables"   Background="#FF282828" >
-            <MenuItem Header="Open in new Window" Foreground="#FFF9F9F9"  Background="#FF282828" Click="OpenTablesNewWindowClick"  Cursor="Hand" Focusable="False" FontFamily="Microsoft Sans Serif" FontSize="13"  />
+            <MenuItem Header="Open in new Window" Foreground="#FFF9F9F9" VerticalContentAlignment="Bottom" Background="#FF282828" Click="OpenTablesNewWindowClick"  Cursor="Hand" Margin="0,2,0,0" FontFamily="Microsoft Sans Serif" FontSize="14"  />
         </ContextMenu>
         <Button x:Key="Button" Background="#FF282828" >
             <TextBlock Text="Open in new window" FontFamily="Microsoft Sans Serif" FontSize="15" />

@@ -151,6 +151,18 @@
     </dependentAssembly>
   </dependency>
   <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="LiveCharts.Geared.dll" size="85504">
+      <assemblyIdentity name="LiveCharts.Geared" version="1.2.8.2" publicKeyToken="7292F245D14AB8BF" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>D3kTuv473h/Ss6AzzXQKaqmfqwcKbNrZMej7baL8h+c=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="LiveCharts.Wpf.dll" size="217600">
       <assemblyIdentity name="LiveCharts.Wpf" version="0.9.7.0" publicKeyToken="0BC1F845D1EBB8DF" language="neutral" processorArchitecture="msil" />
       <hash>
@@ -163,14 +175,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Mlaty.exe" size="1304024">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Mlaty.exe" size="1315288">
       <assemblyIdentity name="Mlaty" version="1.0.0.0" language="neutral" processorArchitecture="amd64" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>iRxJmATBCIWVB3i+1BdIYKndIbUtwjd+2xvUs3kd2qg=</dsig:DigestValue>
+        <dsig:DigestValue>a/fp0e5o8rcgkvW+Sk3UGBgj8/D4fw2p9NF2uBJVwic=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

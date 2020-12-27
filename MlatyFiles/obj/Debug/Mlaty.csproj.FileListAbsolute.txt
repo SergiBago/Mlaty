@@ -126,3 +126,4 @@ C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFi
 C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\obj\Debug\ChartsWindow.baml
 C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\obj\Debug\ViewTablesWindow .g.cs
 C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\obj\Debug\ViewTablesWindow .baml
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\bin\Debug\LiveCharts.Geared.dll
