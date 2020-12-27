@@ -321,7 +321,7 @@ namespace PGTA_WPF
                 else
                 {
                     double prob = ((Convert.ToDouble(FalseDetection) / Convert.ToDouble(CorrectDetection+FalseDetection))*100);
-                    if(prob/100>min)
+                    if(prob>min)
                     {
                         return $"<{String.Format("{0:0.00}", prob)} %";
                     }
