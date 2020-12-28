@@ -77,6 +77,8 @@ namespace PGTA_WPF
             PD.Columns.Add("Expected\nUpdates PD");
             PD.Columns.Add("Missing\nUpdates PD");
             PD.Columns.Add("PD %");
+            PD.Columns.Add("Missing Updates PD \n (50m restriction)");
+            PD.Columns.Add("PD % \n (50m restriction)");
             PD.Columns.Add("Minimum\nPD %");
 
             UP.Columns.Add("Zone");
@@ -186,17 +188,17 @@ namespace PGTA_WPF
             AddHeatherPD("-- AIRBORNE 0-2.5NM --");
             for (int i = 8; i < 11; i++)
             {
-                AddRowPD(ListZones[i], -1);
+                AddRowPD(ListZones[i], 99.9);
             }
             list1 = new int[] { 8, 9, 10 };
-            AddTotalPD(ListZones[17], list1, -1);
+            AddTotalPD(ListZones[17], list1, 99.9);
             AddHeatherPD("-- AIRBORNE 2.5-5NM --");
             for (int i = 11; i < 14; i++)
             {
-                AddRowPD(ListZones[i], -1);
+                AddRowPD(ListZones[i], 99.9);
             }
             list1 = new int[] { 11, 12, 13 };
-            AddTotalPD(ListZones[18], list1,  -1);
+            AddTotalPD(ListZones[18], list1, 99.9);
         }
 
         public void CreateUPTable()
@@ -267,20 +269,20 @@ namespace PGTA_WPF
             AddTotalPFD(ListZones[16], list1, 0.01);
             AddHeatherPFD("--- TAXI ---");
             AddRowPFD(ListZones[7], 0.01);
-            AddHeatherPFD("-- AIRBORNE 0-2.5NM --");
-            for (int i = 8; i < 11; i++)
-            {
-                AddRowPFD(ListZones[i], 0.01);
-            }
-            list1 = new int[] { 8, 9, 10 };
-            AddTotalPFD(ListZones[17], list1, 0.01);
-            AddHeatherPFD("-- AIRBORNE 2.5-5NM --");
-            for (int i = 11; i < 14; i++)
-            {
-                AddRowPFD(ListZones[i], 0.01);
-            }
-            list1 = new int[] { 11, 12, 13 };
-            AddTotalPFD(ListZones[18], list1, 0.01);
+            //AddHeatherPFD("-- AIRBORNE 0-2.5NM --");
+            //for (int i = 8; i < 11; i++)
+            //{
+            //    AddRowPFD(ListZones[i], 0.01);
+            //}
+            //list1 = new int[] { 8, 9, 10 };
+            //AddTotalPFD(ListZones[17], list1, 0.01);
+            //AddHeatherPFD("-- AIRBORNE 2.5-5NM --");
+            //for (int i = 11; i < 14; i++)
+            //{
+            //    AddRowPFD(ListZones[i], 0.01);
+            //}
+            //list1 = new int[] { 11, 12, 13 };
+            //AddTotalPFD(ListZones[18], list1, 0.01);
         }
 
         public void CreatePITable()
@@ -392,6 +394,8 @@ namespace PGTA_WPF
             row["Expected\nUpdates PD"] = "--------";
             row["Missing\nUpdates PD"] = "--------";
             row["PD %"] = "--------";
+            row["Missing Updates PD \n (50m restriction)"] = "--------";
+            row["PD % \n (50m restriction)"] = "--------";
             row["Minimum\nPD %"] = "--------";
             PD.Rows.Add(row);
         }
@@ -475,15 +479,9 @@ namespace PGTA_WPF
             row["Expected\nUpdates PD"] = Convert.ToString(zone.ExpectedMessagesPD);
             row["Missing\nUpdates PD"] = Convert.ToString(zone.MissedMLATSPD); ;
             row["PD %"] = zone.GetPD(minPD);
-            if (minPD < 0)
-            {
-                row["Minimum\nPD %"] = "Not Required";
-
-            }
-            else
-            {
-                row["Minimum\nPD %"] = Convert.ToString(minPD) + "%";
-            }
+            row["Missing Updates PD \n (50m restriction)"] = Convert.ToString(zone.MissedMLATSPD_50m_Restriction);
+            row["PD % \n (50m restriction)"] = zone.GetPD_50m_Restriction(minPD);
+            row["Minimum\nPD %"] = Convert.ToString(minPD) + "%";
             PD.Rows.Add(row);
         }
 

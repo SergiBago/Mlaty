@@ -20,6 +20,7 @@ using System.Drawing;
 using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 using GMap.NET.WindowsPresentation;
+using Color = System.Windows.Media.Color;
 
 namespace PGTA_WPF
 {
@@ -44,6 +45,12 @@ namespace PGTA_WPF
         bool ADSBLoaded = false;
         bool MLATLoaded = false;
         bool DGPSLoaded = false;
+
+        Brush ADSBcolor= new SolidColorBrush(Color.FromArgb(255, (byte)80, (byte)170, (byte)120));
+        Brush MLATcolor = new SolidColorBrush(Color.FromArgb(255, (byte)200, (byte)41, (byte)39));
+        Brush DGPScolor = new SolidColorBrush(Color.FromArgb(255, (byte)40, (byte)130, (byte)200));
+
+
 
         private void MapView_Loaded(object sender, RoutedEventArgs e)
         {
@@ -161,27 +168,6 @@ namespace PGTA_WPF
             gMapControl1.Markers.Add(label);
             //  line.Shape.MouseRightButtonUp += LabelRightButton;
         }
-
-        //private void ShowRunway25LClick(object sender, RoutedEventArgs e)
-        //{
-
-        //}
-
-        //private void ShowRunway25RClick(object sender, RoutedEventArgs e)
-        //{
-
-        //}
-
-        //private void ShowRunway02Click(object sender, RoutedEventArgs e)
-        //{
-
-        //}
-
-        //private void ShowClick(object sender, RoutedEventArgs e)
-        //{
-        //    ShowPlygons();
-
-        //}
 
         private void ShowPlygons()
         {
@@ -336,19 +322,20 @@ namespace PGTA_WPF
                     if (marker.type == 1)
                     {
                         CustomMarker mark = new CustomMarker(marker.p,1);
-                        Brush color = Brushes.Black;
-                        if (marker.zone == 1 || marker.zone == 2 || marker.zone == 3) { color = Brushes.Goldenrod; }
-                        if (marker.zone == 4 || marker.zone == 5) { color = Brushes.Black; }
-                        if (marker.zone == 6 || marker.zone == 7) { color = Brushes.Red; }
-                        if (marker.zone == 8) { color = Brushes.Green; }
-                        if (marker.zone == 9 || marker.zone == 10 || marker.zone == 11) { color = Brushes.Purple; }
-                        if (marker.zone == 12 || marker.zone == 13 || marker.zone == 14) { color = Brushes.Purple; }
+                        Brush color = ADSBcolor;
+                        //if (marker.zone == 1 || marker.zone == 2 || marker.zone == 3) { color = Brushes.Goldenrod; }
+                        //if (marker.zone == 4 || marker.zone == 5) { color = Brushes.Black; }
+                        //if (marker.zone == 6 || marker.zone == 7) { color = Brushes.Red; }
+                        //if (marker.zone == 8) { color = Brushes.Green; }
+                        //if (marker.zone == 9 || marker.zone == 10 || marker.zone == 11) { color = Brushes.Purple; }
+                        //if (marker.zone == 12 || marker.zone == 13 || marker.zone == 14) { color = Brushes.Purple; }
                         mark.Shape = new Ellipse
                         {
-                            Width = 2,
-                            Height = 2,
+                            Width = 3,
+                            Height = 3,
                             Stroke = color,
-                            StrokeThickness = 3
+                            StrokeThickness = 1,
+                            Fill = color
                         };
                         gMapControl1.Markers.Add(mark);
                         ADSBMarkers.Add(mark);
@@ -394,19 +381,20 @@ namespace PGTA_WPF
                     if (marker.type == 0)
                     {
                         CustomMarker mark = new CustomMarker(marker.p,0);
-                        Brush color = Brushes.Black;
-                        if (marker.zone == 1 || marker.zone == 2 || marker.zone == 3) { color = Brushes.Goldenrod; }
-                        if (marker.zone == 4 || marker.zone == 5) { color = Brushes.Black; }
-                        if (marker.zone == 6 || marker.zone == 7) { color = Brushes.Red; }
-                        if (marker.zone == 8) { color = Brushes.Green; }
-                        if (marker.zone == 9 || marker.zone == 10 || marker.zone == 11) { color = Brushes.Purple; }
-                        if (marker.zone == 12 || marker.zone == 13 || marker.zone == 14) { color = Brushes.Purple; }
+                        Brush color = MLATcolor;
+                        //if (marker.zone == 1 || marker.zone == 2 || marker.zone == 3) { color = Brushes.Goldenrod; }
+                        //if (marker.zone == 4 || marker.zone == 5) { color = Brushes.Black; }
+                        //if (marker.zone == 6 || marker.zone == 7) { color = Brushes.Red; }
+                        //if (marker.zone == 8) { color = Brushes.Green; }
+                        //if (marker.zone == 9 || marker.zone == 10 || marker.zone == 11) { color = Brushes.Purple; }
+                        //if (marker.zone == 12 || marker.zone == 13 || marker.zone == 14) { color = Brushes.Purple; }
                         mark.Shape = new Ellipse
                         {
-                            Width = 2,
-                            Height = 2,
+                            Width = 3,
+                            Height =3,
                             Stroke = color,
-                            StrokeThickness = 3
+                            StrokeThickness = 1,
+                            Fill = color
                         };
                         gMapControl1.Markers.Add(mark);
                         MLATMarkers.Add(mark);
@@ -452,19 +440,20 @@ namespace PGTA_WPF
                     if (marker.type == 2)
                     {
                         CustomMarker mark = new CustomMarker(marker.p, 2);
-                        Brush color = Brushes.Black;
-                        if (marker.zone == 1 || marker.zone == 2 || marker.zone == 3) { color = Brushes.Goldenrod; }
-                        if (marker.zone == 4 || marker.zone == 5) { color = Brushes.Black; }
-                        if (marker.zone == 6 || marker.zone == 7) { color = Brushes.Red; }
-                        if (marker.zone == 8) { color = Brushes.Green; }
-                        if (marker.zone == 9 || marker.zone == 10 || marker.zone == 11) { color = Brushes.Purple; }
-                        if (marker.zone == 12 || marker.zone == 13 || marker.zone == 14) { color = Brushes.Purple; }
+                        Brush color =DGPScolor;
+                        //if (marker.zone == 1 || marker.zone == 2 || marker.zone == 3) { color = Brushes.Goldenrod; }
+                        //if (marker.zone == 4 || marker.zone == 5) { color = Brushes.Black; }
+                        //if (marker.zone == 6 || marker.zone == 7) { color = Brushes.Red; }
+                        //if (marker.zone == 8) { color = Brushes.Green; }
+                        //if (marker.zone == 9 || marker.zone == 10 || marker.zone == 11) { color = Brushes.Purple; }
+                        //if (marker.zone == 12 || marker.zone == 13 || marker.zone == 14) { color = Brushes.Purple; }
                         mark.Shape = new Ellipse
                         {
-                            Width = 2,
-                            Height = 2,
+                            Width = 3,
+                            Height = 3,
                             Stroke = color,
-                            StrokeThickness = 3
+                            StrokeThickness = 1,
+                            Fill=color
                         };
                         gMapControl1.Markers.Add(mark);
                         DGPSMarkers.Add(mark);

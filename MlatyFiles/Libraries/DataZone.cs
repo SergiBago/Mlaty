@@ -24,6 +24,7 @@ namespace PGTA_WPF
 
         public double obtainedMessages = 0;
         public int MissedMLATSPD = 0;
+        public int MissedMLATSPD_50m_Restriction = 0;
         public int MissedMLATSUP = 0;
 
         public string name;
@@ -74,6 +75,7 @@ namespace PGTA_WPF
         {
             ExpectedMessagesPD = 0;
             MissedMLATSPD = 0;
+            MissedMLATSPD_50m_Restriction=0;
             expected_PDok = 0;
             PDwrong = 0;
             for (int i = 0; i < list.Count(); i++)
@@ -81,6 +83,7 @@ namespace PGTA_WPF
                 int e = list[i];
                 ExpectedMessagesPD += listzones[e].ExpectedMessagesPD;
                 MissedMLATSPD += listzones[e].MissedMLATSPD;
+                MissedMLATSPD_50m_Restriction += listzones[e].MissedMLATSPD_50m_Restriction;
                 expected_PDok += listzones[e].expected_PDok;
                 PDwrong += listzones[e].PDwrong;
             }
@@ -145,7 +148,7 @@ namespace PGTA_WPF
             }
             else if (MissedMLATSUP != 0)
             {
-                double UR = 100-((Convert.ToDouble(MissedMLATSUP) / Convert.ToDouble(MissedMLATSUP + ExpectedMessagesUP)) * 100);
+                double UR = 100-((Convert.ToDouble(MissedMLATSUP) / Convert.ToDouble( ExpectedMessagesUP)) * 100);
                 if (UR < min)
                 {
                     return ("<" + String.Format("{0:0.00}", UR) + "%");
@@ -166,10 +169,31 @@ namespace PGTA_WPF
             }
             else if (MissedMLATSPD != 0)
             {
-                double PD = 100-((Convert.ToDouble(MissedMLATSPD) / Convert.ToDouble(MissedMLATSPD + ExpectedMessagesPD)) * 100); 
+                double PD = 100-((Convert.ToDouble(MissedMLATSPD) / Convert.ToDouble(ExpectedMessagesPD)) * 100); 
                 if (PD/100 < min)
                 {
                     return ("<"+String.Format("{0:0.00}", PD) + "%");
+                }
+                return (String.Format("{0:0.00}", PD) + "%");
+            }
+            else
+            {
+                return "100%";
+            }
+        }
+
+        public string GetPD_50m_Restriction(double min) // ACABAR
+        {
+            if (ExpectedMessagesPD == 0)
+            {
+                return "Uncomputed";
+            }
+            else if (MissedMLATSPD_50m_Restriction != 0)
+            {
+                double PD = 100 - ((Convert.ToDouble(MissedMLATSPD_50m_Restriction) / Convert.ToDouble( ExpectedMessagesPD)) * 100);
+                if (PD / 100 < min)
+                {
+                    return ("<" + String.Format("{0:0.00}", PD) + "%");
                 }
                 return (String.Format("{0:0.00}", PD) + "%");
             }

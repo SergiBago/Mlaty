@@ -619,7 +619,7 @@ namespace PGTAWPF
                     Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
                     StringBuilder sb = new StringBuilder();
                     StringBuilder ColumnsNames = new StringBuilder();
-                    string Heather = "TIDENT;TIME;RADAL LOCAL X;RADAR LOCAL Y;ARP HEIGHT;GPS LOCAL X;GPS LOCAL Y;GPS LOCAL Z;ERROR LOCAL X;ERROR LOCAL Y;ERROR LOCAL XY;AREA;GBS";
+                    string Heather = "TIDENT;TARGET ADDRESS; TRACK NUMBER; TIME;RADAL LOCAL X;RADAR LOCAL Y;ARP HEIGHT;GPS LOCAL X;GPS LOCAL Y;GPS LOCAL Z;ERROR LOCAL X;ERROR LOCAL Y;ERROR LOCAL XY;AREA;GBS";
                     sb.AppendLine(Heather);
 
                     foreach (PrecissionPoint p in Archivo.data.PrecissionPoints )
@@ -634,7 +634,7 @@ namespace PGTAWPF
                         string ErrorLocalX = Convert.ToString(p.ErrorLocalX);
                         string ErrorLocalY = Convert.ToString(p.ErrorLocalY);
                         string ErrorLocalXY = Convert.ToString(p.ErrorLocalXY);
-                        string RowData= (p.Callsign + ";" + p.time+";" + LocalX+";"+LocalY+ ";"+ARPH+ ";"+GPSX+ ";"+GPSY+ ";"+GPSZ+ ";"+ErrorLocalX+ ";"+ErrorLocalY+ ";"+ErrorLocalXY+ ";"+p.Area+ ";"+p.GroundBit);
+                        string RowData= (p.Callsign + ";" + p.TargetAddress+ ";" + p.TrackNumber+";" + p.time+";" + LocalX+";"+LocalY+ ";"+ARPH+ ";"+GPSX+ ";"+GPSY+ ";"+GPSZ+ ";"+ErrorLocalX+ ";"+ErrorLocalY+ ";"+ErrorLocalXY+ ";"+p.Area+ ";"+p.GroundBit);
                         sb.AppendLine(RowData);
                     }
                     File.WriteAllText(path, sb.ToString());

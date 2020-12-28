@@ -9,6 +9,8 @@ namespace PGTA_WPF
     public class PrecissionPoint
     {
         public string Callsign;
+        public string TargetAddress;
+        public int TrackNumber;
         public double localX;
         public double localY;
         public double ARPH;
@@ -27,9 +29,11 @@ namespace PGTA_WPF
 
         }
 
-        public PrecissionPoint(string Callsign, double LocalX, double LocalY, double ARPH,  double GPSX,double GPSY, double GPSZ, double ErrorLocalX, double ErrorLocalY, double ErrorLocalXY, int area, int GB, double time)
+        public PrecissionPoint(string Callsign,string TargetAddress,int TrackNumber, double LocalX, double LocalY, double ARPH,  double GPSX,double GPSY, double GPSZ, double ErrorLocalX, double ErrorLocalY, double ErrorLocalXY, int area, int GB, double time)
         {
             this.Callsign = Callsign;
+            this.TargetAddress = TargetAddress;
+            this.TrackNumber = TrackNumber;
             this.localX = LocalX;
             this.localY = LocalY;
             this.ARPH = ARPH;
