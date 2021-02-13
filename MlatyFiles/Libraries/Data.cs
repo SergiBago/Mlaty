@@ -77,8 +77,8 @@ namespace PGTA_WPF
             PD.Columns.Add("Expected\nUpdates PD");
             PD.Columns.Add("Missing\nUpdates PD");
             PD.Columns.Add("PD %");
-            PD.Columns.Add("Missing Updates PD \n (50m restriction)");
-            PD.Columns.Add("PD % \n (50m restriction)");
+            //PD.Columns.Add("Missing Updates PD \n (50m restriction)");
+            //PD.Columns.Add("PD % \n (50m restriction)");
             PD.Columns.Add("Minimum\nPD %");
 
             UP.Columns.Add("Zone");
@@ -394,8 +394,8 @@ namespace PGTA_WPF
             row["Expected\nUpdates PD"] = "--------";
             row["Missing\nUpdates PD"] = "--------";
             row["PD %"] = "--------";
-            row["Missing Updates PD \n (50m restriction)"] = "--------";
-            row["PD % \n (50m restriction)"] = "--------";
+            //row["Missing Updates PD \n (50m restriction)"] = "--------";
+            //row["PD % \n (50m restriction)"] = "--------";
             row["Minimum\nPD %"] = "--------";
             PD.Rows.Add(row);
         }
@@ -479,8 +479,8 @@ namespace PGTA_WPF
             row["Expected\nUpdates PD"] = Convert.ToString(zone.ExpectedMessagesPD);
             row["Missing\nUpdates PD"] = Convert.ToString(zone.MissedMLATSPD); ;
             row["PD %"] = zone.GetPD(minPD);
-            row["Missing Updates PD \n (50m restriction)"] = Convert.ToString(zone.MissedMLATSPD_50m_Restriction);
-            row["PD % \n (50m restriction)"] = zone.GetPD_50m_Restriction(minPD);
+            //row["Missing Updates PD \n (50m restriction)"] = Convert.ToString(zone.MissedMLATSPD_50m_Restriction);
+            //row["PD % \n (50m restriction)"] = zone.GetPD_50m_Restriction(minPD);
             row["Minimum\nPD %"] = Convert.ToString(minPD) + "%";
             PD.Rows.Add(row);
         }

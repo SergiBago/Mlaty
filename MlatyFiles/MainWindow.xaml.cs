@@ -524,14 +524,23 @@ namespace PGTAWPF
                             RowData.Append(";");
                         }
                         RowData.Append(";");
+
                         foreach (DataColumn column in PFDTable.Columns)
                         {
-                            DataRow row = PFDTable.Rows[i];
-                            string data = row[column].ToString();
-                            data = ReturnCorrectData(data);
-                            data = data.Replace(",", ".");
-                            RowData.Append(data);
-                            RowData.Append(";");
+                            if (i < PFDTable.Rows.Count)
+                            {
+
+                                DataRow row = PFDTable.Rows[i];
+                                string data = row[column].ToString();
+                                data = ReturnCorrectData(data);
+                                data = data.Replace(",", ".");
+                                RowData.Append(data);
+                                RowData.Append(";");
+                            }
+                            else
+                            {
+                                RowData.Append(";");
+                            }
 
                         }
                         RowData.Append(";");

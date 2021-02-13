@@ -75,7 +75,7 @@ namespace PGTA_WPF
         {
             ExpectedMessagesPD = 0;
             MissedMLATSPD = 0;
-            MissedMLATSPD_50m_Restriction=0;
+            //MissedMLATSPD_50m_Restriction=0;
             expected_PDok = 0;
             PDwrong = 0;
             for (int i = 0; i < list.Count(); i++)
@@ -83,7 +83,7 @@ namespace PGTA_WPF
                 int e = list[i];
                 ExpectedMessagesPD += listzones[e].ExpectedMessagesPD;
                 MissedMLATSPD += listzones[e].MissedMLATSPD;
-                MissedMLATSPD_50m_Restriction += listzones[e].MissedMLATSPD_50m_Restriction;
+                //MissedMLATSPD_50m_Restriction += listzones[e].MissedMLATSPD_50m_Restriction;
                 expected_PDok += listzones[e].expected_PDok;
                 PDwrong += listzones[e].PDwrong;
             }

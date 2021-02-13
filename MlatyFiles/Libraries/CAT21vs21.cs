@@ -679,14 +679,16 @@ namespace PGTAWPF
 
         private void ComputeCartesianFromWGS84()
         {
-            CoordinatesWGS84 ObjectCoordinates = new CoordinatesWGS84((Math.PI/180)*this.LatitudeWGS_84_map, this.LongitudeWGS_84_map*(Math.PI / 180) , Geometric_Height);
-            CoordinatesWGS84 RadarCoordinates = new CoordinatesWGS84(41.2970767* (Math.PI / 180) , 2.07846278* (Math.PI / 180), 53.321);
-            GeoUtils geoUtils = new GeoUtils();
-            CoordinatesXYZ MarkerCartesian = geoUtils.change_geodesic2system_cartesian(ObjectCoordinates, RadarCoordinates);
-            geoUtils = null;
-            X_Component_map = MarkerCartesian.X;
-            Y_Component_map = MarkerCartesian.Y;
-
+            if (LatitudeWGS_84_map != -200 && LongitudeWGS_84_map != -200)
+            {
+                CoordinatesWGS84 ObjectCoordinates = new CoordinatesWGS84((Math.PI / 180) * this.LatitudeWGS_84_map, this.LongitudeWGS_84_map * (Math.PI / 180), Geometric_Height);
+                CoordinatesWGS84 RadarCoordinates = new CoordinatesWGS84(41.2970767 * (Math.PI / 180), 2.07846278 * (Math.PI / 180), 53.321);
+                GeoUtils geoUtils = new GeoUtils();
+                CoordinatesXYZ MarkerCartesian = geoUtils.change_geodesic2system_cartesian(ObjectCoordinates, RadarCoordinates);
+                geoUtils = null;
+                X_Component_map = MarkerCartesian.X;
+                Y_Component_map = MarkerCartesian.Y;
+            }
         }
 
         //MESSAGE AMPLITUDE
