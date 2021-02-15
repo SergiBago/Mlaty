@@ -327,10 +327,6 @@ namespace PGTAWPF
                     //   if (lib.GetVersion(arraystring) != 0)
                     //     {
                     CAT21vs21 newcat21 = new CAT21vs21(arraystring, firsttime, lib);
-                    if(newcat21.Target_address=="343495")
-                    {
-                        int a = 0;
-                    }
                     if (newcat21.X_Component_map != -99999 && newcat21.Y_Component_map != -99999)
                     {
                         if (computePIC == true) { PICS.Add(newcat21.PIC); }
