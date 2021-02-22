@@ -643,7 +643,7 @@ namespace PGTAWPF
                         string ErrorLocalX = Convert.ToString(p.ErrorLocalX);
                         string ErrorLocalY = Convert.ToString(p.ErrorLocalY);
                         string ErrorLocalXY = Convert.ToString(p.ErrorLocalXY);
-                        string RowData= (p.Callsign + ";'" + p.TargetAddress+ ";" + p.TrackNumber+";" + p.time+";" + LocalX+";"+LocalY+ ";"+ARPH+ ";"+GPSX+ ";"+GPSY+ ";"+GPSZ+ ";"+ErrorLocalX+ ";"+ErrorLocalY+ ";"+ErrorLocalXY+ ";"+p.Area+ ";"+p.GroundBit);
+                        string RowData= (p.Callsign + ";" + p.TargetAddress+ ";" + p.TrackNumber+";" + p.time+";" + LocalX+";"+LocalY+ ";"+ARPH+ ";"+GPSX+ ";"+GPSY+ ";"+GPSZ+ ";"+ErrorLocalX+ ";"+ErrorLocalY+ ";"+ErrorLocalXY+ ";"+p.Area+ ";"+p.GroundBit);
                         sb.AppendLine(RowData);
                     }
                     File.WriteAllText(path, sb.ToString());

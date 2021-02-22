@@ -33,6 +33,7 @@ namespace PGTAWPF
 
         public Ficheros()
         {
+            lib.ComputeMLATSPos();
         }
 
         public void ResetData()
@@ -117,7 +118,7 @@ namespace PGTAWPF
             //{
                 bool computePIC = false;
                 if (PICvalue == "Auto") { computePIC = true; }
-
+                
                 PICS.Clear();
                 bool first = true;
                 double firsttime = 0;
@@ -327,11 +328,20 @@ namespace PGTAWPF
                     //   if (lib.GetVersion(arraystring) != 0)
                     //     {
                     CAT21vs21 newcat21 = new CAT21vs21(arraystring, firsttime, lib);
+                    if (lib.FixedMLATS.Contains(newcat21.Target_address))
+                    {
+                        int a = 0;
+                    }
+                    if (newcat21.Target_Identification=="MLAT1")
+                    {
+                        int a = 0;
+
+                    }
                     if (newcat21.X_Component_map != -99999 && newcat21.Y_Component_map != -99999)
                     {
                         if (computePIC == true) { PICS.Add(newcat21.PIC); }
 
-                        if (newcat21.MOPSversion == 2)
+                        if (newcat21.MOPSversion == 2 || lib.FixedMLATS.Contains(newcat21.Target_address))
                         {
                             bool trajfound = false;
                             //if (newcat21.Target_Identification != null)
@@ -507,7 +517,7 @@ namespace PGTAWPF
                     if (Excluded == false)
                     {
                         traject.SetZones(lib);
-                        traject.ComputePrecissionADSBinterpoled(this.data, PIC);
+                        traject.ComputePrecissionADSBinterpoled(this.data, PIC,lib);
                         traject.ComputePDUD(this.data);
                         traject.ComputePFI(this.data);
                         traject.ComputePI(this.data);

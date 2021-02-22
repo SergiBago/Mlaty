@@ -175,14 +175,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Mlaty.exe" size="1318360">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Mlaty.exe" size="1321432">
       <assemblyIdentity name="Mlaty" version="1.0.0.0" language="neutral" processorArchitecture="amd64" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>aVf3AOWCBpJp2z2z+CNZttr5D94uBs9Gi2PXQ7K5Ty0=</dsig:DigestValue>
+        <dsig:DigestValue>p0jrcjEbzHX0GN9TiZ0bPxBldujcQHuQYsw1XiyiT0c=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

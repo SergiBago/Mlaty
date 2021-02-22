@@ -14,9 +14,34 @@ namespace PGTAWPF
     public class LibreriaDecodificacion
     {
         Zonas zones = new Zonas();
-       public List<string> ExcludedMLATS = new List<string>() { "342384", "342387", "342386", "342385", "342383", "3433D5", "341041","34104F", "341097", "341103", "34434B","344357", "344389" , "3443C6", "341042","341050","3410C9","341105","34434C","344358","34438A","3443C3","341043","341051","3410CA", "341107", "34434D", "344359", "34438B", "3443C4", "341044", "341052", "3410CE", "341108", "34434E", "34435A", "34438C", "3443C5", "341045", "341053", "3410D0", "341109", "34434F", "344381", "34438D", "3443C2", "341046", "341055", "3410D2" ,"34110A", "344350", "344382", "34438E", "3443C6", "341047", "341081", "3410D3", "34110B", "344351", "344383", "34438F", "3443C3", "341049", "341082", "3410D4", "34110F", "344352", "344384", "344390", "3443C4", "34104B", "341090", "3410D5", "344347", "344353", "344385", "3443C3", "3443C5", "34104C", "341092", "3410D6", "344348", "344354", "344386", "3443C4", "3443C2", "34104D", "341094", "3410D7", "344349", "344355", "344387", "3443C5", "3443C6", "34104E", "341095", "3410D8", "34434A", "344356", "344388", "3443C2" };
+       public List<string> ExcludedMLATS = new List<string>() {  "341041","34104F", "341097", "341103", "34434B","344357", "344389" , "3443C6", "341042","341050","3410C9","341105","34434C","344358","34438A","3443C3","341043","341051","3410CA", "341107", "34434D", "344359", "34438B", "3443C4", "341044", "341052", "3410CE", "341108", "34434E", "34435A", "34438C", "3443C5", "341045", "341053", "3410D0", "341109", "34434F", "344381", "34438D", "3443C2", "341046", "341055", "3410D2" ,"34110A", "344350", "344382", "34438E", "3443C6", "341047", "341081", "3410D3", "34110B", "344351", "344383", "34438F", "3443C3", "341049", "341082", "3410D4", "34110F", "344352", "344384", "344390", "3443C4", "34104B", "341090", "3410D5", "344347", "344353", "344385", "3443C3", "3443C5", "34104C", "341092", "3410D6", "344348", "344354", "344386", "3443C4", "3443C2", "34104D", "341094", "3410D7", "344349", "344355", "344387", "3443C5", "3443C6", "34104E", "341095", "3410D8", "34434A", "344356", "344388", "3443C2" };
+        // Fixed mlats "342384", "342387", "342386", "342385", "342383", "3433D5",
 
- 
+        public List<string> FixedMLATS = new List<string>() { "342384", "342387", "342386", "342385", "342383", "3433D5" };
+        public Dictionary<string, Point> FixedMLATSPos = new Dictionary<string, Point>();
+
+        List<double> Latitudes = new List<double>() { 41.30633926, 41.30423737 , 41.29556274, 41.29029465 , 41.29211044 , 41.29687500 };
+        List<double> Longitudes = new List<double>() { 2.08272767, 2.10677886, 2.09514618, 2.10366488 , 2.08240461 , 2.05882812 };
+        List<double> Altitudes = new List<double>() { 45.84600067, 15.39000034, 67.86000061, 10.44999981, 15.88899994, 13.52700043 };
+
+
+
+        public void ComputeMLATSPos()
+        {
+            for (int i=0; i<6; i++)
+            {
+                string target_add = FixedMLATS[i];
+                CoordinatesWGS84 ObjectCoordinates = new CoordinatesWGS84((Math.PI / 180) * Latitudes[i], Longitudes[i] * (Math.PI / 180), Altitudes[i]);
+                CoordinatesWGS84 RadarCoordinates = new CoordinatesWGS84(41.2970767 * (Math.PI / 180), 2.07846278 * (Math.PI / 180), 53.321);
+                GeoUtils geoUtils = new GeoUtils();
+                CoordinatesXYZ MarkerCartesian = geoUtils.change_geodesic2system_cartesian(ObjectCoordinates, RadarCoordinates);
+                geoUtils = null;
+                Point p = new Point(MarkerCartesian.X, MarkerCartesian.Y);
+                FixedMLATSPos.Add(target_add, p);
+               
+            }
+            int a = 0;
+        }
 
         readonly private Dictionary<char, string> HexadecimalAbinario = new Dictionary<char, string>
         {

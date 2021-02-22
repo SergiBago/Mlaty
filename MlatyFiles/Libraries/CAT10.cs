@@ -197,7 +197,7 @@ namespace PGTAWPF
             {
                 string newoctet = message[pos + cont];
                 FX = Convert.ToString(newoctet[7]);
-                if (cont == 1) 
+                if (cont == 1)
                 {
                     string SIM = newoctet.Substring(0, 1);
                     if (SIM == "0")
@@ -226,16 +226,19 @@ namespace PGTAWPF
                         this.LOP = "Loop finish";
 
                     string TOT = newoctet.Substring(5, 2);
-                    if (TOT == "00")
-                        this.TOT = "Type of vehicle: Undetermined";
-                    if (TOT == "01")
-                        this.TOT = "Aircraft";
-                    if (TOT == "10")
-                        this.TOT = "Ground vehicle";
-                    if (TOT == "11")
-                        this.TOT = "Helicopter";
+
+
+                        if (TOT == "00")
+                            this.TOT = "Type of vehicle: Undetermined";
+                        if (TOT == "01")
+                            this.TOT = "Aircraft";
+                        if (TOT == "10")
+                            this.TOT = "Ground vehicle";
+                        if (TOT == "11")
+                            this.TOT = "Helicopter";
+                    
                 }
-                else 
+                else
                 {
                     if (newoctet.Substring(0, 1) == "0")
                         this.SPI = "Absence of SPI (Special Position Identification)";
@@ -531,7 +534,13 @@ namespace PGTAWPF
 
         // DATA ITEM I010/200, TARGET ADDRESS
         public string Target_Address;
-        private int Compute_Target_Address(string[] message, int pos) { Target_Address = string.Concat(lib.BinarytoHexa(message[pos]), lib.BinarytoHexa(message[pos + 1]), lib.BinarytoHexa(message[pos + 2])); pos += 3; return pos; }
+        private int Compute_Target_Address(string[] message, int pos)
+        {
+            Target_Address = string.Concat(lib.BinarytoHexa(message[pos]), lib.BinarytoHexa(message[pos + 1]), lib.BinarytoHexa(message[pos + 2]));
+
+            pos += 3; 
+            return pos; 
+        }
 
 
         // DATA ITEM I010/200, TARGET IDENTIFICATION

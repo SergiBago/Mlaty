@@ -28,12 +28,13 @@ namespace PGTAWPF
         public int TrackNumberMLAT = -1;
         public bool aircraftMLAT = false;
         public bool aircraftADSB = false;
-
+        LibreriaDecodificacion lib;
         // Data data;
 
         public string PD;
         public PointLatLng ARPCoords = new PointLatLng(41.2970767, 2.07846278);
 
+        public List<string> FixedMLATS = new List<string>() { "342384", "342387", "342386", "342385", "342383", "3433D5" };
 
         public TrajectoriestoCompute(CAT10 message)
         {
@@ -809,7 +810,6 @@ namespace PGTAWPF
             if (ListMLAT.Count() > 1)
             {
                 if (ListDGPS.Count > 0) { aircraftMLAT = true; }
-
                 if (!aircraftMLAT)
                 {
                     foreach (CAT10 MLAT in ListMLAT)
@@ -892,6 +892,7 @@ namespace PGTAWPF
             if (ListMLAT.Count() > 1)
             {
                 if (ListDGPS.Count > 0) { aircraftMLAT = true; }
+                if (FixedMLATS.Contains(TargetAdress)) { aircraftMLAT = true; }
 
                 if (!aircraftMLAT)
                 {
@@ -964,6 +965,7 @@ namespace PGTAWPF
             if (ListMLAT.Count() > 1)
             {
                 if (ListDGPS.Count > 0) { aircraftMLAT = true; }
+                if (FixedMLATS.Contains(TargetAdress)) { aircraftMLAT = true; }
 
                 if (!aircraftMLAT)
                 {
@@ -1102,99 +1104,124 @@ namespace PGTAWPF
         }
 
 
-        public void ComputePrecissionADSBinterpoled(Data data, int PIC)
+        public void ComputePrecissionADSBinterpoled(Data data, int PIC,LibreriaDecodificacion lib)
         {
             if (ListMLAT.Count() > 1)
             {
-                if (ListDGPS.Count > 0) { aircraftMLAT = true; }
-
-                if (!aircraftMLAT)
+                if (FixedMLATS.Contains(TargetAdress))
                 {
+                    this.lib = lib;
+                    List<CAT10> MlatsInStandsForAccuracy = new List<CAT10>();
                     foreach (CAT10 MLAT in ListMLAT)
                     {
-                        if (MLAT.TOT == "Aircraft")
+                        if (MLAT.zone == 3 || MLAT.zone == 4)
                         {
-                            aircraftMLAT = true;
-                            break;
+                            MlatsInStandsForAccuracy.Add(MLAT);
                         }
-                    }
-                }
-                if (!aircraftMLAT)
-                {
-                    foreach (CAT21vs21 ADSB in ListADSB)
-                    {
-                        if (ADSB.ECAT == "Light aircraft" || ADSB.ECAT == "Small aircraft" || ADSB.ECAT == "Medium aircraft" || ADSB.ECAT == "Heavy aircraft")
+                        else
                         {
-                            aircraftMLAT = true;
-                            break;
-                        }
-                    }
-                }
-                if (aircraftMLAT)
-                {
-                    if (ListMLAT.Count > 9 && ListADSB.Count > 9)
-                    {
-                        List<CAT10> MlatsInStandsForAccuracy = new List<CAT10>();
 
+                            ComputeMLATPrecissionFixedTransp(MLAT, data);
+                        }
+                    }
+                    if (MlatsInStandsForAccuracy.Count() > 1)
+                    {
+                        ComputeMLATprecisionInStandsADSBFixed(MlatsInStandsForAccuracy, data);
+                    }
+
+                }
+                else
+                {
+                    if (ListDGPS.Count > 0) { aircraftMLAT = true; }
+
+                    if (!aircraftMLAT)
+                    {
                         foreach (CAT10 MLAT in ListMLAT)
                         {
-                            
-                            if (MLAT.zone != -1)
+                            if (MLAT.TOT == "Aircraft")
                             {
-                                if (MLAT.zone == 3 || MLAT.zone == 4)
-                                {
-                                    MlatsInStandsForAccuracy.Add(MLAT);
-                                }
-                                else
-                                {
-                                    //double time = MLAT.Time_milisec;
-                                    CAT21vs21 Before = new CAT21vs21();
-                                    CAT21vs21 After = new CAT21vs21();
-                                    bool Correct = false;
-                                    bool cont = true;
-                                    bool BeforeFound = false;
-                                    bool AfterFound = false;
-                                    for (int i = 0; cont == true; i++)
-                                    {
-                                        CAT21vs21 ADSB = ListADSB[i];
-                                        if (ADSB.Time_milisec <= MLAT.Time_milisec && ADSB.Time_milisec > MLAT.Time_milisec - 5)
-                                        {
-                                            Before = ADSB;
-                                            BeforeFound = true;
-                                        }
-                                        if (ADSB.Time_milisec >= MLAT.Time_milisec && ADSB.Time_milisec < MLAT.Time_milisec + 5 && AfterFound == false)
-                                        {
-                                            After = ADSB;
-                                            AfterFound = true;
-                                        }
-                                        if (BeforeFound == true && AfterFound == true)
-                                        {
-                                            Correct = true;
-                                            cont = false;
-                                        }
-                                        if (i == ListADSB.Count - 1)
-                                        {
-                                            cont = false;
-                                        }
-                                    }
-                                    if (Correct == true && Before.PIC >= PIC && After.PIC >= PIC)
-                                    {
+                                aircraftMLAT = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!aircraftMLAT)
+                    {
+                        foreach (CAT21vs21 ADSB in ListADSB)
+                        {
+                            if (ADSB.ECAT == "Light aircraft" || ADSB.ECAT == "Small aircraft" || ADSB.ECAT == "Medium aircraft" || ADSB.ECAT == "Heavy aircraft")
+                            {
+                                aircraftMLAT = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (aircraftMLAT)
+                    {
+                        if (ListMLAT.Count > 9 && ListADSB.Count > 9)
+                        {
+                            List<CAT10> MlatsInStandsForAccuracy = new List<CAT10>();
 
-                                        ComputeMLATPrecission(MLAT, Before, After, data);
+                            foreach (CAT10 MLAT in ListMLAT)
+                            {
+
+                                if (MLAT.zone != -1)
+                                {
+                                    if (MLAT.zone == 3 || MLAT.zone == 4)
+                                    {
+                                        MlatsInStandsForAccuracy.Add(MLAT);
+                                    }
+                                    else
+                                    {
+                                        //double time = MLAT.Time_milisec;
+                                        CAT21vs21 Before = new CAT21vs21();
+                                        CAT21vs21 After = new CAT21vs21();
+                                        bool Correct = false;
+                                        bool cont = true;
+                                        bool BeforeFound = false;
+                                        bool AfterFound = false;
+                                        for (int i = 0; cont == true; i++)
+                                        {
+                                            CAT21vs21 ADSB = ListADSB[i];
+                                            if (ADSB.Time_milisec <= MLAT.Time_milisec && ADSB.Time_milisec > MLAT.Time_milisec - 5)
+                                            {
+                                                Before = ADSB;
+                                                BeforeFound = true;
+                                            }
+                                            if (ADSB.Time_milisec >= MLAT.Time_milisec && ADSB.Time_milisec < MLAT.Time_milisec + 5 && AfterFound == false)
+                                            {
+                                                After = ADSB;
+                                                AfterFound = true;
+                                            }
+                                            if (BeforeFound == true && AfterFound == true)
+                                            {
+                                                Correct = true;
+                                                cont = false;
+                                            }
+                                            if (i == ListADSB.Count - 1)
+                                            {
+                                                cont = false;
+                                            }
+                                        }
+                                        if (Correct == true && Before.PIC >= PIC && After.PIC >= PIC)
+                                        {
+
+                                            ComputeMLATPrecission(MLAT, Before, After, data);
+                                        }
                                     }
                                 }
                             }
-                        }
-                        if(MlatsInStandsForAccuracy.Count()>1)
-                        {
-                            ComputeMLATprecisionInStandsADSB(MlatsInStandsForAccuracy, data);
-                        }
-
-                        foreach (CAT21vs21 ADSB in ListADSB)
-                        {
-                            if (ADSB.used == true && ADSB.zone != -1)
+                            if (MlatsInStandsForAccuracy.Count() > 1)
                             {
-                                data.ListZones[ADSB.zone - 1].ADSBMessagesUsed++;
+                                ComputeMLATprecisionInStandsADSB(MlatsInStandsForAccuracy, data);
+                            }
+
+                            foreach (CAT21vs21 ADSB in ListADSB)
+                            {
+                                if (ADSB.used == true && ADSB.zone != -1)
+                                {
+                                    data.ListZones[ADSB.zone - 1].ADSBMessagesUsed++;
+                                }
                             }
                         }
                     }
@@ -1220,7 +1247,54 @@ namespace PGTAWPF
                 MLATSList.Add(MLAT);
             }
         }
-        
+
+
+        private void ComputeMLATprecisionInStandsADSBFixed(List<CAT10> MlatsInStandsForAccuracy, Data data)
+        {
+            MlatsInStandsForAccuracy.OrderBy(CAT10 => CAT10.Time_milisec);
+            double startTime = MlatsInStandsForAccuracy[0].Time_milisec;
+            List<ListOfMLATSin5Seconds> ListOrderedMlats = new List<ListOfMLATSin5Seconds>();
+            foreach (CAT10 Mlat in MlatsInStandsForAccuracy)
+            {
+                ListOfMLATSin5Seconds list = ListOrderedMlats.Find(x => (x.StartTime <= Mlat.Time_milisec && x.EndTime > Mlat.Time_milisec && x.zone == Mlat.zone));
+                if (list != null)
+                {
+                    list.MLATSList.Add(Mlat);
+                }
+                else
+                {
+                    list = new ListOfMLATSin5Seconds(Mlat.Time_milisec, Mlat.zone, Mlat);
+                    ListOrderedMlats.Add(list);
+                }
+            }
+            foreach (ListOfMLATSin5Seconds List in ListOrderedMlats)
+            {
+                foreach (CAT10 Mlat in List.MLATSList)
+                {
+                    Point p = lib.FixedMLATSPos[TargetAdress];
+                    if (p != null)
+                    {
+                        Point MLATp = new Point(Mlat.X_Component_map, Mlat.Y_Component_map);
+                        double dist = ComputeDistanceXY(MLATp, p);
+                        List.Distances.Add(dist);
+                        List.UsedMLATS++;
+                        double ErrorLocalX = Mlat.X_Component_map - p.X;
+                        double ErrorLocalY = Mlat.Y_Component_map - p.Y;
+                        if (ErrorLocalX > 10000)
+                        {
+                            int a = 0;
+                        }
+                        PrecissionPoint pressP = new PrecissionPoint(TargetIdentification, TargetAdress, TrackNumberMLAT, Mlat.X_Component_map, Mlat.Y_Component_map, 53.321, p.X, p.Y, 0, ErrorLocalX, ErrorLocalY, dist, Mlat.zone, Mlat.GroundBit, Mlat.Time_milisec);
+                        data.PrecissionPoints.Add(pressP);
+                    }
+                }
+            }
+            foreach (ListOfMLATSin5Seconds List in ListOrderedMlats)
+            {
+                CreateTotalListOfMLATSin5Seconds(List, data);
+            }
+
+        }
 
         private void ComputeMLATprecisionInStandsADSB(List<CAT10> MlatsInStandsForAccuracy, Data data)
         {
@@ -1345,7 +1419,49 @@ namespace PGTAWPF
 
             }
         }
-        
+
+        private void ComputeMLATPrecissionFixedTransp(CAT10 MLAT, Data data)
+        {
+            if (MLAT.zone != -1)
+            {
+                Point p = lib.FixedMLATSPos[TargetAdress];
+                Point MLATp = new Point(MLAT.X_Component_map, MLAT.Y_Component_map);
+                double dist = ComputeDistanceXY(MLATp, p);
+                //  PointLatLng p = ComputePosition(Before, After, MLAT);
+                // double dist = ComputeDistance(MLAT, p);
+                double PFDdist = 50;/////DISTANCE IN FUNCTION OF ZONE
+                int zone = MLAT.zone;
+                if (zone == 9 || zone == 10 || zone == 11)
+                {
+                    PFDdist = 80;
+                }
+                else if (zone == 12 || zone == 13 || zone == 14)
+                {
+                    PFDdist = 160;
+                }
+                if (dist > PFDdist)
+                {
+                    data.ListZones[zone - 1].FalseDetection++;
+                }
+                else
+                {
+                    data.ListZones[zone - 1].CorrectDetection++;
+                }
+
+
+                data.ListZones[zone - 1].MLATPrecision.Add(dist);
+                data.ListZones[zone - 1].MLATMessagesUsed++;
+                MLAT.used = true;
+
+                double ErrorLocalX = MLAT.X_Component_map - p.X;
+                double ErrorLocalY = MLAT.Y_Component_map - p.Y;
+                PrecissionPoint pressP = new PrecissionPoint(TargetIdentification, TargetAdress, TrackNumberMLAT, MLAT.X_Component_map, MLAT.Y_Component_map, 53.321, p.X, p.Y, 0, ErrorLocalX, ErrorLocalY, dist, MLAT.zone, MLAT.GroundBit, MLAT.Time_milisec);
+                data.PrecissionPoints.Add(pressP);
+            }
+
+        }
+
+
 
         private void ComputeMLATPrecission(CAT10 MLAT, CAT21vs21 Before, CAT21vs21 After, Data data)
         {
@@ -1664,6 +1780,13 @@ namespace PGTAWPF
         //    return p;
         //}
 
+        private double ComputeDistanceXY(Point MLAT, Point FixedTrans)
+        {
+            double X = MLAT.X - FixedTrans.X;
+            double Y = MLAT.Y - FixedTrans.Y;
+            double dist = Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2));
+            return dist;
+        }
 
 
         private double ComputeDistanceXY(Point MLAT, PointWithHeight ADSB)
