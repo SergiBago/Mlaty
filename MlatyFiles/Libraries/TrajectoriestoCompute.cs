@@ -679,8 +679,23 @@ namespace PGTAWPF
             for (int i = 0; i < ListMLAT.Count; i++)
             {
                 CAT10 MLAT = ListMLAT[i];
-                //if (MLAT.TOT == "Aircraft")
+                if (MLAT.Target_Address =="342384" || MLAT.Target_Address == "342387" || MLAT.Target_Address == "3433D5")
+                {
+                    MLAT.zone = 5;
+                }
+                //if(MLAT.Target_Address == "3433D5")
                 //{
+                //    int a = 0;
+                //}
+                
+                else if (MLAT.Target_Address == "342385" || MLAT.Target_Address == "342386" || MLAT.Target_Address == "342383" )
+                {
+                    MLAT.zone=4;
+                }
+                else
+                {
+                    //if (MLAT.TOT == "Aircraft")
+                    //{
 
                     Point p = new Point(MLAT.X_Component_map, MLAT.Y_Component_map);
                     MLAT.zone = lib.ComputeZone(p, MLAT.GroundBit);
@@ -696,7 +711,8 @@ namespace PGTAWPF
                         }
                     }
 
-                //}
+                    //}
+                }
             }
             for (int i = 0; i < ListADSB.Count; i++)
             {
@@ -1114,7 +1130,7 @@ namespace PGTAWPF
                     List<CAT10> MlatsInStandsForAccuracy = new List<CAT10>();
                     foreach (CAT10 MLAT in ListMLAT)
                     {
-                        if (MLAT.zone == 3 || MLAT.zone == 4)
+                        if (MLAT.zone == 4 || MLAT.zone == 5)
                         {
                             MlatsInStandsForAccuracy.Add(MLAT);
                         }
@@ -1128,7 +1144,7 @@ namespace PGTAWPF
                     {
                         ComputeMLATprecisionInStandsADSBFixed(MlatsInStandsForAccuracy, data);
                     }
-
+                
                 }
                 else
                 {
