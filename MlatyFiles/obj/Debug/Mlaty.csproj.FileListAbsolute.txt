@@ -127,3 +127,38 @@ C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFi
 C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\obj\Debug\ViewTablesWindow .g.cs
 C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\obj\Debug\ViewTablesWindow .baml
 C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\bin\Debug\LiveCharts.Geared.dll
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\obj\Debug\AccuracyCharts.g.cs
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\obj\Debug\ChartsWindow.g.cs
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\obj\Debug\ViewTablesWindow .g.cs
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\obj\Debug\App.baml
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\obj\Debug\AccuracyCharts.baml
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\obj\Debug\ChartsWindow.baml
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\obj\Debug\ViewTablesWindow .baml
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\bin\Debug\LiveCharts.dll
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\bin\Debug\LiveCharts.Geared.dll
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\bin\Debug\LiveCharts.Wpf.dll
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\bin\Debug\LiveCharts.pdb
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\bin\Debug\LiveCharts.xml
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\bin\Debug\LiveCharts.Wpf.pdb
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\bin\Debug\LiveCharts.Wpf.xml
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\obj\Debug\AccuracyChartsSciCharts.g.cs
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\bin\Debug\SciChart.Charting.dll
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\bin\Debug\SciChart.Core.dll
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\bin\Debug\SciChart.Data.dll
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\bin\Debug\SciChart.Drawing.dll
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\bin\Debug\SciChart.Charting.xml
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\bin\Debug\SciChart.Core.xml
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\bin\Debug\SciChart.Data.xml
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\bin\Debug\SciChart.Drawing.xml
+C:\Users\sergi\Desktop\Mlaty\MlatyFiles\obj\Debug\AccuracyChartsSciCharts.baml
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\bin\Debug\SciChart.Charting.dll
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\bin\Debug\SciChart.Core.dll
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\bin\Debug\SciChart.Data.dll
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\bin\Debug\SciChart.Drawing.dll
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\bin\Debug\SciChart.Charting.xml
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\bin\Debug\SciChart.Core.xml
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\bin\Debug\SciChart.Data.xml
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\bin\Debug\SciChart.Drawing.xml
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\obj\Debug\AccuracyChartsSciCharts.g.cs
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\obj\Debug\AccuracyChartsSciCharts.baml

@@ -387,15 +387,16 @@ namespace PGTAWPF
         {
             ExportTable();
         }
-        
-        AccuracyCharts chartsPage; 
+
+        AccuracyChartsSciCharts chartsPage;
         private void PrecisionChartsclick(object sender, MouseButtonEventArgs e)
         {
             activeSeePrecisionChartsbutton();
             if (chartsPage == null)
             {
-                chartsPage = new AccuracyCharts();
-                chartsPage.GetValues(Archivo.data.PrecissionPoints);
+                Mouse.OverrideCursor = Cursors.Wait;
+                chartsPage = new AccuracyChartsSciCharts();
+                chartsPage.GetData(Archivo.data.PrecissionPoints);
             }
             PanelChildForm.Navigate(chartsPage);
 

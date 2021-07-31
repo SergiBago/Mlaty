@@ -182,33 +182,35 @@ namespace Mlaty
             LiveChartScatter.ChartLegend.Foreground = new SolidColorBrush(Color.FromArgb(255, (byte)249, (byte)249, (byte)249));
 
 
+            //LiveChartScatter.Series = new SeriesCollection
+            //{
+
+            //   StandT1Series,
+            //   StandT2Series,
+            //   ApronT1Series,
+            //   ApronT2Series,
+            //   TaxiSeries,
+
+            //   Airborne0225Series,
+            //   Airborne25L25Series,
+            //   Airborne25R25Series,
+
+            //   Runway02Series,
+            //   Runway25LSeries,
+            //   Runway25RSeries,
+
+            //   Airborne025Series,
+            //   Airborne25L5Series,
+            //   Airborne25R5Series,
+
+            //   Circle75mSeries,
+            //   Circle12mSeries,
+            //   Circle20mSeries,
+            //   Circle40mSeries,
+            //};
             LiveChartScatter.Series = new SeriesCollection
             {
-
-               StandT1Series,
-               StandT2Series,
-               ApronT1Series,
-               ApronT2Series,
-               TaxiSeries,
-
-               Airborne0225Series,
-               Airborne25L25Series,
-               Airborne25R25Series,
-
-               Runway02Series,
-               Runway25LSeries,
-               Runway25RSeries,
-
-               Airborne025Series,
-               Airborne25L5Series,
-               Airborne25R5Series,
-
-               Circle75mSeries,
-               Circle12mSeries,
-               Circle20mSeries,
-               Circle40mSeries,
             };
-
 
             DataContext = this;
         }
@@ -457,7 +459,7 @@ namespace Mlaty
                 {
                     correct = false;
                     MessageboxYesNo deleteform = new MessageboxYesNo();
-                    deleteform.getChartsPage(this);
+                  //  deleteform.getChartsPage(this);
                     deleteform.ShowDialog();
                     if (this.repeteddelete == true)
                     {
@@ -515,23 +517,27 @@ namespace Mlaty
         {
             CheckBox box = sender as CheckBox;
             string name = box.Name;
-            if(name=="RunwaysBox")
+            Mouse.OverrideCursor = Cursors.Wait;
+            if (name=="RunwaysBox")
             {
                 if(RunwaysBox.IsChecked==true)
                 {
-                    Runway02Series.Visibility = Visibility.Visible;
-                    Runway25RSeries.Visibility = Visibility.Visible;
-                    Runway25LSeries.Visibility = Visibility.Visible;
-
+                    LiveChartScatter.Series.Add(Runway02Series);
+                    LiveChartScatter.Series.Add(Runway25RSeries);
+                    LiveChartScatter.Series.Add(Runway25LSeries);
                     ShowRunway25LBox.IsChecked = true;
                     ShowRunway25RBox.IsChecked=true;
                     ShowRunway02Box.IsChecked=true;
                 }
                 else
                 {
-                    Runway02Series.Visibility = Visibility.Collapsed;
-                    Runway25RSeries.Visibility = Visibility.Collapsed;
-                    Runway25LSeries.Visibility = Visibility.Collapsed;
+                    LiveChartScatter.Series.Remove(Runway02Series);
+                    LiveChartScatter.Series.Remove(Runway25RSeries);
+                    LiveChartScatter.Series.Remove(Runway25LSeries);
+
+                    //Runway02Series.Visibility = Visibility.Collapsed;
+                    //Runway25RSeries.Visibility = Visibility.Collapsed;
+                    //Runway25LSeries.Visibility = Visibility.Collapsed;
 
                     ShowRunway25LBox.IsChecked = false;
                     ShowRunway25RBox.IsChecked = false;
@@ -542,7 +548,7 @@ namespace Mlaty
             {
                 if(box.IsChecked==true)
                 {
-                    Runway25LSeries.Visibility = Visibility.Visible;
+                    LiveChartScatter.Series.Add(Runway25LSeries);
                     if(ShowRunway25RBox.IsChecked==true && ShowRunway02Box.IsChecked==true)
                     {
                         RunwaysBox.IsChecked = true;
@@ -550,18 +556,22 @@ namespace Mlaty
                 }
                 else
                 {
-                    if(RunwaysBox.IsChecked==true)
+                    LiveChartScatter.Series.Remove(Runway25LSeries);
+
+                    if (RunwaysBox.IsChecked==true)
                     {
                         RunwaysBox.IsChecked = false;
                     }
-                    Runway25LSeries.Visibility = Visibility.Collapsed;
+                  //  Runway25LSeries.Visibility = Visibility.Collapsed;
                 }
             }
             if (name == "ShowRunway25RBox")
             {
                 if (box.IsChecked == true)
                 {
-                    Runway25RSeries.Visibility = Visibility.Visible;
+                    LiveChartScatter.Series.Add(Runway25RSeries);
+
+                   // Runway25RSeries.Visibility = Visibility.Visible;
                     if (ShowRunway25LBox.IsChecked == true && ShowRunway02Box.IsChecked == true)
                     {
                         RunwaysBox.IsChecked = true;
@@ -569,18 +579,22 @@ namespace Mlaty
                 }
                 else
                 {
+                    LiveChartScatter.Series.Remove(Runway25RSeries);
+
                     if (RunwaysBox.IsChecked == true)
                     {
                         RunwaysBox.IsChecked = false;
                     }
-                    Runway25RSeries.Visibility = Visibility.Collapsed;
+                   // Runway25RSeries.Visibility = Visibility.Collapsed;
                 }
             }
             if (name == "ShowRunway02Box")
             {
                 if (box.IsChecked == true)
                 {
-                    Runway02Series.Visibility = Visibility.Visible;
+                    LiveChartScatter.Series.Add(Runway02Series);
+
+                   // Runway02Series.Visibility = Visibility.Visible;
                     if (ShowRunway25RBox.IsChecked == true && ShowRunway25LBox.IsChecked == true)
                     {
                         RunwaysBox.IsChecked = true;
@@ -588,27 +602,35 @@ namespace Mlaty
                 }
                 else
                 {
+                    LiveChartScatter.Series.Remove(Runway02Series);
+
                     if (RunwaysBox.IsChecked == true)
                     {
                         RunwaysBox.IsChecked = false;
                     }
-                    Runway02Series.Visibility = Visibility.Collapsed;
+                  //  Runway02Series.Visibility = Visibility.Collapsed;
                 }
             }
             if(name=="StandsBox")
             {
                 if (box.IsChecked == true)
                 {
-                   StandT1Series.Visibility = Visibility.Visible;
-                   StandT2Series.Visibility = Visibility.Visible;
+                    LiveChartScatter.Series.Add(StandT1Series);
+                    LiveChartScatter.Series.Add(StandT2Series);
+
+                    //     StandT1Series.Visibility = Visibility.Visible;
+                    //      StandT2Series.Visibility = Visibility.Visible;
 
                     StandT1Box.IsChecked = true;
                     StandT2Box.IsChecked = true;
                 }
                 else
                 {
-                    StandT1Series.Visibility = Visibility.Collapsed;
-                    StandT2Series.Visibility = Visibility.Collapsed;
+                    LiveChartScatter.Series.Remove(StandT1Series);
+                    LiveChartScatter.Series.Remove(StandT2Series);
+
+                    //    StandT1Series.Visibility = Visibility.Collapsed;
+                    //     StandT2Series.Visibility = Visibility.Collapsed;
 
                     StandT1Box.IsChecked = false;
                     StandT2Box.IsChecked = false;
@@ -618,26 +640,32 @@ namespace Mlaty
             {
                 if(box.IsChecked==true)
                 {
-                    StandT1Series.Visibility = Visibility.Visible;
-                    if(StandT2Box.IsChecked==true)
+                    LiveChartScatter.Series.Add(StandT1Series);
+
+                    //   StandT1Series.Visibility = Visibility.Visible;
+                    if (StandT2Box.IsChecked==true)
                     {
                         StandsBox.IsChecked = true;
                     }
                 }
                 else
                 {
-                    if(StandsBox.IsChecked==true)
+                    LiveChartScatter.Series.Remove(StandT1Series);
+
+                    if (StandsBox.IsChecked==true)
                     {
                         StandsBox.IsChecked = false;
                     }
-                    StandT1Series.Visibility = Visibility.Collapsed;
+                    //   StandT1Series.Visibility = Visibility.Collapsed;
                 }
             }
             if (name == "StandT2Box")
             {
                 if (box.IsChecked == true)
                 {
-                    StandT2Series.Visibility = Visibility.Visible;
+                    LiveChartScatter.Series.Add(StandT2Series);
+
+                    //   StandT2Series.Visibility = Visibility.Visible;
                     if (StandT1Box.IsChecked == true)
                     {
                         StandsBox.IsChecked = true;
@@ -645,28 +673,36 @@ namespace Mlaty
                 }
                 else
                 {
+                    LiveChartScatter.Series.Remove(StandT2Series);
+
                     if (StandsBox.IsChecked == true)
                     {
                         StandsBox.IsChecked = false;
                     }
-                    StandT2Series.Visibility = Visibility.Collapsed;
+                    //   StandT2Series.Visibility = Visibility.Collapsed;
                 }
             }
             if (name=="ApronsBox")
             {
                 if (box.IsChecked == true)
                 {
-                    ApronT1Series.Visibility = Visibility.Visible;
-                    ApronT2Series.Visibility = Visibility.Visible;
-                    
+                    LiveChartScatter.Series.Add(ApronT1Series);
+                    LiveChartScatter.Series.Add(ApronT2Series);
+
+                    //   ApronT1Series.Visibility = Visibility.Visible;
+                    //     ApronT2Series.Visibility = Visibility.Visible;
+
                     ApronT1Box.IsChecked = true;
                     ApronT2Box.IsChecked = true;
                 }
                 else
                 {
-                    ApronT1Series.Visibility = Visibility.Collapsed;
-                    ApronT2Series.Visibility = Visibility.Collapsed;
-                    
+                    LiveChartScatter.Series.Remove(ApronT1Series);
+                    LiveChartScatter.Series.Remove(ApronT2Series);
+
+                    //   ApronT1Series.Visibility = Visibility.Collapsed;
+                    //    ApronT2Series.Visibility = Visibility.Collapsed;
+
                     ApronT1Box.IsChecked = false;
                     ApronT2Box.IsChecked = false;
                 }
@@ -675,7 +711,9 @@ namespace Mlaty
             {
                 if (box.IsChecked == true)
                 {
-                    ApronT1Series.Visibility = Visibility.Visible;
+                    LiveChartScatter.Series.Add(ApronT1Series);
+
+                    //   ApronT1Series.Visibility = Visibility.Visible;
                     if (ApronT2Box.IsChecked == true)
                     {
                         ApronsBox.IsChecked = true;
@@ -683,18 +721,22 @@ namespace Mlaty
                 }
                 else
                 {
+                    LiveChartScatter.Series.Remove(ApronT1Series);
+
                     if (ApronsBox.IsChecked == true)
                     {
                         ApronsBox.IsChecked = false;
                     }
-                    ApronT1Series.Visibility = Visibility.Collapsed;
+                    //   ApronT1Series.Visibility = Visibility.Collapsed;
                 }
             }
             if (name == "ApronT2Box")
             {
                 if (box.IsChecked == true)
                 {
-                    ApronT2Series.Visibility = Visibility.Visible;
+                    LiveChartScatter.Series.Add(ApronT2Series);
+
+                    //  ApronT2Series.Visibility = Visibility.Visible;
                     if (ApronT2Box.IsChecked == true)
                     {
                         ApronsBox.IsChecked = true;
@@ -702,22 +744,28 @@ namespace Mlaty
                 }
                 else
                 {
+                    LiveChartScatter.Series.Remove(ApronT2Series);
+
                     if (ApronsBox.IsChecked == true)
                     {
                         ApronsBox.IsChecked = false;
                     }
-                    ApronT2Series.Visibility = Visibility.Collapsed;
+                    //   ApronT2Series.Visibility = Visibility.Collapsed;
                 }
             }
             if(name=="TaxiBox")
             {
                 if(box.IsChecked==true)
                 {
-                    TaxiSeries.Visibility = Visibility.Visible;
+                    LiveChartScatter.Series.Add(TaxiSeries);
+
+                    // TaxiSeries.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    TaxiSeries.Visibility = Visibility.Collapsed;
+                    LiveChartScatter.Series.Remove(TaxiSeries);
+
+                    //   TaxiSeries.Visibility = Visibility.Collapsed;
                 }
             }
 
@@ -725,9 +773,13 @@ namespace Mlaty
             {
                 if (box.IsChecked == true)
                 {
-                    Airborne0225Series.Visibility = Visibility.Visible;
-                    Airborne25R25Series.Visibility = Visibility.Visible;
-                    Airborne25L25Series.Visibility = Visibility.Visible;
+                    LiveChartScatter.Series.Add(Airborne0225Series);
+                    LiveChartScatter.Series.Add(Airborne25R25Series);
+                    LiveChartScatter.Series.Add(Airborne25L25Series);
+
+                    //   Airborne0225Series.Visibility = Visibility.Visible;
+                    //    Airborne25R25Series.Visibility = Visibility.Visible;
+                    //  Airborne25L25Series.Visibility = Visibility.Visible;
 
                     AirborneRunway25L25Box.IsChecked = true;
                     AirborneRunway25R25Box.IsChecked = true;
@@ -735,9 +787,13 @@ namespace Mlaty
                 }
                 else
                 {
-                    Airborne0225Series.Visibility = Visibility.Collapsed;
-                    Airborne25R25Series.Visibility = Visibility.Collapsed;
-                    Airborne25L25Series.Visibility = Visibility.Collapsed;
+                    LiveChartScatter.Series.Remove(Airborne0225Series);
+                    LiveChartScatter.Series.Remove(Airborne25R25Series);
+                    LiveChartScatter.Series.Remove(Airborne25L25Series);
+
+                    //     Airborne0225Series.Visibility = Visibility.Collapsed;
+                    //     Airborne25R25Series.Visibility = Visibility.Collapsed;
+                    //    Airborne25L25Series.Visibility = Visibility.Collapsed;
 
                     AirborneRunway25L25Box.IsChecked = false;
                     AirborneRunway25R25Box.IsChecked = false;
@@ -748,7 +804,9 @@ namespace Mlaty
             {
                 if (box.IsChecked == true)
                 {
-                    Airborne25L25Series.Visibility = Visibility.Visible;
+                    LiveChartScatter.Series.Add(Airborne25L25Series);
+
+                    //    Airborne25L25Series.Visibility = Visibility.Visible;
                     if (AirborneRunway25R25Box.IsChecked == true && AirborneRunway0225Box.IsChecked == true)
                     {
                         Airbornes25Box.IsChecked = true;
@@ -756,18 +814,22 @@ namespace Mlaty
                 }
                 else
                 {
+                    LiveChartScatter.Series.Remove(Airborne25L25Series);
+
                     if (Airbornes25Box.IsChecked == true)
                     {
                         Airbornes25Box.IsChecked = false;
                     }
-                    Airborne25L25Series.Visibility = Visibility.Collapsed;
+                    //     Airborne25L25Series.Visibility = Visibility.Collapsed;
                 }
             }
             if (name == "AirborneRunway25R25Box")
             {
                 if (box.IsChecked == true)
                 {
-                    Airborne25R25Series.Visibility = Visibility.Visible;
+                    LiveChartScatter.Series.Add(Airborne25R25Series);
+
+                    //   Airborne25R25Series.Visibility = Visibility.Visible;
                     if (AirborneRunway25L25Box.IsChecked == true && AirborneRunway0225Box.IsChecked == true)
                     {
                         Airbornes25Box.IsChecked = true;
@@ -775,18 +837,22 @@ namespace Mlaty
                 }
                 else
                 {
+                    LiveChartScatter.Series.Remove(Airborne25R25Series);
+
                     if (Airbornes25Box.IsChecked == true)
                     {
                         Airbornes25Box.IsChecked = false;
                     }
-                    Airborne25R25Series.Visibility = Visibility.Collapsed;
+                    //   Airborne25R25Series.Visibility = Visibility.Collapsed;
                 }
             }
             if (name == "AirborneRunway0225Box")
             {
                 if (box.IsChecked == true)
                 {
-                    Airborne0225Series.Visibility = Visibility.Visible;
+                    LiveChartScatter.Series.Add(Airborne0225Series);
+
+                    //   Airborne0225Series.Visibility = Visibility.Visible;
                     if (AirborneRunway25R25Box.IsChecked == true && AirborneRunway25L25Box.IsChecked == true)
                     {
                         Airbornes25Box.IsChecked = true;
@@ -794,11 +860,13 @@ namespace Mlaty
                 }
                 else
                 {
+                    LiveChartScatter.Series.Remove(Airborne0225Series);
+
                     if (Airbornes25Box.IsChecked == true)
                     {
                         Airbornes25Box.IsChecked = false;
                     }
-                    Airborne0225Series.Visibility = Visibility.Collapsed;
+                    //    Airborne0225Series.Visibility = Visibility.Collapsed;
                 }
             }
 
@@ -807,9 +875,13 @@ namespace Mlaty
             {
                 if (box.IsChecked == true)
                 {
-                    Airborne025Series.Visibility = Visibility.Visible;
-                    Airborne25R5Series.Visibility = Visibility.Visible;
-                    Airborne25L5Series.Visibility = Visibility.Visible;
+                    LiveChartScatter.Series.Add(Airborne025Series);
+                    LiveChartScatter.Series.Add(Airborne25R5Series);
+                    LiveChartScatter.Series.Add(Airborne25L5Series);
+
+                    //        Airborne025Series.Visibility = Visibility.Visible;
+                    //         Airborne25R5Series.Visibility = Visibility.Visible;
+                    //   Airborne25L5Series.Visibility = Visibility.Visible;
 
                     AirborneRunway25L5Box.IsChecked = true;
                     AirborneRunway25R5Box.IsChecked = true;
@@ -817,9 +889,13 @@ namespace Mlaty
                 }
                 else
                 {
-                    Airborne025Series.Visibility = Visibility.Collapsed;
-                    Airborne25R5Series.Visibility = Visibility.Collapsed;
-                    Airborne25L5Series.Visibility = Visibility.Collapsed;
+                    LiveChartScatter.Series.Remove(Airborne025Series);
+                    LiveChartScatter.Series.Remove(Airborne25R5Series);
+                    LiveChartScatter.Series.Remove(Airborne25L5Series);
+
+                    //   Airborne025Series.Visibility = Visibility.Collapsed;
+                    //   Airborne25R5Series.Visibility = Visibility.Collapsed;
+                    //   Airborne25L5Series.Visibility = Visibility.Collapsed;
 
                     AirborneRunway25L5Box.IsChecked = false;
                     AirborneRunway25R5Box.IsChecked = false;
@@ -830,7 +906,9 @@ namespace Mlaty
             {
                 if (box.IsChecked == true)
                 {
-                    Airborne25L5Series.Visibility = Visibility.Visible;
+                    LiveChartScatter.Series.Add(Airborne25L5Series);
+
+                    //   Airborne25L5Series.Visibility = Visibility.Visible;
                     if (AirborneRunway25R5Box.IsChecked == true && AirborneRunway025Box.IsChecked == true)
                     {
                         Airbornes5Box.IsChecked = true;
@@ -838,18 +916,22 @@ namespace Mlaty
                 }
                 else
                 {
+                    LiveChartScatter.Series.Remove(Airborne25L5Series);
+
                     if (Airbornes5Box.IsChecked == true)
                     {
                         Airbornes5Box.IsChecked = false;
                     }
-                    Airborne25L5Series.Visibility = Visibility.Collapsed;
+                    //   Airborne25L5Series.Visibility = Visibility.Collapsed;
                 }
             }
             if (name == "AirborneRunway25R5Box")
             {
                 if (box.IsChecked == true)
                 {
-                    Airborne25R5Series.Visibility = Visibility.Visible;
+                    LiveChartScatter.Series.Add(Airborne25R5Series);
+
+                    //   Airborne25R5Series.Visibility = Visibility.Visible;
                     if (AirborneRunway25L5Box.IsChecked == true && AirborneRunway025Box.IsChecked == true)
                     {
                         Airbornes5Box.IsChecked = true;
@@ -857,18 +939,22 @@ namespace Mlaty
                 }
                 else
                 {
+                    LiveChartScatter.Series.Remove(Airborne25R5Series);
+
                     if (Airbornes5Box.IsChecked == true)
                     {
                         Airbornes5Box.IsChecked = false;
                     }
-                    Airborne25R5Series.Visibility = Visibility.Collapsed;
+                    //    Airborne25R5Series.Visibility = Visibility.Collapsed;
                 }
             }
             if (name == "AirborneRunway025Box")
             {
                 if (box.IsChecked == true)
                 {
-                    Airborne025Series.Visibility = Visibility.Visible;
+                    LiveChartScatter.Series.Add(Airborne025Series);
+
+                    //    Airborne025Series.Visibility = Visibility.Visible;
                     if (AirborneRunway25R5Box.IsChecked == true && AirborneRunway25L5Box.IsChecked == true)
                     {
                         Airbornes5Box.IsChecked = true;
@@ -876,11 +962,13 @@ namespace Mlaty
                 }
                 else
                 {
+                    LiveChartScatter.Series.Remove(Airborne025Series);
+
                     if (Airbornes5Box.IsChecked == true)
                     {
                         Airbornes5Box.IsChecked = false;
                     }
-                    Airborne025Series.Visibility = Visibility.Collapsed;
+                    //   Airborne025Series.Visibility = Visibility.Collapsed;
                 }
             }
 
@@ -888,10 +976,15 @@ namespace Mlaty
             {
                 if (box.IsChecked == true)
                 {
-                    Circle75mSeries.Visibility = Visibility.Visible;
-                    Circle12mSeries.Visibility = Visibility.Visible;
-                    Circle20mSeries.Visibility = Visibility.Visible;
-                    Circle40mSeries.Visibility = Visibility.Visible;
+                    LiveChartScatter.Series.Add(Circle75mSeries);
+                    LiveChartScatter.Series.Add(Circle12mSeries);
+                    LiveChartScatter.Series.Add(Circle20mSeries);
+                    LiveChartScatter.Series.Add(Circle40mSeries);
+
+                    //   Circle75mSeries.Visibility = Visibility.Visible;
+                    //    Circle12mSeries.Visibility = Visibility.Visible;
+                    //   Circle20mSeries.Visibility = Visibility.Visible;
+                    //   Circle40mSeries.Visibility = Visibility.Visible;
 
                     Circle75Box.IsChecked = true;
                     Circle12Box.IsChecked = true;
@@ -901,10 +994,15 @@ namespace Mlaty
                 }
                 else
                 {
-                    Circle75mSeries.Visibility = Visibility.Collapsed;
-                    Circle12mSeries.Visibility = Visibility.Collapsed;
-                    Circle20mSeries.Visibility = Visibility.Collapsed;
-                    Circle40mSeries.Visibility = Visibility.Collapsed;
+                    LiveChartScatter.Series.Remove(Circle75mSeries);
+                    LiveChartScatter.Series.Remove(Circle12mSeries);
+                    LiveChartScatter.Series.Remove(Circle20mSeries);
+                    LiveChartScatter.Series.Remove(Circle40mSeries);
+
+                    //  Circle75mSeries.Visibility = Visibility.Collapsed;
+                    //   Circle12mSeries.Visibility = Visibility.Collapsed;
+                    //  Circle20mSeries.Visibility = Visibility.Collapsed;
+                    //// Circle40mSeries.Visibility = Visibility.Collapsed;
 
                     Circle75Box.IsChecked = false;
                     Circle12Box.IsChecked = false;
@@ -916,7 +1014,9 @@ namespace Mlaty
             {
                 if (box.IsChecked == true)
                 {
-                    Circle75mSeries.Visibility = Visibility.Visible;
+                    LiveChartScatter.Series.Add(Circle75mSeries);
+
+                    // Circle75mSeries.Visibility = Visibility.Visible;
                     if (Circle12Box.IsChecked == true && Circle20Box.IsChecked == true && Circle40Box.IsChecked == true)
                     {
                         CirclesBox.IsChecked = true;
@@ -924,18 +1024,22 @@ namespace Mlaty
                 }
                 else
                 {
+                    LiveChartScatter.Series.Remove(Circle75mSeries);
+
                     if (CirclesBox.IsChecked == true)
                     {
                         CirclesBox.IsChecked = false;
                     }
-                    Circle75mSeries.Visibility = Visibility.Collapsed;
+                    // Circle75mSeries.Visibility = Visibility.Collapsed;
                 }
             }
             if (name == "Circle12Box")
             {
                 if (box.IsChecked == true)
                 {
-                    Circle12mSeries.Visibility = Visibility.Visible;
+                    LiveChartScatter.Series.Add(Circle12mSeries);
+
+                    //    Circle12mSeries.Visibility = Visibility.Visible;
                     if (Circle75Box.IsChecked == true && Circle20Box.IsChecked == true && Circle40Box.IsChecked == true)
                     {
                         CirclesBox.IsChecked = true;
@@ -943,18 +1047,22 @@ namespace Mlaty
                 }
                 else
                 {
+                    LiveChartScatter.Series.Remove(Circle12mSeries);
+
                     if (CirclesBox.IsChecked == true)
                     {
                         CirclesBox.IsChecked = false;
                     }
-                    Circle12mSeries.Visibility = Visibility.Collapsed;
+                    //   Circle12mSeries.Visibility = Visibility.Collapsed;
                 }
             }
             if (name == "Circle20Box")
             {
                 if (box.IsChecked == true)
                 {
-                    Circle20mSeries.Visibility = Visibility.Visible;
+                    LiveChartScatter.Series.Add(Circle20mSeries);
+
+                    // Circle20mSeries.Visibility = Visibility.Visible;
                     if (Circle12Box.IsChecked == true && Circle75Box.IsChecked == true && Circle40Box.IsChecked == true)
                     {
                         CirclesBox.IsChecked = true;
@@ -962,18 +1070,22 @@ namespace Mlaty
                 }
                 else
                 {
+                    LiveChartScatter.Series.Remove(Circle20mSeries);
+
                     if (CirclesBox.IsChecked == true)
                     {
                         CirclesBox.IsChecked = false;
                     }
-                    Circle20mSeries.Visibility = Visibility.Collapsed;
+                    //   Circle20mSeries.Visibility = Visibility.Collapsed;
                 }
             }
             if (name == "Circle40Box")
             {
                 if (box.IsChecked == true)
                 {
-                    Circle40mSeries.Visibility = Visibility.Visible;
+                    LiveChartScatter.Series.Add(Circle40mSeries);
+
+                    //  Circle40mSeries.Visibility = Visibility.Visible;
                     if (Circle12Box.IsChecked == true && Circle20Box.IsChecked == true && Circle75Box.IsChecked == true)
                     {
                         CirclesBox.IsChecked = true;
@@ -981,13 +1093,17 @@ namespace Mlaty
                 }
                 else
                 {
+                    LiveChartScatter.Series.Remove(Circle40mSeries);
+
                     if (CirclesBox.IsChecked == true)
                     {
                         CirclesBox.IsChecked = false;
                     }
-                    Circle40mSeries.Visibility = Visibility.Collapsed;
+                    //Circle40mSeries.Visibility = Visibility.Collapsed;
                 }
             }
+            Mouse.OverrideCursor = null;
+
         }
 
         private void Resize(object sender, SizeChangedEventArgs e)

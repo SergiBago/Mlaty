@@ -23,7 +23,7 @@ namespace PGTA_WPF
     {
 
         MainWindow Form;
-        AccuracyCharts chartsPage;
+        AccuracyChartsSciCharts chartsPage;
         public MessageboxYesNo()
         {
             InitializeComponent();
@@ -34,7 +34,7 @@ namespace PGTA_WPF
             this.Form = form;
         }
 
-        public void getChartsPage(AccuracyCharts form)
+        public void getChartsPage(AccuracyChartsSciCharts form)
         {
             this.chartsPage= form;
         }

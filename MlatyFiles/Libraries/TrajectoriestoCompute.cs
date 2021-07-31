@@ -1183,7 +1183,7 @@ namespace PGTAWPF
 
                                 if (MLAT.zone != -1)
                                 {
-                                    if (MLAT.zone == 3 || MLAT.zone == 4)
+                                    if (MLAT.zone == 4 || MLAT.zone == 5)
                                     {
                                         MlatsInStandsForAccuracy.Add(MLAT);
                                     }
@@ -1309,7 +1309,6 @@ namespace PGTAWPF
             {
                 CreateTotalListOfMLATSin5Seconds(List, data);
             }
-
         }
 
         private void ComputeMLATprecisionInStandsADSB(List<CAT10> MlatsInStandsForAccuracy, Data data)
@@ -1348,7 +1347,7 @@ namespace PGTAWPF
                             int a = 0;
                         }
                         PrecissionPoint pressP = new PrecissionPoint(TargetIdentification, TargetAdress, TrackNumberMLAT, Mlat.X_Component_map, Mlat.Y_Component_map, 53.321, p.X, p.Y, p.Z, ErrorLocalX, ErrorLocalY, dist, Mlat.zone, Mlat.GroundBit, Mlat.Time_milisec);
-                        data.PrecissionPoints.Add(pressP);
+                        data.PrecissionPoints.Add(pressP);     
                     }
                 }
             }
@@ -1367,6 +1366,15 @@ namespace PGTAWPF
                 dist += distance;
             }
             double precision = dist / List.UsedMLATS;
+            double PFDdist = 50; /////DISTANCE IN FUNCTION OF ZONE
+            if (precision > PFDdist)
+            {
+                data.ListZones[List.zone - 1].FalseDetection++;
+            }
+            else
+            {
+                data.ListZones[List.zone - 1].CorrectDetection++;
+            }
             data.ListZones[List.zone - 1].MLATPrecision.Add(precision);
             data.ListZones[List.zone - 1].MLATMessagesUsed+=List.UsedMLATS;            
         }
