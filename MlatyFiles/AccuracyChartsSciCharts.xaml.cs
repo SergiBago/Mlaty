@@ -76,24 +76,24 @@ namespace Mlaty
         FastLineRenderableSeries Circle20Series;
         FastLineRenderableSeries Circle40Series;
 
-        Color Runway02Color = Color.FromArgb(255, 255, 0, 0);
-        Color Runway25LColor = Color.FromArgb(255, 255, 0, 0);
-        Color Runway25RColor = Color.FromArgb(255, 255, 0, 0);
-        Color StandT1Color = Color.FromArgb(255, 255, 0, 0);
-        Color StandT2Color = Color.FromArgb(255, 255, 0, 0);
-        Color TaxiZonesColor = Color.FromArgb(255, 255, 0, 0);
-        Color ApronT1Color = Color.FromArgb(255, 255, 0, 0);
-        Color ApronT2Color = Color.FromArgb(255, 255, 0, 0);
-        Color Airborne25L25Color = Color.FromArgb(255, 255, 0, 0);
-        Color Airborne25R25Color = Color.FromArgb(255, 255, 0, 0);
-        Color Airborne0225Color = Color.FromArgb(255, 255, 0, 0);
-        Color Airborne25L5Color = Color.FromArgb(255, 255, 0, 0);
-        Color Airborne25R5Color = Color.FromArgb(255, 255, 0, 0);
-        Color Airborne025Color = Color.FromArgb(255, 255, 0, 0);
-        Color Circle12Color = Color.FromArgb(255, 200, 0, 0);
+        Color Runway02Color = Color.FromArgb(255, 255, 255, 0);
+        Color Runway25LColor = Color.FromArgb(255, 200, 200, 0);
+        Color Runway25RColor = Color.FromArgb(255, 150,150, 0);
+        Color StandT1Color = Color.FromArgb(255, 200, 200, 200);
+        Color StandT2Color = Color.FromArgb(255, 150, 150, 150);
+        Color TaxiZonesColor = Color.FromArgb(255, 255, 137, 0);
+        Color ApronT1Color = Color.FromArgb(255, 255, 91, 102);
+        Color ApronT2Color = Color.FromArgb(255, 210, 0, 14);
+        Color Airborne25L25Color = Color.FromArgb(255, 255, 110, 255);
+        Color Airborne25R25Color = Color.FromArgb(255, 229, 0, 229);
+        Color Airborne0225Color = Color.FromArgb(255, 137, 0, 137);
+        Color Airborne25L5Color = Color.FromArgb(255, 255, 47, 165);
+        Color Airborne25R5Color = Color.FromArgb(255, 203, 0, 115);
+        Color Airborne025Color = Color.FromArgb(255, 149, 29, 97);
+        Color Circle12Color = Color.FromArgb(255, 255, 0, 0);
         Color Circle75Color = Color.FromArgb(255, 255, 0, 0);
-        Color Circle20Color = Color.FromArgb(255, 150, 0, 0);
-        Color Circle40Color = Color.FromArgb(255, 100, 0, 0);
+        Color Circle20Color = Color.FromArgb(255, 255, 0, 0);
+        Color Circle40Color = Color.FromArgb(255, 255, 0, 0);
 
 
         public AccuracyChartsSciCharts()
@@ -180,7 +180,7 @@ namespace Mlaty
             Runway25RSeries.DataSeries = Runway25R;
             Runway25R.SeriesName = "Runway 25R";
             Runway25R.AcceptsUnsortedData = true;
-            Runway25RSeries.PointMarker = new EllipsePointMarker() { Width = 5, Height = 5 , Stroke=Runway25LColor, Fill= Runway25LColor };
+            Runway25RSeries.PointMarker = new EllipsePointMarker() { Width = 5, Height = 5 , Stroke=Runway25RColor, Fill= Runway25RColor };
 
             sciChart.RenderableSeries.Add(Runway25RSeries);
               StandT1Series = new XyScatterRenderableSeries
