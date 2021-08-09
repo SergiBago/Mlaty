@@ -10,7 +10,7 @@ namespace PGTA_WPF
 {
     public class DataZone
     {
-        public int MLATMessagesUsed; //
+        public int MLATMessagesUsed { get; set; } //
         public int MLATMessagesUsedheight; //
         public int ADSBMessagesUsed; //
         public List<double> MLATPrecision = new List<double>(); //

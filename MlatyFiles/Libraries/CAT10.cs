@@ -11,10 +11,7 @@ namespace PGTAWPF
 {
     public class CAT10
     {
-        /// <summary>
-        /// Hi
-        /// </summary>
-        readonly LibreriaDecodificacion lib;
+
         readonly string[] mensaje;
         readonly string FSPEC1;
         public string CAT = "10";
@@ -32,18 +29,17 @@ namespace PGTAWPF
         }
 
 
-        public CAT10(string[] mensajehexa, double firsttime, LibreriaDecodificacion lib)
+        public CAT10(string[] mensajehexa, double firsttime)
         {
             try
             {
-                this.lib = lib;
                 this.FirstTime = firsttime;
                 this.mensaje = mensajehexa;
-                FSPEC1 = lib.FSPEC(mensaje);
+                FSPEC1 = LibreriaDecodificacion.FSPEC(mensaje);
                 int longFSPEC = this.FSPEC1.Length / 7;
                 int pos = 3 + longFSPEC;
                 char[] FSPEC = FSPEC1.ToCharArray(0, FSPEC1.Length);
-                this.mensaje = lib.Passarmensajeenteroabinario(mensaje);
+                this.mensaje = LibreriaDecodificacion.Passarmensajeenteroabinario(mensaje);
                 if (FSPEC[0] == '1') { pos = this.Compute_Data_Source_Identifier(mensaje, pos); } //
                 if (FSPEC[1] == '1') { pos = this.Compute_Message_Type(mensaje, pos); } //
                 if (FSPEC[2] == '1') { pos = this.Compute_Target_Report_Descriptor(mensaje, pos); } //
@@ -120,7 +116,7 @@ namespace PGTAWPF
             //else {
             SAC = Convert.ToString(Convert.ToInt32(message[pos],2)); 
             SIC = Convert.ToString(Convert.ToInt32(message[pos + 1],2));
-            this.airportCode = lib.GetAirporteCode(Convert.ToInt32(SIC));
+            this.airportCode = LibreriaDecodificacion.GetAirporteCode(Convert.ToInt32(SIC));
 
             pos += 2;
             return pos;
@@ -274,8 +270,8 @@ namespace PGTAWPF
         public double LongitudeWGS_84_map = -200;
         private int Compute_Position_in_WGS_84_Coordinates(string[] message, int pos)
         {
-            double Latitude = lib.ComputeA2Complement(string.Concat(message[pos], message[pos + 1], message[pos + 2], message[pos + 3])) * (180 / (Math.Pow(2, 31))); pos += 4;
-            double Longitude = lib.ComputeA2Complement(string.Concat(message[pos], message[pos + 1], message[pos + 2], message[pos + 3])) * (180 / (Math.Pow(2, 31))); pos += 4;
+            double Latitude = LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos], message[pos + 1], message[pos + 2], message[pos + 3])) * (180 / (Math.Pow(2, 31))); pos += 4;
+            double Longitude = LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos], message[pos + 1], message[pos + 2], message[pos + 3])) * (180 / (Math.Pow(2, 31))); pos += 4;
             int Latdegres = Convert.ToInt32(Math.Truncate(Latitude));
             int Latmin = Convert.ToInt32(Math.Truncate((Latitude - Latdegres) * 60));
             double Latsec = Math.Round(((Latitude - (Latdegres + (Convert.ToDouble(Latmin) / 60))) * 3600), 5);
@@ -295,8 +291,8 @@ namespace PGTAWPF
         public string Position_Cartesian_Coordinates;
         private int Compute_Position_in_Cartesian_Coordinates(string[] message, int pos)
         {
-            X_Component_map= lib.ComputeA2Complement(string.Concat(message[pos], message[pos + 1]));
-            Y_Component_map= lib.ComputeA2Complement(string.Concat(message[pos+2], message[pos + 3]));
+            X_Component_map= LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos], message[pos + 1]));
+            Y_Component_map= LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos+2], message[pos + 3]));
             X_Component = Convert.ToString(X_Component_map);
             Y_Component = Convert.ToString(Y_Component_map);
             Position_Cartesian_Coordinates = "X: " + X_Component + ", Y: " + Y_Component;
@@ -308,16 +304,16 @@ namespace PGTAWPF
         private void ComputeZone()
         {
             Point p = new Point(X_Component_map, Y_Component_map);
-            zone = lib.ComputeZone(p, GroundBit);
+            zone = LibreriaDecodificacion.ComputeZone(p, GroundBit);
         }
 
         private void ComputeWGS_84_from_Cartesian()
         {
-            //PointLatLng AirportPoint = lib.GetAirportARPCoorde(airportCode);
+            //PointLatLng AirportPoint = LibreriaDecodificacion.GetAirportARPCoorde(airportCode);
             double X = this.X_Component_map;
             double Y = this.Y_Component_map;
             CoordinatesXYZ ObjectCartesian = new CoordinatesXYZ(X, Y,0);
-            PointLatLng AirportPoint = lib.GetCoordenatesSMRMALT(Convert.ToInt32(SIC));
+            PointLatLng AirportPoint = LibreriaDecodificacion.GetCoordenatesSMRMALT(Convert.ToInt32(SIC));
             CoordinatesWGS84 AirportGeodesic = new CoordinatesWGS84(AirportPoint.Lat * (Math.PI / 180), AirportPoint.Lng * (Math.PI / 180));
             GeoUtils geoUtils = new GeoUtils();
             CoordinatesWGS84 MarkerGeodesic = geoUtils.change_system_cartesian2geodesic(ObjectCartesian, AirportGeodesic);
@@ -351,7 +347,7 @@ namespace PGTAWPF
             //else { G_Mode_3A = "G: Garbled code"; }
             //if (OctetoChar[2] == '0') { L_Mode_3A = "L: Mode-3/A code derived from the reply of the transponder"; }
             //else { L_Mode_3A = "L: Mode-3/A code not extracted during the last scan"; }
-            //Mode_3A = Convert.ToString(lib.ConvertDecimalToOctal(Convert.ToInt32(string.Concat(message[pos], message[pos + 1]).Substring(4, 12), 2))).PadLeft(4,'0');
+            //Mode_3A = Convert.ToString(LibreriaDecodificacion.ConvertDecimalToOctal(Convert.ToInt32(string.Concat(message[pos], message[pos + 1]).Substring(4, 12), 2))).PadLeft(4,'0');
             pos += 2;
             return pos;
         }
@@ -368,7 +364,7 @@ namespace PGTAWPF
             else { V_Flight_Level = "Code not validated"; }
             if (OctetoChar[1] == '0') { G_Flight_Level = "Default"; }
             else { G_Flight_Level = "Garbled code"; }
-            Flight_Level_Binary = Convert.ToString(lib.ComputeA2Complement(string.Concat(message[pos], message[pos + 1]).Substring(2, 14)) * (0.25));
+            Flight_Level_Binary = Convert.ToString(LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos], message[pos + 1]).Substring(2, 14)) * (0.25));
           //  Flight_Level = V_Flight_Level + ", " + G_Flight_Level + ", Flight Level: " + Flight_Level_Binary;
             Flight_Level = Convert.ToDouble(Flight_Level_Binary)* (0.3048*100);
             pos += 2;
@@ -379,7 +375,7 @@ namespace PGTAWPF
         public double Measured_Height=-999;
         private int Compute_Measured_Height(string[] message, int pos)
         {
-            Measured_Height=lib.ComputeA2Complement(string.Concat(message[pos], message[pos + 1])) * 6.25* 0.3048 ;
+            Measured_Height=LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos], message[pos + 1])) * 6.25* 0.3048 ;
             pos += 2;
             return pos;
         }
@@ -506,9 +502,9 @@ namespace PGTAWPF
         public string Track_Velocity_in_Cartesian_Coordinates;
         private int Compute_Track_Velocity_in_Cartesian_Coordinates(string[] message, int pos)
         {
-            double vx = (lib.ComputeA2Complement(string.Concat(message[pos], message[pos + 1])) * 0.25);
+            double vx = (LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos], message[pos + 1])) * 0.25);
             Vx = vx;
-            double vy = (lib.ComputeA2Complement(string.Concat(message[pos + 2], message[pos + 3])) * 0.25);
+            double vy = (LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos + 2], message[pos + 3])) * 0.25);
             Vy =vy;
             //Track_Velocity_in_Cartesian_Coordinates = Vx + Vy;
             pos += 4;
@@ -521,8 +517,8 @@ namespace PGTAWPF
         //public string Calculated_Acceleration;
         private int Compute_Calculated_Acceleration(string[] message, int pos)
         {
-            //double ax = lib.ComputeA2Complement(message[pos]) * 0.25;
-            //double ay = lib.ComputeA2Complement(message[pos + 1]) * 0.25;
+            //double ax = LibreriaDecodificacion.ComputeA2Complement(message[pos]) * 0.25;
+            //double ay = LibreriaDecodificacion.ComputeA2Complement(message[pos + 1]) * 0.25;
             //if (Convert.ToInt32(ax) >= 31 || Convert.ToInt32(ax) <= -31) { Ax = "Ax exceed the max value or is the max value (+-31 m/s^2)"; }
             //else { Ax = "Ax: " + Convert.ToString(ax) + "m/s^2"; }
             //if (Convert.ToInt32(ay) >= 31 || Convert.ToInt32(ax) <= -31) { Ay = "Ay exceed the max value or is the max value (+-31 m/s^2)"; }
@@ -536,7 +532,7 @@ namespace PGTAWPF
         public string Target_Address;
         private int Compute_Target_Address(string[] message, int pos)
         {
-            Target_Address = string.Concat(lib.BinarytoHexa(message[pos]), lib.BinarytoHexa(message[pos + 1]), lib.BinarytoHexa(message[pos + 2]));
+            Target_Address = string.Concat(LibreriaDecodificacion.BinarytoHexa(message[pos]), LibreriaDecodificacion.BinarytoHexa(message[pos + 1]), LibreriaDecodificacion.BinarytoHexa(message[pos + 2]));
 
             pos += 3; 
             return pos; 
@@ -556,7 +552,7 @@ namespace PGTAWPF
             else if (sti == 2) { STI = "Registration not downlinked from transponder"; }
             StringBuilder Identification = new StringBuilder();
             string octets = string.Concat(message[pos + 1], message[pos + 2], message[pos + 3], message[pos + 4], message[pos + 5], message[pos + 6]);
-            for (int i = 0; i < 8; i++) { Identification.Append(lib.Compute_Char(octets.Substring(i * 6, 6))); }
+            for (int i = 0; i < 8; i++) { Identification.Append(LibreriaDecodificacion.Compute_Char(octets.Substring(i * 6, 6))); }
             Target_Identification = Identification.ToString().Trim();
             pos += 7;
             return pos;
@@ -685,7 +681,7 @@ namespace PGTAWPF
         {
             //Deviation_X = "Standard Deviation of X component (σx):" + Convert.ToString(Convert.ToDouble(Convert.ToInt32(message[pos], 2)) * 0.25) + "m";
             //Deviation_Y = "Standard Deviation of Y component (σy): " + Convert.ToString(Convert.ToDouble(Convert.ToInt32(message[pos + 1], 2)) * 0.25) + "m";
-            //Covariance_XY = "Covariance (σxy): " + Convert.ToString(lib.ComputeA2Complement(string.Concat(message[pos + 2], message[pos + 3])) * 0.25) + "m^2";
+            //Covariance_XY = "Covariance (σxy): " + Convert.ToString(LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos + 2], message[pos + 3])) * 0.25) + "m^2";
             pos += 4;
             return pos;
         }

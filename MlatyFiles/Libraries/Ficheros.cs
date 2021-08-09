@@ -21,24 +21,23 @@ namespace PGTAWPF
         public int numficheros = 0;
         public List<string> namestxt = new List<string>();
         public List<string> namesastadsb = new List<string>();
-        public List<string> namesastdgps = new List<string>();
-        readonly LibreriaDecodificacion lib = new LibreriaDecodificacion();
+        public List<string> namesastdgps = new List<string>();       
         public List<int> AirportCodesList = new List<int>();
         public Data data = new Data();
         public List<MapMarker> listMarkers = new List<MapMarker>();
         List<int> PICS = new List<int>();
         bool SavePositions = true;
-        List<TrajectoriestoCompute> trajdgps = new List<TrajectoriestoCompute>();
-        int failed;
+        List<TrajectoriesToCompute> trajdgps = new List<TrajectoriesToCompute>();
 
         public Ficheros()
         {
-            lib.ComputeMLATSPos();
         }
 
+        /// <summary>
+        /// Clear all list, and delet all messages and loaded data. 
+        /// </summary>
         public void ResetData()
         {
-
             namestxt.Clear();
             namesastdgps.Clear();
             namesastadsb.Clear();
@@ -47,11 +46,16 @@ namespace PGTAWPF
             listMarkers.Clear();
         }
 
+        /// <summary>
+        /// Compute ADS-B MLATY files
+        /// </summary>
+        /// <param name="SaveMarkers"></param>
+        /// <param name="PIC"></param>
+        /// <returns></returns>
         public int ComputeValuesADSB(bool SaveMarkers, string PIC)
         {
             //try
             //{
-            failed = 0;
                 SavePositions = SaveMarkers;
                 for (int i = 0; i < namesastadsb.Count; i += 2)
                 {
@@ -61,13 +65,19 @@ namespace PGTAWPF
                     }
                 }
                 return 1;
-            //}
-            //catch
-            //{
-            //    return 0;
-            //}
+        //}
+        //    catch
+        //    {
+        //        return 0;
+        //    }
         }
 
+
+        /// <summary>
+        /// Compute DGPS-MLAT files
+        /// </summary>
+        /// <param name="SaveMarkers"></param>
+        /// <returns></returns>
         public int ComputeValuesDGPS(bool SaveMarkers)
         {
             SavePositions = SaveMarkers;
@@ -89,61 +99,50 @@ namespace PGTAWPF
 
         }
 
-        private void AddMapMarker(CAT21vs21 newcat)
-        {
-            if (newcat.zone != -1)
-            {
-                PointLatLng p = new PointLatLng(newcat.LatitudeWGS_84_map, newcat.LongitudeWGS_84_map);
-                MapMarker mark = new MapMarker(newcat.zone, p,1);
-                listMarkers.Add(mark);
-            }
-        }
 
-        private void AddMapMarker(CAT10 newcat)
-        {
-            if (newcat.zone != -1)
-            {
-                PointLatLng p = new PointLatLng(newcat.LatitudeWGS_84_map, newcat.LongitudeWGS_84_map);
-                MapMarker mark = new MapMarker(newcat.zone, p,0);
-                listMarkers.Add(mark);
-            }
-        }
-
-        
+        /// <summary>
+        /// Decodify and compute each ADSB MLAT file
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="s"></param>
+        /// <param name="PICvalue"></param>
         public void ComputeFileADSB(string path, int s, string PICvalue)
         {
-          
+
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
             //try
             //{
-                bool computePIC = false;
-                if (PICvalue == "Auto") { computePIC = true; }
-                
+            bool computePIC = false;
+            if (PICvalue == "Auto") { computePIC = true; }
+
                 PICS.Clear();
                 bool first = true;
                 double firsttime = 0;
-                List<TrajectoriestoCompute> traj = new List<TrajectoriestoCompute>();
+                List<TrajectoriesToCompute> traj = new List<TrajectoriesToCompute>();
                 namesastadsb[s + 1] = "Decodifying file...";
-                byte[] fileBytes = File.ReadAllBytes(path);
+
+
+
+                byte[] fileBytes = File.ReadAllBytes(path); //Read all bytes of the file. This returs a list of bytes which have a value from 0 to 254
                 List<byte[]> listabyte = new List<byte[]>();
                 int i = 0;
-                int contador = fileBytes[2] + (fileBytes[1] * 256);
-                while (i < fileBytes.Length)
+                int contador = fileBytes[2] + (fileBytes[1] * 256); //Compute message lenght. First Octet gives cat, second and third give lenght of message. 
+                while (i < fileBytes.Length) //Create a list which every item will be an array of bytes (every item is a message)
                 {
-                    byte[] array = new byte[contador];
-                    for (int j = 0; j < array.Length; j++)
+                    byte[] array = new byte[contador]; //Lenght of array will be lenght of message octets
+                    for (int j = 0; j < array.Length; j++) 
                     {
-                        array[j] = fileBytes[i];
+                        array[j] = fileBytes[i]; //Clone readed bytes to message array
                         i++;
                     }
-                    listabyte.Add(array);
-                    if (i + 2 < fileBytes.Length)
+                    listabyte.Add(array); //Add message array to list of messages
+                    if (i + 2 < fileBytes.Length) // Compute lenght of next messsage
                     {
-                        contador = fileBytes[i + 2] + (fileBytes[i + 1] * 256);
+                        contador = fileBytes[i + 2] + (fileBytes[i + 1] * 256); //Again, we take i+1 and i+2 because i+0 will give message cat and not lenght
                     }
                 }
-                List<string[]> listahex = new List<string[]>();
-                for (int x = 0; x < listabyte.Count; x++)
+                List<string[]> listahex = new List<string[]>(); //Convert list of bytes into list of strings (we will work in Hex format)
+                for (int x = 0; x < listabyte.Count; x++) //transform every byte into hex character
                 {
                     byte[] buffer = listabyte[x];
                     string[] arrayhex = new string[buffer.Length];
@@ -154,342 +153,136 @@ namespace PGTAWPF
                     listahex.Add(arrayhex);
                 }
 
+
+
+
+
                 for (int q = 0; q < listahex.Count; q++)
                 {
                     namesastadsb[s + 1] = "Computing message " + Convert.ToString(q) + " of " + Convert.ToString(listahex.Count) + " messages...";
                     string[] arraystring = listahex[q];
                     int CAT = int.Parse(arraystring[0], System.Globalization.NumberStyles.HexNumber);
-                if (CAT == 10)
-                {
-                    CAT10 newcat10 = new CAT10(arraystring, firsttime, lib);
-                    if (newcat10.TYP == "Mode S MLAT")
+                    if (CAT == 10)
                     {
-                        if (newcat10.Target_Identification != null)
-                        {
-                            int a = 0;
-                        }
+                        CAT10 newcat10 = new CAT10(arraystring, firsttime);
 
-                        bool trajfound = false;
-                        if(newcat10.Target_Address=="3433D5")
-                        {
-                            int a = 0;
-                        }
-                        //if (newcat10.Track_Number != -1)// && trajfound == false)
-                        //{
-                        //    if (traj.Exists(x => x.TrackNumber == newcat10.Track_Number))
-                        //    {
-
-                        //        TrajectoriestoCompute traject= traj.Find(x => x.TrackNumber == newcat10.Track_Number);
-
-                        //        if(traject.ListMLAT.Count() > 0 && traject.ListMLAT[traject.ListMLAT.Count()-1].Time_of_day_sec>=newcat10.Time_of_day_sec-25 && traject.ListMLAT[traject.ListMLAT.Count() - 1].Time_of_day_sec <= newcat10.Time_of_day_sec + 25)
-                        //        {
-                        //            traject.ADDCAT10(newcat10);
-                        //            trajfound = true;
-                        //        }
-                        //        else
-                        //        {
-                        //            TrajectoriestoCompute newtraj = new TrajectoriestoCompute(newcat10);
-                        //            traj.Add(newtraj);
-                        //            trajfound = true;
-
-                        //        }
-                        //        trajfound = true;
-                        //    }
-                        //}
-                        //if (trajfound == false)
-                        //{
-                        //if (newcat10.Target_Identification != null)
-                        //{
-                        //    if (traj.Exists(x => x.TargetIdentification == newcat10.Target_Identification))
-                        //    {
-                        //        traj.Find(x => x.TargetIdentification == newcat10.Target_Identification).ADDCAT10(newcat10);
-                        //        trajfound = true;
-                        //    }
-                        //}
-                        //else if (newcat10.Target_Address != null && trajfound == false)
-                        //{
-                        //    if (traj.Exists(x => x.TargetAdress == newcat10.Target_Address))
-                        //    {
-                        //        TrajectoriestoCompute traject = traj.Find(x => x.TargetAdress == newcat10.Target_Address);
-                        //        if (traject.TrackNumber == newcat10.Track_Number && traject.TargetIdentification != newcat10.Target_Identification)
-                        //        {
-                        //        }
-                        //        trajfound = true;
-                        //    }
-                        //}
-                        if (newcat10.Target_Address != null && newcat10.Target_Identification != null && newcat10.Track_Number != -1)
-                        {
-                            if (traj.Exists(x => (x.TargetAdress == newcat10.Target_Address && x.TargetIdentification == newcat10.Target_Identification && newcat10.Track_Number == x.TrackNumberMLAT)))
-                            {
-                                TrajectoriestoCompute traject = traj.Find(x => (x.TargetAdress == newcat10.Target_Address && x.TargetIdentification == newcat10.Target_Identification && newcat10.Track_Number == x.TrackNumberMLAT));
-                                //  if (traject.TrackNumber == newcat10.Track_Number && traject.TargetIdentification != newcat10.Target_Identification)
-                                //   {
-                                traject.ADDCAT10(newcat10);
-                                trajfound = true;
-
-                                //    }
-                            }
-                            //else if (traj.Exists(x => (x.TargetAdress == newcat10.Target_Address && x.TargetIdentification == newcat10.Target_Identification)))
-                            //{
-                            //    TrajectoriestoCompute traject = traj.Find(x => (x.TargetAdress == newcat10.Target_Address && x.TargetIdentification == newcat10.Target_Identification));
-                            //    //  if (traject.TrackNumber == newcat10.Track_Number && traject.TargetIdentification != newcat10.Target_Identification)
-                            //    //   {
-                            //    traject.ADDCAT10(newcat10);
-                            //    trajfound = true;
-                            //}
-                        }
-                        if (newcat10.Target_Address != null  && newcat10.Track_Number != -1 && trajfound==false)
-                        {
-                            if (traj.Exists(x => (x.TargetAdress == newcat10.Target_Address  && newcat10.Track_Number == x.TrackNumberMLAT)))
-                            {
-                                TrajectoriestoCompute traject = traj.Find(x => (x.TargetAdress == newcat10.Target_Address && newcat10.Track_Number == x.TrackNumberMLAT));
-                                //  if (traject.TrackNumber == newcat10.Track_Number && traject.TargetIdentification != newcat10.Target_Identification)
-                                //   {
-                                traject.ADDCAT10(newcat10);
-                                trajfound = true;
-
-                                //    }
-                            }
-                            //    else if(traj.Exists(x => (x.TargetAdress == newcat10.Target_Address && x.TargetIdentification == newcat10.Target_Identification)))
-                            //{
-                            //    TrajectoriestoCompute traject = traj.Find(x => (x.TargetAdress == newcat10.Target_Address && x.TargetIdentification == newcat10.Target_Identification));
-                            //    //  if (traject.TrackNumber == newcat10.Track_Number && traject.TargetIdentification != newcat10.Target_Identification)
-                            //    //   {
-                            //    traject.ADDCAT10(newcat10);
-                            //    trajfound = true;
-                            //}
-                        }
-                        if (newcat10.Target_Address != null && !trajfound)
-                        {
-
-                            if (traj.Exists(x => x.TargetAdress == newcat10.Target_Address))
-                            {
-                                TrajectoriestoCompute traject = traj.Find(x => x.TargetAdress == newcat10.Target_Address);
-                                traject.ADDCAT10(newcat10);
-                                trajfound = true;
-                               
-                            }
-                        }
-                        if (newcat10.Track_Number != -1 && trajfound == false)
-                        {
-                            if (traj.Exists(x => x.TrackNumberMLAT == newcat10.Track_Number))
-                            {
-
-                                TrajectoriestoCompute traject = traj.Find(x => x.TrackNumberMLAT == newcat10.Track_Number);
-
-                                //if (traject.ListMLAT.Count() > 0 && traject.ListMLAT[traject.ListMLAT.Count() - 1].Time_of_day_sec >= newcat10.Time_of_day_sec - 25 && traject.ListMLAT[traject.ListMLAT.Count() - 1].Time_of_day_sec <= newcat10.Time_of_day_sec + 25)
-                                //{
-                                traject.ADDCAT10(newcat10);
-                                trajfound = true;
-                                //}
-                                //else
-                                //{
-                                //    TrajectoriestoCompute newtraj = new TrajectoriestoCompute(newcat10);
-                                //      traj.Add(newtraj);
-                                //  trajfound = true;
-
-                                //}
-                                //trajfound = true;
-                            }
-                        }
-
-
-                        //if (trajfound == false)
-                        //{
-                        //    //if (newcat10.Target_Identification != null)
-                        //    //{
-                        //    //    if (traj.Exists(x => x.TargetIdentification == newcat10.Target_Identification))
-                        //    //    {
-                        //    //        traj.Find(x => x.TargetIdentification == newcat10.Target_Identification).ADDCAT10(newcat10);
-                        //    //        trajfound = true;
-                        //    //    }
-                        //    //}
-                        //    if (newcat10.Target_Address != null)
-                        //    {
-                        //        if (traj.Exists(x => x.TargetAdress == newcat10.Target_Address))
-                        //        {
-                        //            TrajectoriestoCompute traject = traj.Find(x => x.TargetAdress == newcat10.Target_Address);
-                        //            traject.ADDCAT10(newcat10);
-                        //            trajfound = true;
-                        //        }
-                        //    }
-                            if (!trajfound)
-                            {
-
-                                TrajectoriestoCompute newtraj = new TrajectoriestoCompute(newcat10);
-                                traj.Add(newtraj);
-                            }
-                            //}
-       
-                        //}
-                        if (first == true)
-                        {
-                            first = false;
-                            firsttime = newcat10.Time_milisec;
-                        }
-                    }
-                }
-                else if (CAT == 21)
-                {
-                    //   if (lib.GetVersion(arraystring) != 0)
-                    //     {
-                    CAT21vs21 newcat21 = new CAT21vs21(arraystring, firsttime, lib);
-
-                    if (newcat21.X_Component_map != -99999 && newcat21.Y_Component_map != -99999)
-                    {
-                        if (computePIC == true) { PICS.Add(newcat21.PIC); }
-
-                        if (newcat21.MOPSversion == 2 || lib.FixedMLATS.Contains(newcat21.Target_address))
+                        if (newcat10.TYP == "Mode S MLAT")
                         {
                             bool trajfound = false;
-                            //if (newcat21.Target_Identification != null)
-                            //{
-                            //    if (traj.Exists(x => x.TargetIdentification == newcat21.Target_Identification))
-                            //    {
-                            //        traj.Find(x => x.TargetIdentification == newcat21.Target_Identification).ADDCAT21(newcat21);
-                            //        trajfound = true;
-                            //        TrajectoriestoCompute traject = traj.Find(x => x.TargetIdentification == newcat21.Target_Identification);
-                            //    }
-                            //}
-                            //if (newcat21.Target_address != null && trajfound == false)
-                            //{
-                            //    if (traj.Exists(x => x.TargetAdress == newcat21.Target_address))
-                            //    {
-                            //        traj.Find(x => x.TargetAdress == newcat21.Target_address).ADDCAT21(newcat21);
-                            //        TrajectoriestoCompute traject = traj.Find(x => x.TargetAdress == newcat21.Target_address);
-                            //        trajfound = true;
-                            //    }
-                            //}
-                            //if (newcat21.Track_Number != -1)//&& trajfound == false)
-                            //{
-                            //    if (traj.Exists(x => x.TrackNumber == newcat21.Track_Number))
-                            //    {
-                            //        traj.Find(x => x.TrackNumber == newcat21.Track_Number).ADDCAT21(newcat21);
-                            //        TrajectoriestoCompute traject = traj.Find(x => x.TrackNumber == newcat21.Track_Number);
-                            //        if (trajfound == false)
-                            //        {
-                            //            traject.ADDCAT21(newcat21);
-                            //        }
-
-                            //        trajfound = true;
-                            //    }
-                            //}
-                            //if (trajfound == false)
-                            //{
-                            //    TrajectoriestoCompute newtraj = new TrajectoriestoCompute(newcat21);
-                            //    traj.Add(newtraj);
-                            //}
-                            if (newcat21.Target_address != null && newcat21.Target_Identification != null && newcat21.Track_Number != -1)
+                            if (newcat10.Target_Address != null && newcat10.Target_Identification != null && newcat10.Track_Number != -1)
                             {
-                                if (traj.Exists(x => (x.TargetAdress == newcat21.Target_address && x.TargetIdentification == newcat21.Target_Identification && newcat21.Track_Number == x.TrackNumberADSB)))
+                                if (traj.Exists(x => (x.TargetAdress == newcat10.Target_Address && x.TargetIdentification == newcat10.Target_Identification && newcat10.Track_Number == x.TrackNumberMLAT)))
                                 {
-                                    TrajectoriestoCompute traject = traj.Find(x => (x.TargetAdress == newcat21.Target_address && x.TargetIdentification == newcat21.Target_Identification && newcat21.Track_Number == x.TrackNumberADSB));
-                                    //  if (traject.TrackNumber == newcat10.Track_Number && traject.TargetIdentification != newcat10.Target_Identification)
-                                    //   {
-                                    traject.ADDCAT21(newcat21);
+                                    TrajectoriesToCompute traject = traj.Find(x => (x.TargetAdress == newcat10.Target_Address && x.TargetIdentification == newcat10.Target_Identification && newcat10.Track_Number == x.TrackNumberMLAT));
+                                    traject.ADDCAT10(newcat10);
                                     trajfound = true;
-
-                                    //    }
                                 }
-                                //    else if(traj.Exists(x => (x.TargetAdress == newcat10.Target_Address && x.TargetIdentification == newcat10.Target_Identification)))
-                                //{
-                                //    TrajectoriestoCompute traject = traj.Find(x => (x.TargetAdress == newcat10.Target_Address && x.TargetIdentification == newcat10.Target_Identification));
-                                //    //  if (traject.TrackNumber == newcat10.Track_Number && traject.TargetIdentification != newcat10.Target_Identification)
-                                //    //   {
-                                //    traject.ADDCAT10(newcat10);
-                                //    trajfound = true;
-                                //}
+
                             }
-                            if (newcat21.Target_address != null && newcat21.Track_Number != -1 && !trajfound)
+                            if (newcat10.Target_Address != null && newcat10.Track_Number != -1 && trajfound == false)
                             {
-                                if (traj.Exists(x => (x.TargetAdress == newcat21.Target_address && newcat21.Track_Number == x.TrackNumberADSB)))
+                                if (traj.Exists(x => (x.TargetAdress == newcat10.Target_Address && newcat10.Track_Number == x.TrackNumberMLAT)))
                                 {
-                                    TrajectoriestoCompute traject = traj.Find(x => (x.TargetAdress == newcat21.Target_address && newcat21.Track_Number == x.TrackNumberADSB));
-                                    //  if (traject.TrackNumber == newcat10.Track_Number && traject.TargetIdentification != newcat10.Target_Identification)
-                                    //   {
-                                    traject.ADDCAT21(newcat21);
-                                    trajfound = true;
-
-                                    //    }
-                                }
-                                //    else if(traj.Exists(x => (x.TargetAdress == newcat10.Target_Address && x.TargetIdentification == newcat10.Target_Identification)))
-                                //{
-                                //    TrajectoriestoCompute traject = traj.Find(x => (x.TargetAdress == newcat10.Target_Address && x.TargetIdentification == newcat10.Target_Identification));
-                                //    //  if (traject.TrackNumber == newcat10.Track_Number && traject.TargetIdentification != newcat10.Target_Identification)
-                                //    //   {
-                                //    traject.ADDCAT10(newcat10);
-                                //    trajfound = true;
-                                //}
-                            }
-                            if (newcat21.Track_Number != -1 && !trajfound)
-                            {
-                                if (traj.Exists(x => x.TrackNumberADSB == newcat21.Track_Number))
-                                {
-
-                                    TrajectoriestoCompute traject = traj.Find(x => x.TrackNumberADSB == newcat21.Track_Number);
-
-                                    //if (traject.ListMLAT.Count() > 0 && traject.ListMLAT[traject.ListMLAT.Count() - 1].Time_of_day_sec >= newcat10.Time_of_day_sec - 25 && traject.ListMLAT[traject.ListMLAT.Count() - 1].Time_of_day_sec <= newcat10.Time_of_day_sec + 25)
-                                    //{
-                                    traject.ADDCAT21(newcat21);
-                                    trajfound = true;
-                                    //}
-                                    //else
-                                    //{
-                                    //    TrajectoriestoCompute newtraj = new TrajectoriestoCompute(newcat10);
-                                    //      traj.Add(newtraj);
-                                    //  trajfound = true;
-
-                                    //}
-                                    //trajfound = true;
-                                }
-                            }
-                            if (newcat21.Target_address != null && !trajfound)
-                            {
-                                if (traj.Exists(x => x.TargetAdress == newcat21.Target_address))
-                                {
-                                    TrajectoriestoCompute traject = traj.Find(x => x.TargetAdress == newcat21.Target_address);
-                                    traject.ADDCAT21(newcat21);
+                                    TrajectoriesToCompute traject = traj.Find(x => (x.TargetAdress == newcat10.Target_Address && newcat10.Track_Number == x.TrackNumberMLAT));
+                                    traject.ADDCAT10(newcat10);
                                     trajfound = true;
                                 }
                             }
+                            if (newcat10.Target_Address != null && !trajfound)
+                            {
 
-                            //if (trajfound == false)
-                            //{
-                            //    //if (newcat10.Target_Identification != null)
-                            //    //{
-                            //    //    if (traj.Exists(x => x.TargetIdentification == newcat10.Target_Identification))
-                            //    //    {
-                            //    //        traj.Find(x => x.TargetIdentification == newcat10.Target_Identification).ADDCAT10(newcat10);
-                            //    //        trajfound = true;
-                            //    //    }
-                            //    //}
-                            //    if (newcat21.Target_address != null)
-                            //    {
-                            //        if (traj.Exists(x => x.TargetAdress == newcat21.Target_address))
-                            //        {
-                            //            TrajectoriestoCompute traject = traj.Find(x => x.TargetAdress == newcat21.Target_address);
-                            //            traject.ADDCAT21(newcat21);
-                            //            trajfound = true;
-                            //        }
-                            //    }
+                                if (traj.Exists(x => x.TargetAdress == newcat10.Target_Address))
+                                {
+                                    TrajectoriesToCompute traject = traj.Find(x => x.TargetAdress == newcat10.Target_Address);
+                                    traject.ADDCAT10(newcat10);
+                                    trajfound = true;
+
+                                }
+                            }
+                            if (newcat10.Track_Number != -1 && trajfound == false)
+                            {
+                                if (traj.Exists(x => x.TrackNumberMLAT == newcat10.Track_Number))
+                                {
+
+                                    TrajectoriesToCompute traject = traj.Find(x => x.TrackNumberMLAT == newcat10.Track_Number);
+                                    traject.ADDCAT10(newcat10);
+                                    trajfound = true;
+                                }
+                            }
                             if (!trajfound)
                             {
 
-                                TrajectoriestoCompute newtraj = new TrajectoriestoCompute(newcat21);
+                                TrajectoriesToCompute newtraj = new TrajectoriesToCompute(newcat10);
                                 traj.Add(newtraj);
                             }
-                            //}
-
-                            //}
                             if (first == true)
                             {
                                 first = false;
-                                firsttime = newcat21.Time_milisec;
+                                firsttime = newcat10.Time_milisec;
                             }
                         }
                     }
-                    //  }
-                }
+                    else if (CAT == 21)
+                    {
+                        CAT21vs21 newcat21 = new CAT21vs21(arraystring, firsttime);
+
+                        if (newcat21.X_Component_map != -99999 && newcat21.Y_Component_map != -99999)
+                        {
+                            if (computePIC == true) { PICS.Add(newcat21.PIC); }
+
+                            if (newcat21.MOPSversion == 2 || LibreriaDecodificacion.FixedMLATS.Contains(newcat21.Target_address))
+                            {
+                                bool trajfound = false;
+                                if (newcat21.Target_address != null && newcat21.Target_Identification != null && newcat21.Track_Number != -1)
+                                {
+                                    if (traj.Exists(x => (x.TargetAdress == newcat21.Target_address && x.TargetIdentification == newcat21.Target_Identification && newcat21.Track_Number == x.TrackNumberADSB)))
+                                    {
+                                        TrajectoriesToCompute traject = traj.Find(x => (x.TargetAdress == newcat21.Target_address && x.TargetIdentification == newcat21.Target_Identification && newcat21.Track_Number == x.TrackNumberADSB));
+                                        traject.ADDCAT21(newcat21);
+                                        trajfound = true;
+                                    }
+                                }
+                                if (newcat21.Target_address != null && newcat21.Track_Number != -1 && !trajfound)
+                                {
+                                    if (traj.Exists(x => (x.TargetAdress == newcat21.Target_address && newcat21.Track_Number == x.TrackNumberADSB)))
+                                    {
+                                        TrajectoriesToCompute traject = traj.Find(x => (x.TargetAdress == newcat21.Target_address && newcat21.Track_Number == x.TrackNumberADSB));
+                                        traject.ADDCAT21(newcat21);
+                                        trajfound = true;
+                                    }
+                                }
+                                if (newcat21.Track_Number != -1 && !trajfound)
+                                {
+                                    if (traj.Exists(x => x.TrackNumberADSB == newcat21.Track_Number))
+                                    {
+                                        TrajectoriesToCompute traject = traj.Find(x => x.TrackNumberADSB == newcat21.Track_Number);
+                                        traject.ADDCAT21(newcat21);
+                                        trajfound = true;
+                                    }
+                                }
+                                if (newcat21.Target_address != null && !trajfound)
+                                {
+                                    if (traj.Exists(x => x.TargetAdress == newcat21.Target_address))
+                                    {
+                                        TrajectoriesToCompute traject = traj.Find(x => x.TargetAdress == newcat21.Target_address);
+                                        traject.ADDCAT21(newcat21);
+                                        trajfound = true;
+                                    }
+                                }
+                                if (!trajfound)
+                                {
+                                    TrajectoriesToCompute newtraj = new TrajectoriesToCompute(newcat21);
+                                    traj.Add(newtraj);
+                                }
+                                if (first == true)
+                                {
+                                    first = false;
+                                    firsttime = newcat21.Time_milisec;
+                                }
+                            }
+                        }
+
+                    }
                 }
 
                 namesastadsb[s + 1] = "Computing Parameters...";
@@ -505,17 +298,12 @@ namespace PGTAWPF
                     }
                 }
                 else { PIC = Convert.ToInt32(PICvalue); }
-                foreach (TrajectoriestoCompute traject in traj)
+                foreach (TrajectoriesToCompute traject in traj)
                 {
-                    //if (traject.TargetIdentification== "ECKJQ" || traject.TargetAdress== "34304F")
-                    //{
-                    //    int a = 1;
-                    //}
-                    bool Excluded = lib.ExcludedMLATS.Contains(traject.TargetIdentification);
-                    if (Excluded == false)
+                    if (!LibreriaDecodificacion.ExcludedMLATS.Contains(traject.TargetIdentification))
                     {
-                        traject.SetZones(lib);
-                        traject.ComputePrecissionADSBinterpoled(this.data, PIC,lib);
+                        traject.SetZones();
+                        traject.ComputePrecissionADSBinterpoled(this.data, PIC);
                         traject.ComputePDUD(this.data);
                         traject.ComputePFI(this.data);
                         traject.ComputePI(this.data);
@@ -530,9 +318,8 @@ namespace PGTAWPF
                 numficheros++;
                 namesastadsb[s + 1] = "Computed!";
                 traj = null;
-                traj = new List<TrajectoriestoCompute>();
+                traj = new List<TrajectoriesToCompute>();
                 GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
-                // return 1;
             //}
             //catch
             //{
@@ -545,12 +332,11 @@ namespace PGTAWPF
         public void ComputeFileDGPS(string path, int s)
         {
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
-            //try
-            //{
+            try
+            {
                 PICS.Clear();
                 bool first = true;
                 double firsttime = 0;
-                //    List<TrajectoriestoCompute> traj = new List<TrajectoriestoCompute>();
                 namesastdgps[s + 1] = "Decodifying file...";
                 byte[] fileBytes = File.ReadAllBytes(path);
                 List<byte[]> listabyte = new List<byte[]>();
@@ -588,14 +374,14 @@ namespace PGTAWPF
                     int CAT = int.Parse(arraystring[0], System.Globalization.NumberStyles.HexNumber);
                     if (CAT == 10)
                     {
-                        CAT10 newcat10 = new CAT10(arraystring, firsttime, lib);
+                        CAT10 newcat10 = new CAT10(arraystring, firsttime);
                         if (newcat10.TYP == "Mode S MLAT")
                         {
 
                             bool trajfound = false;
                             if(newcat10.Track_Number!=-1)
                             {
-                                TrajectoriestoCompute traject = trajdgps.Find(x => x.TargetIdentification == newcat10.Target_Identification);
+                                TrajectoriesToCompute traject = trajdgps.Find(x => x.TargetIdentification == newcat10.Target_Identification);
                                 if (traject != null)
                                 {
                                     if (traject.ListMLAT.Count() > 0 && traject.ListMLAT[traject.ListMLAT.Count() - 1].Time_of_day_sec >= newcat10.Time_of_day_sec - 25 && traject.ListMLAT[traject.ListMLAT.Count() - 1].Time_of_day_sec <= newcat10.Time_of_day_sec + 25)
@@ -633,13 +419,10 @@ namespace PGTAWPF
                     }
                 }
                 namesastdgps[s + 1] = "Computing Parameters...";
-                foreach (TrajectoriestoCompute traject in trajdgps)
+                foreach (TrajectoriesToCompute traject in trajdgps)
                 {
-                    //MessageBox.Show(Convert.ToString(traject.ListDGPS.Count) + "  " + Convert.ToString(traject.ListADSB.Count));
-                    //bool Excluded = lib.ExcludedMLATS.Contains(traject.TargetIdentification);
-                    //if (Excluded == false)
-                    //{
-                        traject.SetZones(lib);
+ 
+                        traject.SetZones();
                         traject.ComputePrecissionMLATinterpoledDGPS(this.data);
                         traject.ComputePDUD(this.data);
                         traject.ComputePFI(this.data);
@@ -649,20 +432,18 @@ namespace PGTAWPF
                         {
                             traject.SaveMarkers(listMarkers);
                         }
-                    //}
+                    
                 }
                 listahex = null;
-                //fileBytes = null;
                 numficheros++;
                 namesastdgps[s + 1] = "Computed!";
                 GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
-               // return 1;
-            //}
-            //catch
-            //{
-            //    GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
-            //    namesastdgps[s + 1] = "Can't Compute this file!!!";
-            //}
+            }
+            catch
+            {
+                GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
+                namesastdgps[s + 1] = "Can't Compute this file!!!";
+            }
         }
 
         
@@ -676,7 +457,7 @@ namespace PGTAWPF
                 string[] lines = File.ReadAllLines(path);
                 string Heather = lines[0];
                 string[] attributes = Heather.Split(',');
-                TrajectoriestoCompute newtraj = new TrajectoriestoCompute();
+                TrajectoriesToCompute newtraj = new TrajectoriesToCompute();
 
                 if (attributes.Length > 1 && lines.Count() > 1)
                 {
@@ -748,7 +529,7 @@ namespace PGTAWPF
                                 double lat = parameters2[0];
                                 double lon = parameters2[1];
                                 PointLatLng p = new PointLatLng(lat, lon);
-                                Point Pxy = lib.ComputeCartesianFromWGS84(p);
+                                Point Pxy = LibreriaDecodificacion.ComputeCartesianFromWGS84(p);
                                 time = (parameters2[6]) * 3600 + (parameters2[7]) * 60 + (parameters2[8]);
                                 if (first == false)
                                 {
@@ -789,7 +570,7 @@ namespace PGTAWPF
                                 }
 
                                 PointLatLng p = new PointLatLng(values[0], values[1]);
-                                Point Pxy = lib.ComputeCartesianFromWGS84(p);
+                                Point Pxy = LibreriaDecodificacion.ComputeCartesianFromWGS84(p);
                                 time = (values[2] * 3600 + values[3] * 60 + values[4]);
                                 if (first == false)
                                 {
@@ -805,89 +586,69 @@ namespace PGTAWPF
                                 }
                                 MarkerDGPS DGPS = new MarkerDGPS(p, Pxy, time);
                                 newtraj.ADDDGPS(DGPS);
-                                //   MessageBox.Show(Convert.ToString(p.Lat) + "  " + Convert.ToString(p.Lng) + "  " + Convert.ToString(time));
                             }
                             catch {; }
                             namestxt[s + 1] = "Computing message " + Convert.ToString(i) + " of " + Convert.ToString(lines.Length) + " messages...";
                         }
-                        //   MessageBox.Show(Convert.ToString(newtraj.ListDGPS.Count));
-
-
-                        //   MessageBox.Show(Convert.ToString(newtraj.ListDGPS.Count()) + "  " + Convert.ToString(newtraj.ListDGPS[newtraj.ListDGPS.Count - 1].Time));
-
                     }
                     else
                     {
                         namestxt[s + 1] = "Decodifying file...";
-                        //      string[] lines = File.ReadAllLines(path);
-                        //string Heather = lines[0];
-                        //string[] attributes = Heather.Split(',');
-                        //TrajectoriestoCompute newtraj = new TrajectoriestoCompute();
-
                         for (int i = 1; i < lines.Length; i++)
                         {
-                            //try
-                            //{
-                            if (lines[i] != "" && lines[i].Substring(0, 1) != "#")
-                            {
-                                char[] Splitter = new Char[] { ' ', '\t' };
-                                string[] parameters = lines[i].Split(Splitter, StringSplitOptions.RemoveEmptyEntries);
-                                if (parameters[0] != ":")
+                                if (lines[i] != "" && lines[i].Substring(0, 1) != "#")
                                 {
-
-                                    List<string> parameters2 = new List<string>();
-                                    for (int f = 0; f < parameters.Length; f++)
+                                    char[] Splitter = new Char[] { ' ', '\t' };
+                                    string[] parameters = lines[i].Split(Splitter, StringSplitOptions.RemoveEmptyEntries);
+                                    if (parameters[0] != ":")
                                     {
-                                        if (parameters[f] != "O")
+
+                                        List<string> parameters2 = new List<string>();
+                                        for (int f = 0; f < parameters.Length; f++)
                                         {
-                                            parameters2.Add(parameters[f]);
+                                            if (parameters[f] != "O")
+                                            {
+                                                parameters2.Add(parameters[f]);
+                                            }
                                         }
-                                    }
-                                    parameters = parameters2.ToArray();
-                                    parameters2.Clear();
+                                        parameters = parameters2.ToArray();
+                                        parameters2.Clear();
 
-                                    string[] TimeParam = parameters[1].Split(':');
-                                    double hours = Convert.ToDouble(TimeParam[0]);
-                                    double min = Convert.ToDouble(TimeParam[1]);
-                                    double seconds = Convert.ToDouble(TimeParam[2].Replace('.', ','));
-                                    double height = (Convert.ToDouble(parameters[2].Replace('.', ',')) * 0.3048);
+                                        string[] TimeParam = parameters[1].Split(':');
+                                        double hours = Convert.ToDouble(TimeParam[0]);
+                                        double min = Convert.ToDouble(TimeParam[1]);
+                                        double seconds = Convert.ToDouble(TimeParam[2].Replace('.', ','));
+                                        double height = (Convert.ToDouble(parameters[2].Replace('.', ',')) * 0.3048);
 
 
-                                    double lat = ComputeLat(parameters[4]);
-                                    double lon = ComputeLon(parameters[5]);
-                                    PointLatLng p = new PointLatLng(lat, lon);
-                                    Point Pxy = lib.ComputeCartesianFromWGS84(p, height);
-                                    time = (hours) * 3600 + (min) * 60 + (seconds);
-                                    if (first == false)
-                                    {
-                                        if (time < firsttime)
+                                        double lat = ComputeLat(parameters[4]);
+                                        double lon = ComputeLon(parameters[5]);
+                                        PointLatLng p = new PointLatLng(lat, lon);
+                                        Point Pxy = LibreriaDecodificacion.ComputeCartesianFromWGS84(p, height);
+                                        time = (hours) * 3600 + (min) * 60 + (seconds);
+                                        if (first == false)
                                         {
-                                            time += 86400;
+                                            if (time < firsttime)
+                                            {
+                                                time += 86400;
+                                            }
                                         }
+                                        else
+                                        {
+                                            firsttime = time;
+                                            first = false;
+                                        }
+                                        MarkerDGPS DGPS = new MarkerDGPS(p, Pxy, time, height);
+                                        newtraj.ADDDGPS(DGPS);
                                     }
-                                    else
-                                    {
-                                        firsttime = time;
-                                        first = false;
-                                    }
-                                    MarkerDGPS DGPS = new MarkerDGPS(p, Pxy, time,height);
-                                    newtraj.ADDDGPS(DGPS);
-                                    //}
-                                    //catch {; }
                                     namestxt[s + 1] = "Computing message " + Convert.ToString(i) + " of " + Convert.ToString(lines.Length) + " messages...";
 
                                 }
                             }
-                        }
-                            //   MessageBox.Show(Convert.ToString(newtraj.ListDGPS.Count));
-
-                     //       trajdgps.Add(newtraj);
-                            // MessageBox.Show(Convert.ToString(newtraj.ListDGPS.Count));
-                     //       namestxt[s + 1] = "Computed!";
                         
+    
                     }
                     trajdgps.Add(newtraj);
-                    // MessageBox.Show(Convert.ToString(newtraj.ListDGPS.Count));
                     namestxt[s + 1] = "Computed!";
 
                 }

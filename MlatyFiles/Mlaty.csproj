@@ -193,7 +193,7 @@
     </Compile>
     <Compile Include="Libraries\MapMarker.cs" />
     <Compile Include="Libraries\Polygon.cs" />
-    <Compile Include="Libraries\TrajectoriestoCompute.cs" />
+    <Compile Include="Libraries\TrajectoriesToCompute.cs" />
     <Compile Include="Libraries\MarkerDGPS.cs" />
     <Compile Include="MessageboxYesNo.xaml.cs">
       <DependentUpon>MessageboxYesNo.xaml</DependentUpon>

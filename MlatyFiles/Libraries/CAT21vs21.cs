@@ -11,7 +11,7 @@ namespace PGTAWPF
 {
     public class CAT21vs21
     {
-        readonly LibreriaDecodificacion lib ;
+     
         readonly string FSPEC1;
         readonly string[] mensaje;
         public string CAT ="21 v. 2.1";
@@ -25,18 +25,18 @@ namespace PGTAWPF
         public bool saved = false;
         double firsttime;
         public CAT21vs21() { }
-        public CAT21vs21(string[] mensajehexa, double firsttime, LibreriaDecodificacion lib)
+        public CAT21vs21(string[] mensajehexa, double firsttime)
         {
             try
             {
-                this.lib = lib;
+                
                 this.firsttime = firsttime;
-                this.mensaje = mensajehexa;//lib.passarmensajeenteroabinario(mensajehexa);
-                FSPEC1 = lib.FSPEC(mensaje);
+                this.mensaje = mensajehexa;//LibreriaDecodificacion.passarmensajeenteroabinario(mensajehexa);
+                FSPEC1 = LibreriaDecodificacion.FSPEC(mensaje);
                 int longFSPEC = this.FSPEC1.Length / 7;
                 int pos = 3 + longFSPEC;
                 char[] FSPEC = FSPEC1.ToCharArray(0, FSPEC1.Length);
-                this.mensaje = lib.Passarmensajeenteroabinario(mensaje);
+                this.mensaje = LibreriaDecodificacion.Passarmensajeenteroabinario(mensaje);
                 //  this.airportCode = airportCode;
                 if (FSPEC[0] == '1') { pos = this.Compute_Data_Source_Identification(mensaje, pos); }
                 if (FSPEC[1] == '1') { pos = this.Compute_Target_Report_Descripter(mensaje, pos); }
@@ -105,7 +105,7 @@ namespace PGTAWPF
                    ComputeCartesianFromWGS84();
                   //  this.ComputeZone();
                 }         
-                  //  lib = null;
+                  //  LibreriaDecodificacion = null;
 
             }
             catch
@@ -164,7 +164,7 @@ namespace PGTAWPF
         {
             SAC = Convert.ToString(Convert.ToInt32(message[pos],2));
             SIC = Convert.ToString(Convert.ToInt32(message[pos+1],2));
-            this.airportCode = lib.GetAirporteCode(Convert.ToInt32(SIC));
+            this.airportCode = LibreriaDecodificacion.GetAirporteCode(Convert.ToInt32(SIC));
 
             pos += 2;
             return pos;
@@ -308,7 +308,7 @@ namespace PGTAWPF
         //public string ModeA3;
         private int Compute_Mode_A3(string[] message, int pos) 
         {
-            //ModeA3 = Convert.ToString(lib.ConvertDecimalToOctal(Convert.ToInt32(string.Concat(message[pos], message[pos + 1]).Substring(4,12),2))).PadLeft(4,'0');
+            //ModeA3 = Convert.ToString(LibreriaDecodificacion.ConvertDecimalToOctal(Convert.ToInt32(string.Concat(message[pos], message[pos + 1]).Substring(4,12),2))).PadLeft(4,'0');
             pos += 2;
             return pos; 
         }
@@ -429,7 +429,7 @@ namespace PGTAWPF
 
         //TARGET ADDRESS
         public string Target_address;
-        private int Compute_Target_Address(string[] message, int pos) { Target_address = string.Concat(lib.BinarytoHexa(message[pos]), lib.BinarytoHexa(message[pos + 1]), lib.BinarytoHexa(message[pos + 2])); pos += 3; return pos; }
+        private int Compute_Target_Address(string[] message, int pos) { Target_address = string.Concat(LibreriaDecodificacion.BinarytoHexa(message[pos]), LibreriaDecodificacion.BinarytoHexa(message[pos + 1]), LibreriaDecodificacion.BinarytoHexa(message[pos + 2])); pos += 3; return pos; }
 
 
         //QUALITY INDICATORS
@@ -581,11 +581,11 @@ namespace PGTAWPF
                     //else { NC[i] = "TCP non-compliance"; }
                     //TCP[i] = Convert.ToInt32(message[pos].Substring(2, 6));
                     pos++;
-                    //Altitude[i] = Convert.ToString(lib.ComputeA2Complement(string.Concat(message[pos], message[pos + 1])) * 10) + " ft";
+                    //Altitude[i] = Convert.ToString(LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos], message[pos + 1])) * 10) + " ft";
                     pos += 2;
-                    //Latitude[i] = Convert.ToString(lib.ComputeA2Complement(string.Concat(message[pos], message[pos + 1])) * (180 / (Math.Pow(2, 23)))) + " deg";
+                    //Latitude[i] = Convert.ToString(LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos], message[pos + 1])) * (180 / (Math.Pow(2, 23)))) + " deg";
                     pos +=2;
-                    //Longitude[i] = Convert.ToString(lib.ComputeA2Complement(string.Concat(message[pos], message[pos + 1])) * (180 / (Math.Pow(2, 23)))) + " deg";
+                    //Longitude[i] = Convert.ToString(LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos], message[pos + 1])) * (180 / (Math.Pow(2, 23)))) + " deg";
                     pos += 2;
                     //int pt = Convert.ToInt32(message[pos].Substring(0, 4), 2);
                     //if (pt == 0) { Point_Type[i] = "Unknown"; }
@@ -628,8 +628,8 @@ namespace PGTAWPF
         private int Compute_PositionWGS_84(string[] message, int pos)
         {
             
-            double Latitude  =lib.ComputeA2Complement(string.Concat(message[pos], message[pos + 1], message[pos + 2]))*(180/(Math.Pow(2,23))); pos += 3;
-            double Longitude = lib.ComputeA2Complement(string.Concat(message[pos], message[pos + 1], message[pos + 2])) * (180 / (Math.Pow(2, 23)));
+            double Latitude  =LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos], message[pos + 1], message[pos + 2]))*(180/(Math.Pow(2,23))); pos += 3;
+            double Longitude = LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos], message[pos + 1], message[pos + 2])) * (180 / (Math.Pow(2, 23)));
             LatitudeWGS_84_map = Convert.ToDouble(Latitude);
             LongitudeWGS_84_map = Convert.ToDouble(Longitude);
             int Latdegres = Convert.ToInt32(Math.Truncate(Latitude));
@@ -652,8 +652,8 @@ namespace PGTAWPF
         private int Compute_High_Resolution_PositionWGS_84(string[] message, int pos)
         {
             
-            double Latitude= lib.ComputeA2Complement(string.Concat(message[pos], message[pos + 1], message[pos + 2], message[pos + 3])) * (180 / (Math.Pow(2, 30))); pos +=  4;
-            double Longitude= lib.ComputeA2Complement(string.Concat(message[pos], message[pos + 1], message[pos + 2], message[pos + 3])) * (180 / (Math.Pow(2, 30))); pos += 4;
+            double Latitude= LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos], message[pos + 1], message[pos + 2], message[pos + 3])) * (180 / (Math.Pow(2, 30))); pos +=  4;
+            double Longitude= LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos], message[pos + 1], message[pos + 2], message[pos + 3])) * (180 / (Math.Pow(2, 30))); pos += 4;
             LatitudeWGS_84_map = Convert.ToDouble(Latitude);
             LongitudeWGS_84_map = Convert.ToDouble(Longitude);
             int Latdegres = Convert.ToInt32(Math.Truncate(Latitude));
@@ -671,7 +671,7 @@ namespace PGTAWPF
         //private void ComputeZone()
         //{
         //   Point p= ComputeCartesianFromWGS84();
-        //    zone = lib.ComputeZone(p, GroundBit);
+        //    zone = LibreriaDecodificacion.ComputeZone(p, GroundBit);
         //}
 
         public double X_Component_map = -99999;
@@ -695,7 +695,7 @@ namespace PGTAWPF
         //public string Message_Amplitude;
         private int Compute_Message_Amplitude(string[] message, int pos) 
         {
-            //Message_Amplitude = Convert.ToString(lib.ComputeA2Complement(message[pos])) + " dBm";
+            //Message_Amplitude = Convert.ToString(LibreriaDecodificacion.ComputeA2Complement(message[pos])) + " dBm";
             pos++; 
             return pos; 
         }
@@ -705,7 +705,7 @@ namespace PGTAWPF
         public double Geometric_Height=-999;
         private int Compute_Geometric_Height(string[] message, int pos) 
         {
-            Geometric_Height = lib.ComputeA2Complement(string.Concat(message[pos], message[pos + 1])) * 6.25* 0.3048 ;
+            Geometric_Height = LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos], message[pos + 1])) * 6.25* 0.3048 ;
             pos += 2;
             return pos;
         }
@@ -715,7 +715,7 @@ namespace PGTAWPF
         public double Flight_Level=-999;
         private int Compute_Flight_level(string[] message, int pos) 
         {
-            Flight_Level = lib.ComputeA2Complement(string.Concat(message[pos], message[pos + 1])) * (0.25) * (0.3048 * 100);
+            Flight_Level = LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos], message[pos + 1])) * (0.25) * (0.3048 * 100);
             pos += 2; 
             return pos;
         }
@@ -734,7 +734,7 @@ namespace PGTAWPF
         //    else if (sou == "01") { Source = "Aircraft Altitude (Holding Altitude)"; }
         //    else if (sou == "10") { Source = "MCP/FCU Selected Altitude"; }
         //    else { Source = "FMS Selected Altitude"; }
-        //    Sel_Altitude = Convert.ToString(lib.ComputeA2Complement(string.Concat(message[pos], message[pos+1]).Substring(3, 13)) * 25) + " ft";
+        //    Sel_Altitude = Convert.ToString(LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos], message[pos+1]).Substring(3, 13)) * 25) + " ft";
         ////    if (message[pos].Substring(0, 1) == "0") { Selected_Altitude = "No source information provided. Altitude: "+Sel_Altitude; }
         //  //  else { Selected_Altitude = "Source: "+ Source+ " SA: "+ Sel_Altitude; }
         //    Selected_Altitude= "SA: "+ Convert.ToString(Sel_Altitude);
@@ -756,7 +756,7 @@ namespace PGTAWPF
             //else { AH = "Active"; }
             //if (message[pos].Substring(2, 1) == "0") { AM = "Not active or unknown"; }
             //else { AM = "Active"; }
-            //Final_State_Altitude = Convert.ToString(lib.ComputeA2Complement(string.Concat(message[pos], message[pos+1]).Substring(3, 13)) * 25) + " ft";
+            //Final_State_Altitude = Convert.ToString(LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos], message[pos+1]).Substring(3, 13)) * 25) + " ft";
             pos += 2;
             return pos ;
         }
@@ -798,7 +798,7 @@ namespace PGTAWPF
         //public string Barometric_Vertical_Rate;
         private int Compute_Barometric_Vertical_Rate(string[] message, int pos)
         {
-            //if (message[pos].Substring(0, 1) == "0") { Barometric_Vertical_Rate = Convert.ToString(lib.ComputeA2Complement(string.Concat(message[pos], message[pos + 1]).Substring(1, 15)) * 6.25) + " feet/minute"; }
+            //if (message[pos].Substring(0, 1) == "0") { Barometric_Vertical_Rate = Convert.ToString(LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos], message[pos + 1]).Substring(1, 15)) * 6.25) + " feet/minute"; }
             //else { Barometric_Vertical_Rate = "Value exceeds defined rage"; }
             pos += 2;
             return pos;
@@ -809,7 +809,7 @@ namespace PGTAWPF
         //public string Geometric_Vertical_Rate;
         private int Compute_Geometric_Vertical_Rate(string[] message, int pos)
         {
-            //if (message[pos].Substring(0, 1) == "0") { Geometric_Vertical_Rate = Convert.ToString(lib.ComputeA2Complement(string.Concat(message[pos], message[pos + 1]).Substring(1, 15)) * 6.25) + " feet/minute"; }
+            //if (message[pos].Substring(0, 1) == "0") { Geometric_Vertical_Rate = Convert.ToString(LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos], message[pos + 1]).Substring(1, 15)) * 6.25) + " feet/minute"; }
             //else { Geometric_Vertical_Rate = "Value exceeds defined rage"; }
             pos += 2;
             return pos;
@@ -856,7 +856,7 @@ namespace PGTAWPF
         {
             StringBuilder Identification= new StringBuilder();
             string octets = string.Concat(message[pos], message[pos + 1], message[pos + 2], message[pos + 3], message[pos + 4], message[pos + 5]);
-            for (int i=0; i<8;i++) {Identification.Append(lib.Compute_Char(octets.Substring(i*6,6)));}
+            for (int i=0; i<8;i++) {Identification.Append(LibreriaDecodificacion.Compute_Char(octets.Substring(i*6,6)));}
             string tar = Identification.ToString();
             if (tar.Length > 1) { Target_Identification = tar; }
             return pos + 6;
@@ -947,7 +947,7 @@ namespace PGTAWPF
         //public string Roll_Angle;
         private int Compute_Roll_Angle(string[] message, int pos)
         {
-            //Roll_Angle = Convert.ToString(lib.ComputeA2Complement(string.Concat(message[pos],message[pos]))*0.01) + "º";
+            //Roll_Angle = Convert.ToString(LibreriaDecodificacion.ComputeA2Complement(string.Concat(message[pos],message[pos]))*0.01) + "º";
             pos++;
             return pos; 
         }

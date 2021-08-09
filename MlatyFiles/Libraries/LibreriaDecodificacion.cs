@@ -11,39 +11,36 @@ using MultiCAT6.Utils;
 
 namespace PGTAWPF
 {
-    public class LibreriaDecodificacion
+    public static class LibreriaDecodificacion
     {
-        Zonas zones = new Zonas();
-       public List<string> ExcludedMLATS = new List<string>() {  "341041","34104F", "341097", "341103", "34434B","344357", "344389" , "3443C6", "341042","341050","3410C9","341105","34434C","344358","34438A","3443C3","341043","341051","3410CA", "341107", "34434D", "344359", "34438B", "3443C4", "341044", "341052", "3410CE", "341108", "34434E", "34435A", "34438C", "3443C5", "341045", "341053", "3410D0", "341109", "34434F", "344381", "34438D", "3443C2", "341046", "341055", "3410D2" ,"34110A", "344350", "344382", "34438E", "3443C6", "341047", "341081", "3410D3", "34110B", "344351", "344383", "34438F", "3443C3", "341049", "341082", "3410D4", "34110F", "344352", "344384", "344390", "3443C4", "34104B", "341090", "3410D5", "344347", "344353", "344385", "3443C3", "3443C5", "34104C", "341092", "3410D6", "344348", "344354", "344386", "3443C4", "3443C2", "34104D", "341094", "3410D7", "344349", "344355", "344387", "3443C5", "3443C6", "34104E", "341095", "3410D8", "34434A", "344356", "344388", "3443C2" };
+       static Zonas zones = new Zonas();
+       public static List<string> ExcludedMLATS = new List<string>() {  "341041","34104F", "341097", "341103", "34434B","344357", "344389" , "3443C6", "341042","341050","3410C9","341105","34434C","344358","34438A","3443C3","341043","341051","3410CA", "341107", "34434D", "344359", "34438B", "3443C4", "341044", "341052", "3410CE", "341108", "34434E", "34435A", "34438C", "3443C5", "341045", "341053", "3410D0", "341109", "34434F", "344381", "34438D", "3443C2", "341046", "341055", "3410D2" ,"34110A", "344350", "344382", "34438E", "3443C6", "341047", "341081", "3410D3", "34110B", "344351", "344383", "34438F", "3443C3", "341049", "341082", "3410D4", "34110F", "344352", "344384", "344390", "3443C4", "34104B", "341090", "3410D5", "344347", "344353", "344385", "3443C3", "3443C5", "34104C", "341092", "3410D6", "344348", "344354", "344386", "3443C4", "3443C2", "34104D", "341094", "3410D7", "344349", "344355", "344387", "3443C5", "3443C6", "34104E", "341095", "3410D8", "34434A", "344356", "344388", "3443C2" };
         // Fixed mlats "342384", "342387", "342386", "342385", "342383", "3433D5",
 
-        public List<string> FixedMLATS = new List<string>() { "342384", "342387", "342386", "342385", "342383", "3433D5" };
-        public Dictionary<string, Point> FixedMLATSPos = new Dictionary<string, Point>();
+        public static List<string> FixedMLATS = new List<string>() { "342384", "342387", "342386", "342385", "342383", "3433D5" };
 
-        List<double> Latitudes = new List<double>() { 41.30633926, 41.30423737 , 41.29556274, 41.29029465 , 41.29211044 , 41.29687500 };
-        List<double> Longitudes = new List<double>() { 2.08272767, 2.10677886, 2.09514618, 2.10366488 , 2.08240461 , 2.05882812 };
-        List<double> Altitudes = new List<double>() { 45.84600067, 15.39000034, 67.86000061, 10.44999981, 15.88899994, 13.52700043 };
+       static List<double> Latitudes = new List<double>() { 41.30633926, 41.30423737 , 41.29556274, 41.29029465 , 41.29211044 , 41.29687500 };
+        static List<double> Longitudes = new List<double>() { 2.08272767, 2.10677886, 2.09514618, 2.10366488 , 2.08240461 , 2.05882812 };
+        static List<double> Altitudes = new List<double>() { 45.84600067, 15.39000034, 67.86000061, 10.44999981, 15.88899994, 13.52700043 };
+
+ 
 
 
 
-        public void ComputeMLATSPos()
+        public static Point GetFixedMLATPos(string Key)
         {
-            for (int i=0; i<6; i++)
-            {
-                string target_add = FixedMLATS[i];
-                CoordinatesWGS84 ObjectCoordinates = new CoordinatesWGS84((Math.PI / 180) * Latitudes[i], Longitudes[i] * (Math.PI / 180), Altitudes[i]);
-                CoordinatesWGS84 RadarCoordinates = new CoordinatesWGS84(41.2970767 * (Math.PI / 180), 2.07846278 * (Math.PI / 180), 53.321);
-                GeoUtils geoUtils = new GeoUtils();
-                CoordinatesXYZ MarkerCartesian = geoUtils.change_geodesic2system_cartesian(ObjectCoordinates, RadarCoordinates);
-                geoUtils = null;
-                Point p = new Point(MarkerCartesian.X, MarkerCartesian.Y);
-                FixedMLATSPos.Add(target_add, p);
-               
-            }
-            int a = 0;
+            int pos = FixedMLATS.IndexOf(Key);
+            CoordinatesWGS84 ObjectCoordinates = new CoordinatesWGS84((Math.PI / 180) * Latitudes[pos], Longitudes[pos] * (Math.PI / 180), Altitudes[pos]);
+            CoordinatesWGS84 RadarCoordinates = new CoordinatesWGS84(41.2970767 * (Math.PI / 180), 2.07846278 * (Math.PI / 180), 53.321);
+            GeoUtils geoUtils = new GeoUtils();
+            CoordinatesXYZ MarkerCartesian = geoUtils.change_geodesic2system_cartesian(ObjectCoordinates, RadarCoordinates);
+            return new Point(MarkerCartesian.X, MarkerCartesian.Y);
+
         }
 
-        readonly private Dictionary<char, string> HexadecimalAbinario = new Dictionary<char, string>
+
+
+        readonly private static Dictionary<char, string> HexadecimalAbinario = new Dictionary<char, string>
         {
             { '0', "0000" },
             { '1', "0001" },
@@ -63,7 +60,7 @@ namespace PGTAWPF
             { 'F', "1111" }
         };
 
-        readonly private Dictionary<string, char> BinarioaHexadecimal = new Dictionary<string, char>
+        readonly private static Dictionary<string, char> BinarioaHexadecimal = new Dictionary<string, char>
         {
             {"0000", '0' },
             {"0001", '1'},
@@ -83,9 +80,9 @@ namespace PGTAWPF
             {"1111",'F' }
         };
 
-        public string HexaoctetoAbinario (string octeto)
+        public static string HexaoctetoAbinario (string octeto)
         {
-            octeto = this.Zerodelante(octeto);
+            octeto = Zerodelante(octeto);
             StringBuilder Octeto = new StringBuilder();
             foreach (char a in octeto)
             {
@@ -94,7 +91,7 @@ namespace PGTAWPF
              return Octeto.ToString();
         }
 
-        public string BinarytoHexa(string octeto)
+        public static string BinarytoHexa(string octeto)
         {
             StringBuilder Octeto = new StringBuilder();
             Octeto.Append(BinarioaHexadecimal[octeto.Substring(0,4)]);
@@ -102,7 +99,7 @@ namespace PGTAWPF
             return Octeto.ToString();
         }
 
-        public string Zerodelante (string octeto)
+        public static string Zerodelante (string octeto)
         {
             if (octeto.Length==1)
             {
@@ -113,13 +110,13 @@ namespace PGTAWPF
                 return octeto;
             }
         }
-        public int Longitud (string[] mensaje )
+        public static int Longitud (string[] mensaje )
         {
             string octetos = string.Concat(mensaje[1], mensaje[2]);
             return Convert.ToInt32(octetos, 2);
         }
         
-        public string FSPEC (string [] message)
+        public static string FSPEC (string [] message)
         {
             string FSPEC1 = "";
             int pos = 3;
@@ -136,15 +133,15 @@ namespace PGTAWPF
             return FSPEC1;
         }
 
-        public string[] Passarmensajeenteroabinario(string[] mensaje)
+        public static string[] Passarmensajeenteroabinario(string[] mensaje)
         {
             string[] Mensajebinario = new string[mensaje.Length];
-            for (int i=0; i<mensaje.Length; i++) {Mensajebinario[i] = this.HexaoctetoAbinario(mensaje[i]);}
+            for (int i=0; i<mensaje.Length; i++) {Mensajebinario[i] = HexaoctetoAbinario(mensaje[i]);}
             return Mensajebinario;
         }
 
 
-        public double ComputeA2Complement(string bits)
+        public static double ComputeA2Complement(string bits)
         {
             if (Convert.ToString(bits[0]) == "0")
             {
@@ -169,7 +166,7 @@ namespace PGTAWPF
             }
 
         }
-        public int ConvertDecimalToOctal(int decimalNumber)
+        public static int ConvertDecimalToOctal(int decimalNumber)
         {
             int octalNumber = 0, i = 1;
 
@@ -183,7 +180,7 @@ namespace PGTAWPF
             return octalNumber;
         }
 
-        public string Compute_Char(string Char)
+        public static string Compute_Char(string Char)
         {
             int code = Convert.ToInt32(Char, 2);
             List<string> codelist = new List<string>() { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
@@ -193,13 +190,13 @@ namespace PGTAWPF
                 return codelist[code - 1];
         }
 
-        public int GetVersion(string[] message)
+        public static int GetVersion(string[] message)
         {
             string[] mensaje = message;
-            string FSPEC1 = this.FSPEC(mensaje);
+            string FSPEC1 = FSPEC(mensaje);
             int longFSPEC = FSPEC1.Length / 7;
             int pos = 3 + longFSPEC;
-            mensaje = this.Passarmensajeenteroabinario(mensaje);
+            mensaje = Passarmensajeenteroabinario(mensaje);
             int SAC = Convert.ToInt32(mensaje[pos], 2);
             int SIC = Convert.ToInt32(mensaje[pos + 1], 2);
             if (SAC == 0 && SIC != 101) { return 0; }
@@ -211,7 +208,7 @@ namespace PGTAWPF
 
 
 
-        public int GetAirporteCode(int SIC)
+        public static int GetAirporteCode(int SIC)
         {
             int i = 0;
             if (SIC==107 || SIC ==7 || SIC==219)  { i= 0; } //BARCELONA
@@ -242,7 +239,7 @@ namespace PGTAWPF
         }
 
 
-        public PointLatLng GetCoordenatesSMRMALT(int SIC)
+        public static PointLatLng GetCoordenatesSMRMALT(int SIC)
         {
             PointLatLng point = new PointLatLng(0, 0);
             if (SIC == 1) { point = SMRTenerife; }
@@ -291,14 +288,14 @@ namespace PGTAWPF
             return result;
         }
 
-        //public int ComputeZone(PointLatLng p, int type) //Type1 =ground, type0= air, 2 unspecified
+        //public static int ComputeZone(PointLatLng p, int type) //Type1 =ground, type0= air, 2 unspecified
         //{
         //    Point Pxy = ComputeCartesianFromWGS84(p);
         //    int zone = ComputeZone(Pxy, 2);
 
         //}
 
-        public int ComputeZone(Point p, int type) //Type1 =ground, type0= air, 2=unspecified 
+        public static int ComputeZone(Point p, int type) //Type1 =ground, type0= air, 2=unspecified 
         {
             int zone=-1;
             if (type != 2)
@@ -433,7 +430,7 @@ namespace PGTAWPF
             return zone;
         }
 
-        public int RecomputeZone(CAT10 Before, CAT10 MLAT, CAT10 After)
+        public static int RecomputeZone(CAT10 Before, CAT10 MLAT, CAT10 After)
         {
             double dir = 0;
 
@@ -468,7 +465,7 @@ namespace PGTAWPF
             }
         }
 
-        public int RecomputeZone(CAT21vs21 Before, CAT21vs21 ADSB, CAT21vs21 After)
+        public static int RecomputeZone(CAT21vs21 Before, CAT21vs21 ADSB, CAT21vs21 After)
         {
             double dir=0;
 
@@ -503,7 +500,7 @@ namespace PGTAWPF
             }
         }
 
-        public int RecomputeZone(MarkerDGPS Before, MarkerDGPS DGPS, MarkerDGPS After)
+        public static int RecomputeZone(MarkerDGPS Before, MarkerDGPS DGPS, MarkerDGPS After)
         {
             double dir = 0;
 
@@ -538,7 +535,7 @@ namespace PGTAWPF
             }
         }
 
-        public Point ComputeCartesianFromWGS84(PointLatLng Platlng)
+        public static Point ComputeCartesianFromWGS84(PointLatLng Platlng)
         {
 
             CoordinatesWGS84 ObjectCoordinates = new CoordinatesWGS84((Math.PI / 180) * Platlng.Lat, Platlng.Lng* (Math.PI / 180));
@@ -552,7 +549,7 @@ namespace PGTAWPF
             return p;
         }
 
-        public Point ComputeCartesianFromWGS84(PointLatLng Platlng, double height)
+        public static Point ComputeCartesianFromWGS84(PointLatLng Platlng, double height)
         {
 
             CoordinatesWGS84 ObjectCoordinates = new CoordinatesWGS84((Math.PI / 180) * Platlng.Lat, Platlng.Lng * (Math.PI / 180),height);
@@ -566,7 +563,7 @@ namespace PGTAWPF
             return p;
         }
 
-        public Point ComputeCartesianFromWGS84(PointLatLng Platlng,double Height,double ARPHeight)
+        public static Point ComputeCartesianFromWGS84(PointLatLng Platlng,double Height,double ARPHeight)
         {
 
             CoordinatesWGS84 ObjectCoordinates = new CoordinatesWGS84((Math.PI / 180) * Platlng.Lat, Platlng.Lng * (Math.PI / 180),Height);
@@ -580,19 +577,19 @@ namespace PGTAWPF
             return p;
         }
 
-        PointLatLng SMRAsturias = new PointLatLng(43.56464083, -6.030623056);
-        PointLatLng SMRBarcelona = new PointLatLng(41.29561833, 2.095114167);
-        PointLatLng SMRPalma = new PointLatLng(39.54864778, 2.732764444);
-        PointLatLng SMRSantiago = new PointLatLng(42.89805333, -8.413033056);
-        PointLatLng SMRBarajas_N = new PointLatLng(40.49184306, -3.569051667);
-        PointLatLng SMRBarajas_S = new PointLatLng(40.46814972, -3.568730278);
-        PointLatLng SMRTenerife = new PointLatLng(28.47749583, -16.33252028);
-        PointLatLng ARPPalma = new PointLatLng(39.5486842, 2.73276111);
-        PointLatLng ARPAsturias = new PointLatLng(43.56356722, -6.034621111);
-        PointLatLng ARPBarajas = new PointLatLng(40.47224833, -3.560945278);
-        PointLatLng ARPBarcelona = new PointLatLng(41.2970767, 2.07846278); 
-        PointLatLng ARPMalaga = new PointLatLng(36.67497111, - 4.499206944);
-        PointLatLng ARPTenerife = new PointLatLng(28.48265333, -16.34153722);
-        PointLatLng ARPSantiago = new PointLatLng(42.896335, -8.41514361);
+        static PointLatLng SMRAsturias = new PointLatLng(43.56464083, -6.030623056);
+        static PointLatLng SMRBarcelona = new PointLatLng(41.29561833, 2.095114167);
+        static PointLatLng SMRPalma = new PointLatLng(39.54864778, 2.732764444);
+        static PointLatLng SMRSantiago = new PointLatLng(42.89805333, -8.413033056);
+        static PointLatLng SMRBarajas_N = new PointLatLng(40.49184306, -3.569051667);
+        static PointLatLng SMRBarajas_S = new PointLatLng(40.46814972, -3.568730278);
+        static PointLatLng SMRTenerife = new PointLatLng(28.47749583, -16.33252028);
+        static PointLatLng ARPPalma = new PointLatLng(39.5486842, 2.73276111);
+        static PointLatLng ARPAsturias = new PointLatLng(43.56356722, -6.034621111);
+        static PointLatLng ARPBarajas = new PointLatLng(40.47224833, -3.560945278);
+        static PointLatLng ARPBarcelona = new PointLatLng(41.2970767, 2.07846278);
+        static PointLatLng ARPMalaga = new PointLatLng(36.67497111, -4.499206944);
+        static PointLatLng ARPTenerife = new PointLatLng(28.48265333, -16.34153722);
+        static PointLatLng ARPSantiago = new PointLatLng(42.896335, -8.41514361);
     }
 }

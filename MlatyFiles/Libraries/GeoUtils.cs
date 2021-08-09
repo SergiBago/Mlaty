@@ -635,7 +635,7 @@ namespace MultiCAT6.Utils
                 // http://www.gmat.unsw.edu.au/snap/gps/clynch_pdfs/radiigeo.pdf
 
                 // Radius of curvature in Meridian
-                // Matlib ARTAS &&
+                // MatLibreriaDecodificacion ARTAS &&
                 // http://williams.best.vwh.net/avform.htm (local, flat earth approximation)
                 // R1=a(1-e^2)/(1-e^2*(sin(lat0))^2)^(3/2)
                 ret = (this.A * (1.0 - this.E2)) /
@@ -644,7 +644,7 @@ namespace MultiCAT6.Utils
                 // Radius of curvature in Prime Vertical
                 // Double ret0 = this.A / (Math.Pow(1 - this.E2 * Math.Pow(Math.Sin(geo.Lat), 2), 0.5));
 
-                // Matlib Transform (transform.c) from NLR 2.33
+                // MatLibreriaDecodificacion Transform (transform.c) from NLR 2.33
                 // Double ret1 = this.A * (1.0 - (1.0/2.0) * this.E2 * Math.Cos(2.0*geo.Lat));
                 
                 // WIKIPEDIA     

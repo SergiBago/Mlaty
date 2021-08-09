@@ -33,7 +33,7 @@ namespace PGTA_WPF
 
         private PointLatLng ComputeWGS_84_from_Cartesian(Point p)
         {
-            //PointLatLng AirportPoint = lib.GetAirportARPCoorde(airportCode);
+            //PointLatLng AirportPoint = LibreriaDecodificacion.GetAirportARPCoorde(airportCode);
             PointLatLng Platlong = new PointLatLng();
             double X = p.X;
             double Y = p.Y;

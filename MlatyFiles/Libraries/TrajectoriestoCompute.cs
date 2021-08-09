@@ -17,7 +17,7 @@ using System.Linq.Expressions;
 
 namespace PGTAWPF
 {
-    public class TrajectoriestoCompute
+    public class TrajectoriesToCompute
     {
         public List<CAT10> ListMLAT = new List<CAT10>();
         public List<CAT21vs21> ListADSB = new List<CAT21vs21>();
@@ -28,15 +28,13 @@ namespace PGTAWPF
         public int TrackNumberMLAT = -1;
         public bool aircraftMLAT = false;
         public bool aircraftADSB = false;
-        LibreriaDecodificacion lib;
-        // Data data;
 
         public string PD;
         public PointLatLng ARPCoords = new PointLatLng(41.2970767, 2.07846278);
 
         public List<string> FixedMLATS = new List<string>() { "342384", "342387", "342386", "342385", "342383", "3433D5" };
 
-        public TrajectoriestoCompute(CAT10 message)
+        public TrajectoriesToCompute(CAT10 message)
         {
             ListMLAT.Add(message);
             if (message.Target_Identification != null)
@@ -54,7 +52,7 @@ namespace PGTAWPF
 
         }
 
-        public TrajectoriestoCompute(CAT21vs21 message)
+        public TrajectoriesToCompute(CAT21vs21 message)
         {
             ListADSB.Add(message);
             if (message.Target_Identification != null)
@@ -71,7 +69,7 @@ namespace PGTAWPF
             }
         }
 
-        public TrajectoriestoCompute()
+        public TrajectoriesToCompute()
         {
         }
 
@@ -132,8 +130,6 @@ namespace PGTAWPF
                 if (zone == 9 || zone == 10 || zone == 11 || zone == 12 || zone == 13 || zone == 14) { refreshrate = 1; }
 
                 int expected = 0;
-                // int missing = 0;
-                int refrat = Convert.ToInt32(refreshrate);
                 List<CAT10> ListPDMLAT = new List<CAT10>();
                 foreach (CAT10 MLAT in ListMLAT)
                 {
@@ -164,23 +160,14 @@ namespace PGTAWPF
                         double mintime = (i - (refreshrate / 2));
                         double maxtime = (i + (refreshrate / 2));
                         bool found = false;
-                        bool foundRestriction = false;
                         foreach (CAT10 MLAT in ListMLAT)
                         {
                             if (MLAT.Time_milisec >= mintime && MLAT.Time_milisec <= maxtime)
                             {
-                                //if (ComputeMessageAccuracy(MLAT))
-                                //{
-                                //    found = true;
-                                //    foundRestriction = true;
-                                //    MLAT.used = true;
-                                //    break;
-                                //}
-                                //else
-                                //{
+                        
                                     found = true;
                                     MLAT.used = true;
-                                //}
+                                
 
                             }
                         }
@@ -188,50 +175,11 @@ namespace PGTAWPF
                         {
                             data.ListZones[zone - 1].MissedMLATSPD++;
                         }
-                        //if (!foundRestriction)
-                        //{
-                        //    data.ListZones[zone - 1].MissedMLATSPD_50m_Restriction++;
-                        //}
 
                     }
                     expected = Convert.ToInt32((endTime - startTime));
 
 
-                    //for (int i = Convert.ToInt32(startTime + (refreshrate)); i < Convert.ToInt32(endTime - (refreshrate)); i += refrat)
-                    //{
-                    //    double mintime = (i - (refreshrate / 2));
-                    //    double maxtime = (i + (refreshrate / 2));
-                    //    bool found = false;
-                    //    bool foundRestriction = false;
-                    //    foreach (CAT10 MLAT in ListMLAT)
-                    //    {
-                    //        if (MLAT.Time_milisec >= mintime && MLAT.Time_milisec <= maxtime)
-                    //        {
-                    //            if (ComputeMessageAccuracy(MLAT))
-                    //            {
-                    //                found = true;
-                    //                foundRestriction = true;
-                    //                MLAT.used = true;
-                    //                break;
-                    //            }
-                    //            else
-                    //            {
-                    //                found = true;
-                    //                MLAT.used = true;
-                    //            }
-
-                    //        }
-                    //    }
-                    //    if (found == false)
-                    //    {
-                    //        data.ListZones[zone - 1].MissedMLATSPD++;
-                    //    }
-                    //    if (!foundRestriction)
-                    //    {
-                    //        data.ListZones[zone - 1].MissedMLATSPD_50m_Restriction++;
-                    //    }
-                    //}
-                    //expected = Convert.ToInt32((endTime - startTime) / refreshrate);
                 }
                 else
                 {
@@ -246,23 +194,13 @@ namespace PGTAWPF
                             double mintime = (i - (refreshrate / 2));
                             double maxtime = (i + (refreshrate / 2));
                             bool found = false;
-                            bool foundRestriction = false;
                             foreach (CAT10 MLAT in ListMLAT)
                             {
                                 if (MLAT.Time_milisec >= mintime && MLAT.Time_milisec <= maxtime)
                                 {
-                                    //if (ComputeMessageAccuracy(MLAT))
-                                    //{
-                                    //    found = true;
-                                    //    foundRestriction = true;
-                                    //    MLAT.used = true;
-                                    //    break;
-                                    //}
-                                    //else
-                                    //{
                                         found = true;
                                         MLAT.used = true;
-                                    //}
+                                  
 
                                 }
                             }
@@ -270,141 +208,14 @@ namespace PGTAWPF
                             {
                                 data.ListZones[zone - 1].MissedMLATSPD++;
                             }
-                            //if (!foundRestriction)
-                            //{
-                            //    data.ListZones[zone - 1].MissedMLATSPD_50m_Restriction++;
-                            //}
                         }
                         expected += Convert.ToInt32((endTime - startTime));
 
                         }
-                        //expected += Convert.ToInt32((endTime - startTime) / refreshrate);
-                        //for (int i = Convert.ToInt32(startTime + (refreshrate )); i < Convert.ToInt32(endTime - (refreshrate )); i += refrat)
-                        //{
-                        //    double mintime = i - (refreshrate / 2);
-                        //    double maxtime = i + (refreshrate / 2);
-                        //    bool found = false;
-                        //    bool foundRestriction = false;
-                        //    foreach (CAT10 MLAT in ListMLAT)
-                        //    {
-                        //        if (MLAT.Time_milisec >= mintime && MLAT.Time_milisec <= maxtime)
-                        //        {
-                        //            if (ComputeMessageAccuracy(MLAT))
-                        //            {
-                        //                found = true;
-                        //                foundRestriction = true;
-                        //                MLAT.used = true;
-                        //                break;
-                        //            }
-                        //            else
-                        //            {
-                        //                found = true;
-                        //                MLAT.used = true;
-                        //            }
-                        //        }
-                        //    }
-
-                        //    if (found == false) 
-                        //    { 
-                        //        data.ListZones[zone-1].MissedMLATSPD++; 
-                        //    }
-                        //    if(!foundRestriction)
-                        //    {
-                        //        data.ListZones[zone - 1].MissedMLATSPD_50m_Restriction ++;
-                        //    }
-                        //}
                     
                 }
                 data.ListZones[zone-1].ExpectedMessagesPD += expected;
             }
-        }
-
-
-        private bool ComputeMessageAccuracy(CAT10 MLAT)
-        {
-            bool Less50m = false;
-            PointWithHeight p=null;
-            if (ListADSB.Count>0)
-            {
-                CAT21vs21 Before = new CAT21vs21();
-                CAT21vs21 After = new CAT21vs21();
-                bool Correct = false;
-                bool BeforeFound = false;
-                bool AfterFound = false;
-                for (int i = 0; true; i++)
-                {
-                    CAT21vs21 ADSB = ListADSB[i];
-                    if (ADSB.Time_milisec <= MLAT.Time_milisec && ADSB.Time_milisec > MLAT.Time_milisec - 5)
-                    {
-                        Before = ADSB;
-                        BeforeFound = true;
-                    }
-                    if (ADSB.Time_milisec >= MLAT.Time_milisec && ADSB.Time_milisec < MLAT.Time_milisec + 5 && AfterFound == false)
-                    {
-                        After = ADSB;
-                        AfterFound = true;
-                    }
-                    if (BeforeFound == true && AfterFound == true)
-                    {
-                        Correct = true;
-                        break;
-                    }
-                    if (i == ListADSB.Count - 1)
-                    {
-                        break;
-                    }
-                }
-                if (Correct == true)
-                {
-                    p = ComputePositionXY(Before, After, MLAT);
-                }
-            }
-            else if(ListDGPS.Count>0)
-            {
-                MarkerDGPS Before = new MarkerDGPS();
-                MarkerDGPS After = new MarkerDGPS();
-                bool Correct = false;
-                bool BeforeFound = false;
-                bool AfterFound = false;
-                for (int i = 0; true; i++)
-                {
-                    MarkerDGPS DGPS = ListDGPS[i];
-                    if (DGPS.Time <= MLAT.Time_milisec && DGPS.Time > MLAT.Time_milisec - 5)
-                    {
-                        Before = DGPS;
-                        BeforeFound = true;
-                    }
-                    if (DGPS.Time >= MLAT.Time_milisec && DGPS.Time < MLAT.Time_milisec + 5 && AfterFound == false)
-                    {
-                        After = DGPS;
-                        AfterFound = true;
-                    }
-                    if (BeforeFound == true && AfterFound == true)
-                    {
-                        Correct = true;
-                        break;
-                    }
-                    if (i == ListDGPS.Count - 1)
-                    {
-                        break;
-                    }
-                }
-                if (Correct == true)
-                {
-                    p = ComputePositionXY(Before, After, MLAT);
-                }
-               
-            }
-            if (p != null)
-            {
-                Point MLATp = new Point(MLAT.X_Component_map, MLAT.Y_Component_map);
-                double dist = ComputeDistanceXY(MLATp, p);
-                if (dist < 50)
-                {
-                    Less50m = true;
-                }
-            }
-            return Less50m;
         }
 
 
@@ -674,7 +485,7 @@ namespace PGTAWPF
         }
 
 
-        public void SetZones(LibreriaDecodificacion lib)
+        public void SetZones()
         {
             for (int i = 0; i < ListMLAT.Count; i++)
             {
@@ -698,16 +509,16 @@ namespace PGTAWPF
                     //{
 
                     Point p = new Point(MLAT.X_Component_map, MLAT.Y_Component_map);
-                    MLAT.zone = lib.ComputeZone(p, MLAT.GroundBit);
+                    MLAT.zone = LibreriaDecodificacion.ComputeZone(p, MLAT.GroundBit);
                     if (MLAT.zone == 10)
                     {
                         if (i < ListMLAT.Count - 2)
                         {
-                            MLAT.zone = lib.RecomputeZone(null, MLAT, ListMLAT[i + 1]);
+                            MLAT.zone = LibreriaDecodificacion.RecomputeZone(null, MLAT, ListMLAT[i + 1]);
                         }
                         else if (i > 0)
                         {
-                            MLAT.zone = lib.RecomputeZone(ListMLAT[i - 1], MLAT, null);
+                            MLAT.zone = LibreriaDecodificacion.RecomputeZone(ListMLAT[i - 1], MLAT, null);
                         }
                     }
 
@@ -717,109 +528,39 @@ namespace PGTAWPF
             for (int i = 0; i < ListADSB.Count; i++)
             {
                 CAT21vs21 ADSB = ListADSB[i];
-                //if (ADSB.ECAT == "Light aircraft" || ADSB.ECAT == "Small aircraft" || ADSB.ECAT == "Medium aircraft" || ADSB.ECAT == "Heavy aircraft")
-                //{
                     Point p = new Point(ADSB.X_Component_map, ADSB.Y_Component_map);
-                    ADSB.zone = lib.ComputeZone(p, ADSB.GroundBit);
+                    ADSB.zone = LibreriaDecodificacion.ComputeZone(p, ADSB.GroundBit);
                     if (ADSB.zone == 10)
                     {
                         if (i < ListADSB.Count - 2)
                         {
-                            ADSB.zone = lib.RecomputeZone(null, ADSB, ListADSB[i + 1]);
+                            ADSB.zone = LibreriaDecodificacion.RecomputeZone(null, ADSB, ListADSB[i + 1]);
                         }
                         else if (i > 0)
                         {
-                            ADSB.zone = lib.RecomputeZone(ListADSB[i - 1], ADSB, null);
+                            ADSB.zone = LibreriaDecodificacion.RecomputeZone(ListADSB[i - 1], ADSB, null);
                         }
                     }
-                    //if (save == true && ADSB.zone!=-1)
-                    //{
-                    //    AddMapMarker(ADSB, listMarkers);
-                    //}
-                //}
+               
             }
             for (int i = 0; i < ListDGPS.Count; i++)
             {
                 MarkerDGPS DGPS = ListDGPS[i];
-                //if (ADSB.ECAT == "Light aircraft" || ADSB.ECAT == "Small aircraft" || ADSB.ECAT == "Medium aircraft" || ADSB.ECAT == "Heavy aircraft")
-                //{
-
-                DGPS.zone = lib.ComputeZone(DGPS.Pxy, 2);
+                DGPS.zone = LibreriaDecodificacion.ComputeZone(DGPS.Pxy, 2);
                 if (DGPS.zone == 10)
                 {
                     if (i < ListADSB.Count - 2)
                     {
-                        DGPS.zone = lib.RecomputeZone(null, DGPS, ListDGPS[i + 1]);
+                        DGPS.zone = LibreriaDecodificacion.RecomputeZone(null, DGPS, ListDGPS[i + 1]);
                     }
                     else if (i > 0)
                     {
-                        DGPS.zone = lib.RecomputeZone(ListDGPS[i - 1], DGPS, null);
+                        DGPS.zone = LibreriaDecodificacion.RecomputeZone(ListDGPS[i - 1], DGPS, null);
                     }
                 }
-                //if (save == true && ADSB.zone!=-1)
-                //{
-                //    AddMapMarker(ADSB, listMarkers);
-                //}
             }
         }
     
-
-
-        //public void ComputePDADSBInterpoled2(Data data)
-        //{
-        //    if (ListMLAT.Count > 9 && ListADSB.Count > 9)
-        //    {
-        //        ListADSB = ListADSB.OrderBy(x => x.Time_milisec).ToList();
-        //        foreach (CAT10 MLAT in ListMLAT)
-        //        {
-        //            if (MLAT.TOT == "Aircraft")
-        //            {
-        //                aircraftMLAT = true;
-        //                break;
-        //            }
-        //        }
-        //        foreach (CAT21vs21 ADSB in ListADSB)
-        //        {
-        //            if (ADSB.ECAT == "Light aircraft" || ADSB.ECAT == "Small aircraft" || ADSB.ECAT == "Medium aircraft" || ADSB.ECAT == "Heavy aircraft")
-        //            {
-        //                aircraftADSB = true;
-        //                break;
-        //            }
-        //        }
-        //        int zone = 0;
-        //        bool first = true;
-        //        if (aircraftMLAT == true && aircraftADSB == true)
-        //        {
-        //            double startTime = 0;
-        //            double EndTime = 0;
-        //            for (int i = 0; i < ListADSB.Count; i++)
-        //            {
-        //                CAT21vs21 ADSB = ListADSB[i];
-        //                if (ADSB.zone != zone && first == true)
-        //                {
-        //                    startTime = ADSB.Time_milisec;
-        //                    first = false;
-        //                    zone = ADSB.zone;
-        //                }
-        //                if (ADSB.zone != zone && first == false)
-        //                {
-        //                    EndTime = ADSB.Time_milisec;
-        //                    ComputeZonePD(startTime, EndTime, zone, data);
-        //                    ComputeZoneUP(startTime, EndTime, zone, data);
-        //                    startTime = ADSB.Time_milisec;
-        //                    zone = ADSB.zone;
-        //                }
-        //                if (i == ListADSB.Count - 1)
-        //                {
-        //                    EndTime = ADSB.Time_milisec;
-        //                    ComputeZonePD(startTime, EndTime, zone, data);
-        //                    ComputeZoneUP(startTime, EndTime, zone, data);
-
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
 
         public void ComputePDUD(Data data)
         {
@@ -1015,14 +756,6 @@ namespace PGTAWPF
                     string TargetIdentification = this.TargetIdentification;
                     int same = 0;
                     int dif = 0;
-                    //foreach(CAT10 MLAT in ListMLATOrdered)
-                    //{
-                    //    int zone = MLAT.zone;
-                    //    if (zone != -1)
-                    //    {
-                    //        data.ListZones[zone - 1].CorrectIdentification++;
-                    //    }
-                    //}
                     for (int i = 1; i < numberwindows; i++)
                     {
                         int zone = ListMLATOrdered[index].zone;
@@ -1065,41 +798,14 @@ namespace PGTAWPF
                             if (ThisWindowList.Count() > 0)
                             {
                                 Error = true;
-
                                 foreach (CAT10 MLAT in ThisWindowList)
                                 {
-
-
-                                    if ((MLAT.Target_Address != null || MLAT.Target_Address!="") && MLAT.Target_Address==TargetAdress)
-                                
+                                    if ((MLAT.Target_Address != null || MLAT.Target_Address!="") && MLAT.Target_Address==TargetAdress)                               
                                     {
                                         Error = false;
                                         break;
                                     }
-                                    // if (((MLAT.Target_Address != null || MLAT.Target_Address!="") && MLAT.Target_Address!=TargetAdress) && ((MLAT.Target_Identification != null || MLAT.Target_Identification != "") && MLAT.Target_Identification != TargetIdentification))
-                                    //{
-                                    //    double t = MLAT.Time_milisec;
-                                    //    double mintime = t - 5;
-                                    //    double maxtime = t + 5;
-                                    //    Error = true;
 
-                                    //    List<CAT10> newList = new List<CAT10>();
-                                    //    foreach (CAT10 mlat in ListMLAT)
-                                    //    {
-                                    //        if (mlat.Time_milisec > mintime && mlat.Time_milisec < maxtime)
-                                    //        {
-                                    //            newList.Add(mlat);
-                                    //        }
-                                    //    }
-                                    //    foreach (CAT10 mlat in newList)
-                                    //    {
-                                    //        if ((MLAT.Target_Address != null || MLAT.Target_Address != "") && MLAT.Target_Address == TargetAdress)
-                                    //        {
-                                    //            Error = false;
-                                    //            break;
-                                    //        }
-                                    //    }
-                                    //}
                                 }
                             }
                             if (Error == true)
@@ -1120,13 +826,13 @@ namespace PGTAWPF
         }
 
 
-        public void ComputePrecissionADSBinterpoled(Data data, int PIC,LibreriaDecodificacion lib)
+        public void ComputePrecissionADSBinterpoled(Data data, int PIC)
         {
             if (ListMLAT.Count() > 1)
             {
                 if (FixedMLATS.Contains(TargetAdress))
                 {
-                    this.lib = lib;
+                    
                     List<CAT10> MlatsInStandsForAccuracy = new List<CAT10>();
                     foreach (CAT10 MLAT in ListMLAT)
                     {
@@ -1136,15 +842,13 @@ namespace PGTAWPF
                         }
                         else
                         {
-
                             ComputeMLATPrecissionFixedTransp(MLAT, data);
                         }
                     }
                     if (MlatsInStandsForAccuracy.Count() > 1)
                     {
                         ComputeMLATprecisionInStandsADSBFixed(MlatsInStandsForAccuracy, data);
-                    }
-                
+                    }              
                 }
                 else
                 {
@@ -1189,7 +893,6 @@ namespace PGTAWPF
                                     }
                                     else
                                     {
-                                        //double time = MLAT.Time_milisec;
                                         CAT21vs21 Before = new CAT21vs21();
                                         CAT21vs21 After = new CAT21vs21();
                                         bool Correct = false;
@@ -1221,7 +924,6 @@ namespace PGTAWPF
                                         }
                                         if (Correct == true && Before.PIC >= PIC && After.PIC >= PIC)
                                         {
-
                                             ComputeMLATPrecission(MLAT, Before, After, data);
                                         }
                                     }
@@ -1231,7 +933,6 @@ namespace PGTAWPF
                             {
                                 ComputeMLATprecisionInStandsADSB(MlatsInStandsForAccuracy, data);
                             }
-
                             foreach (CAT21vs21 ADSB in ListADSB)
                             {
                                 if (ADSB.used == true && ADSB.zone != -1)
@@ -1287,7 +988,7 @@ namespace PGTAWPF
             {
                 foreach (CAT10 Mlat in List.MLATSList)
                 {
-                    Point p = lib.FixedMLATSPos[TargetAdress];
+                    Point p = LibreriaDecodificacion.GetFixedMLATPos(TargetAdress);
                     if (p != null)
                     {
                         Point MLATp = new Point(Mlat.X_Component_map, Mlat.Y_Component_map);
@@ -1296,10 +997,7 @@ namespace PGTAWPF
                         List.UsedMLATS++;
                         double ErrorLocalX = Mlat.X_Component_map - p.X;
                         double ErrorLocalY = Mlat.Y_Component_map - p.Y;
-                        if (ErrorLocalX > 10000)
-                        {
-                            int a = 0;
-                        }
+                   
                         PrecissionPoint pressP = new PrecissionPoint(TargetIdentification, TargetAdress, TrackNumberMLAT, Mlat.X_Component_map, Mlat.Y_Component_map, 53.321, p.X, p.Y, 0, ErrorLocalX, ErrorLocalY, dist, Mlat.zone, Mlat.GroundBit, Mlat.Time_milisec);
                         data.PrecissionPoints.Add(pressP);
                     }
@@ -1342,10 +1040,6 @@ namespace PGTAWPF
                         List.UsedMLATS++;
                         double ErrorLocalX = Mlat.X_Component_map - p.X;
                         double ErrorLocalY = Mlat.Y_Component_map - p.Y;
-                        if (ErrorLocalX > 10000)
-                        {
-                            int a = 0;
-                        }
                         PrecissionPoint pressP = new PrecissionPoint(TargetIdentification, TargetAdress, TrackNumberMLAT, Mlat.X_Component_map, Mlat.Y_Component_map, 53.321, p.X, p.Y, p.Z, ErrorLocalX, ErrorLocalY, dist, Mlat.zone, Mlat.GroundBit, Mlat.Time_milisec);
                         data.PrecissionPoints.Add(pressP);     
                     }
@@ -1424,10 +1118,6 @@ namespace PGTAWPF
                         {
                             ComputeMLATPrecission(MLAT, Before, After, data);
                         }
-                        else
-                        {
-                            int a = 0;
-                        }
                     }
                 }
 
@@ -1448,11 +1138,9 @@ namespace PGTAWPF
         {
             if (MLAT.zone != -1)
             {
-                Point p = lib.FixedMLATSPos[TargetAdress];
+                Point p = LibreriaDecodificacion.GetFixedMLATPos(TargetAdress);
                 Point MLATp = new Point(MLAT.X_Component_map, MLAT.Y_Component_map);
                 double dist = ComputeDistanceXY(MLATp, p);
-                //  PointLatLng p = ComputePosition(Before, After, MLAT);
-                // double dist = ComputeDistance(MLAT, p);
                 double PFDdist = 50;/////DISTANCE IN FUNCTION OF ZONE
                 int zone = MLAT.zone;
                 if (zone == 9 || zone == 10 || zone == 11)
@@ -1476,7 +1164,6 @@ namespace PGTAWPF
                 data.ListZones[zone - 1].MLATPrecision.Add(dist);
                 data.ListZones[zone - 1].MLATMessagesUsed++;
                 MLAT.used = true;
-
                 double ErrorLocalX = MLAT.X_Component_map - p.X;
                 double ErrorLocalY = MLAT.Y_Component_map - p.Y;
                 PrecissionPoint pressP = new PrecissionPoint(TargetIdentification, TargetAdress, TrackNumberMLAT, MLAT.X_Component_map, MLAT.Y_Component_map, 53.321, p.X, p.Y, 0, ErrorLocalX, ErrorLocalY, dist, MLAT.zone, MLAT.GroundBit, MLAT.Time_milisec);
@@ -1494,9 +1181,7 @@ namespace PGTAWPF
                 PointWithHeight p = ComputePositionXY(Before, After, MLAT);
                 Point MLATp = new Point(MLAT.X_Component_map, MLAT.Y_Component_map);
                 double dist = ComputeDistanceXY(MLATp, p);
-              //  PointLatLng p = ComputePosition(Before, After, MLAT);
                 double difH = ComputeHeightDif(Before, After, MLAT);
-                // double dist = ComputeDistance(MLAT, p);
                 double PFDdist = 50;/////DISTANCE IN FUNCTION OF ZONE
                 int zone = MLAT.zone;
                 if (zone ==9|| zone == 10 || zone == 11)
@@ -1515,8 +1200,6 @@ namespace PGTAWPF
                 {
                     data.ListZones[zone - 1].CorrectDetection++;
                 }
-
-
                 data.ListZones[zone - 1].MLATPrecision.Add(dist);
                 data.ListZones[zone - 1].MLATMessagesUsed++;
                 data.ListZones[zone - 1].NAC += After.NAC;
@@ -1525,13 +1208,10 @@ namespace PGTAWPF
                 Before.used = true;
                 After.used = true;
                 MLAT.used = true;
-
                 double ErrorLocalX = MLAT.X_Component_map - p.X;
                 double ErrorLocalY = MLAT.Y_Component_map - p.Y;
                 PrecissionPoint pressP = new PrecissionPoint(TargetIdentification,TargetAdress ,TrackNumberMLAT, MLAT.X_Component_map, MLAT.Y_Component_map, 53.321, p.X, p.Y, p.Z, ErrorLocalX, ErrorLocalY, dist, MLAT.zone, MLAT.GroundBit, MLAT.Time_milisec);
                 data.PrecissionPoints.Add(pressP);
-
-
                 if (difH != -999)
                 {
                     data.ListZones[zone - 1].totalMLATPrecissionheight.Add(difH);
@@ -1637,7 +1317,6 @@ namespace PGTAWPF
             {
                 return -999;
             }
-
         }
 
 
@@ -1713,97 +1392,6 @@ namespace PGTAWPF
             PointWithHeight p = new PointWithHeight(Xfin, Yfin,Height);
             return p;
         }
-
-        //private PointLatLng ComputePosition(CAT21vs21 Before, CAT21vs21 After, CAT10 MLAT)
-        //{
-
-
-        //    PointLatLng p = new PointLatLng();
-        //    double lat = Before.LatitudeWGS_84_map;
-        //    double lon = Before.LongitudeWGS_84_map;
-        //    double lat2 = After.LatitudeWGS_84_map;
-        //    double lon2 = After.LongitudeWGS_84_map;
-        //    double dist = 6371000 * (Math.Acos(Math.Cos((Math.PI / 180) * (90 - lat)) * Math.Cos((Math.PI / 180) * (90 - lat2)) + Math.Sin((Math.PI / 180) * (90 - lat)) * Math.Sin((Math.PI / 180) * (90 - lat2)) * Math.Cos((Math.PI / 180) * (lon - lon2))));
-        //    double moveddist;
-        //    double Vtime = (MLAT.Time_milisec - Before.Time_milisec);
-        //    double timeBefore_After = After.Time_milisec - Before.Time_milisec;
-        //    if (Before.Ground_Speed != -1 && After.Ground_Speed != -1)
-        //    {
-        //        double acceleration = (Before.Ground_Speed - After.Ground_Speed) / timeBefore_After;
-        //        moveddist = (Before.Ground_Speed * Vtime) + ((acceleration * (Math.Pow(Vtime, 2))) / (2));
-        //    }
-        //    else
-        //    {
-        //        double vel = dist / timeBefore_After;
-        //        moveddist = vel * Vtime;
-        //    }
-        //    double X0 = lon - lon2;
-        //    double Y0 = lat - lat2;
-        //    double dir = Math.Atan2(Y0, X0);
-        //    double X = moveddist * Math.Cos(dir);
-        //    double Y = moveddist * Math.Sin(dir);
-        //    double R = 6371 * 1000;
-        //    double d = Math.Sqrt((X * X) + (Y * Y));
-        //    double brng = Math.Atan2(Y, -X) - (Math.PI / 2);          
-        //    double Lat1 = Before.LatitudeWGS_84_map * (Math.PI / 180);
-        //    double Lon1 = Before.LongitudeWGS_84_map * (Math.PI / 180);
-        //    var Lat2 = Math.Asin(Math.Sin(Lat1) * Math.Cos(d / R) + Math.Cos(Lat1) * Math.Sin(d / R) * Math.Cos(brng));
-        //    var Lon2 = Lon1 + Math.Atan2(Math.Sin(brng) * Math.Sin(d / R) * Math.Cos(Lat1), Math.Cos(d / R) - Math.Sin(Lat1) * Math.Sin(Lat2));
-        //    p.Lat = Lat2 * (180 / Math.PI);
-        //    p.Lng = Lon2 * (180 / Math.PI);
-        //    return p;
-        //}
-
-
-        //private PointLatLng ComputePosition(CAT10 Before, CAT10 After, CAT21vs21 ADSB)
-        //{
-        //    PointLatLng p = new PointLatLng();
-        //    double lat = Before.LatitudeWGS_84_map;
-        //    double lon = Before.LongitudeWGS_84_map;
-        //    double lat2 = After.LatitudeWGS_84_map;
-        //    double lon2 = After.LongitudeWGS_84_map;
-        //    double dist = 6371000 * (Math.Acos(Math.Cos((Math.PI / 180) * (90 - lat)) * Math.Cos((Math.PI / 180) * (90 - lat2)) + Math.Sin((Math.PI / 180) * (90 - lat)) * Math.Sin((Math.PI / 180) * (90 - lat2)) * Math.Cos((Math.PI / 180) * (lon - lon2))));
-        //    double moveddist;
-        //    double Vtime = (ADSB.Time_milisec- Before.Time_milisec);
-        //    double timeBefore_After = After.Time_milisec - Before.Time_milisec;
-        //    //  bool accelerationComputed = false;
-        //    if (Before.Vx != -1 && Before.Vy != -1 && After.Vy != -1 && After.Vx != -1)
-        //    {
-        //        double Vbefore = Math.Sqrt(Math.Pow(Before.Vx, 2) + Math.Pow(Before.Vy, 2));
-        //        double Vafter = Math.Sqrt(Math.Pow(After.Vx, 2) + Math.Pow(After.Vy, 2));
-        //        double acceleration = (Vbefore - Vafter) / timeBefore_After;
-        //        moveddist = (Vbefore * Vtime) + ((acceleration * (Math.Pow(Vtime, 2))) / (2));
-        //    }
-        //    else
-        //    if (Before.Ground_Speed != -1 && After.Ground_Speed != -1)
-        //    {
-        //        double acceleration = (Before.Ground_Speed - After.Ground_Speed) / timeBefore_After;
-        //        moveddist = (Before.Ground_Speed * Vtime) + ((acceleration * (Math.Pow(Vtime, 2))) / (2));
-        //    }
-        //    else
-        //    {
-        //        double vel = dist / timeBefore_After;
-        //        moveddist = vel * Vtime;
-        //    }
-        //    double X0 = lon - lon2;
-        //    double Y0 = lat - lat2;
-        //    double dir = ((Math.Atan2(Y0, X0) * (180 / Math.PI)) - 90);
-        //    double X = moveddist * Math.Sin(dir);
-        //    double Y = moveddist * Math.Cos(dir);
-        //    double R = 6371 * 1000;
-        //    double d = Math.Sqrt((X * X) + (Y * Y));
-        //    double brng = Math.Atan2(Y, -X) - (Math.PI / 2);
-        //    //double Lat1 = 0;
-        //    //double Lon1 = 0;          
-        //    double Lat1 = Before.LatitudeWGS_84_map * (Math.PI / 180);
-        //    double Lon1 = Before.LongitudeWGS_84_map * (Math.PI / 180);
-        //    var Lat2 = Math.Asin(Math.Sin(Lat1) * Math.Cos(d / R) + Math.Cos(Lat1) * Math.Sin(d / R) * Math.Cos(brng));
-        //    var Lon2 = Lon1 + Math.Atan2(Math.Sin(brng) * Math.Sin(d / R) * Math.Cos(Lat1), Math.Cos(d / R) - Math.Sin(Lat1) * Math.Sin(Lat2));
-        //    p.Lat = Lat2 * (180 / Math.PI);
-        //    p.Lng = Lon2 * (180 / Math.PI);
-        //    return p;
-        //}
-
         private double ComputeDistanceXY(Point MLAT, Point FixedTrans)
         {
             double X = MLAT.X - FixedTrans.X;
@@ -1811,7 +1399,6 @@ namespace PGTAWPF
             double dist = Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2));
             return dist;
         }
-
 
         private double ComputeDistanceXY(Point MLAT, PointWithHeight ADSB)
         {
@@ -1830,16 +1417,6 @@ namespace PGTAWPF
             double dist = 6371000 * (Math.Acos(Math.Cos((Math.PI / 180) * (90 - lat)) * Math.Cos((Math.PI / 180) * (90 - lat2)) + Math.Sin((Math.PI / 180) * (90 - lat)) * Math.Sin((Math.PI / 180) * (90 - lat2)) * Math.Cos((Math.PI / 180) * (lon - lon2))));
             return dist;
         }
-
-        //private double ComputeDistance(CAT21vs21 ADSB, PointLatLng p)
-        //{
-        //    double lat = ADSB.LatitudeWGS_84_map;
-        //    double lon = ADSB.LongitudeWGS_84_map;
-        //    double lat2 = p.Lat;
-        //    double lon2 = p.Lng;
-        //    double dist = 6371000 * (Math.Acos(Math.Cos((Math.PI / 180) * (90 - lat)) * Math.Cos((Math.PI / 180) * (90 - lat2)) + Math.Sin((Math.PI / 180) * (90 - lat)) * Math.Sin((Math.PI / 180) * (90 - lat2)) * Math.Cos((Math.PI / 180) * (lon - lon2))));
-        //    return dist;
-        //}
 
     }
 }
