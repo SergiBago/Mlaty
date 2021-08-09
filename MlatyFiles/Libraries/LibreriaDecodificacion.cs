@@ -298,9 +298,9 @@ namespace PGTAWPF
         public static int ComputeZone(Point p, int type) //Type1 =ground, type0= air, 2=unspecified 
         {
             int zone=-1;
-            if (type != 2)
+            if (type != 2) //If bit ground set is specified
             {
-                if (type == 0)
+                if (type == 0) //if bit ground set is air first check if the point is in any of the air zones.
                 {
                     if (IsPointInZone(zones.Airborne25RZones25, p) == true)
                     {
@@ -327,7 +327,8 @@ namespace PGTAWPF
                         return 14;
                     }
                 }
-                if (type == 1 || type == 0)
+                if (type == 1 || type == 0) //if point is not in air zones (if it was there the function will have returned some value and it will not have arrived at this point)
+                                            //then we check if the point is in any of the runways. For the runways bgs can be 0 or 1
                 {
 
                     if (IsPointInZone(zones.Runway25LZones, p) == true)
@@ -343,7 +344,7 @@ namespace PGTAWPF
                         return 3;
                     }
                 }
-                if (type == 1)
+                if (type == 1) //if point is not in airspace and not in runways and gbs=1, we check for the rest of airport zones
                 {
                     if (IsPointInZone(zones.StandT1Zones, p) == true)
                     {
@@ -432,7 +433,7 @@ namespace PGTAWPF
 
         public static int RecomputeZone(CAT10 Before, CAT10 MLAT, CAT10 After)
         {
-            double dir = 0;
+            double dir;
 
             if (IsPointInZone(zones.Runway25LZones, new Point(MLAT.X_Component_map, MLAT.Y_Component_map)) == true)
             {

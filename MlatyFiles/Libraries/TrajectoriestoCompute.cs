@@ -257,10 +257,6 @@ namespace PGTAWPF
                     Before.used = true;
                     After.used = true;
                     p = ComputePositionXY(Before, After, MLAT);
-                    if(Math.Abs(p.X)>30000)
-                    {
-                        int a = 0;
-                    }
                 }
             }
             else if (ListDGPS.Count > 0)
@@ -493,21 +489,14 @@ namespace PGTAWPF
                 if (MLAT.Target_Address =="342384" || MLAT.Target_Address == "342387" || MLAT.Target_Address == "3433D5")
                 {
                     MLAT.zone = 5;
-                }
-                //if(MLAT.Target_Address == "3433D5")
-                //{
-                //    int a = 0;
-                //}
-                
+                }                          
                 else if (MLAT.Target_Address == "342385" || MLAT.Target_Address == "342386" || MLAT.Target_Address == "342383" )
                 {
                     MLAT.zone=4;
                 }
                 else
                 {
-                    //if (MLAT.TOT == "Aircraft")
-                    //{
-
+                    
                     Point p = new Point(MLAT.X_Component_map, MLAT.Y_Component_map);
                     MLAT.zone = LibreriaDecodificacion.ComputeZone(p, MLAT.GroundBit);
                     if (MLAT.zone == 10)
@@ -522,7 +511,7 @@ namespace PGTAWPF
                         }
                     }
 
-                    //}
+                    
                 }
             }
             for (int i = 0; i < ListADSB.Count; i++)
@@ -611,9 +600,9 @@ namespace PGTAWPF
                             if (ListADSB.Count > 0 || ListDGPS.Count > 0)
                             {
                                 ComputeZonePD(startTime, EndTime, zone, data);
-                            }
-                            ComputeZoneUP(startTime, EndTime, zone, data);
 
+                                ComputeZoneUP(startTime, EndTime, zone, data);
+                            }
                             startTime = MLAT.Time_milisec;
                             zone = MLAT.zone;
                         }
@@ -623,9 +612,9 @@ namespace PGTAWPF
                             if (ListADSB.Count > 0 || ListDGPS.Count > 0)
                             {
                                 ComputeZonePD(startTime, EndTime, zone, data);
-                            }
-                            ComputeZoneUP(startTime, EndTime, zone, data);
 
+                                ComputeZoneUP(startTime, EndTime, zone, data);
+                            }
                         }
                     }
                 }
@@ -828,7 +817,7 @@ namespace PGTAWPF
 
         public void ComputePrecissionADSBinterpoled(Data data, int PIC)
         {
-            if (ListMLAT.Count() > 1)
+            if (ListMLAT.Count() > 0)
             {
                 if (FixedMLATS.Contains(TargetAdress))
                 {
@@ -852,7 +841,6 @@ namespace PGTAWPF
                 }
                 else
                 {
-                    if (ListDGPS.Count > 0) { aircraftMLAT = true; }
 
                     if (!aircraftMLAT)
                     {
@@ -902,12 +890,12 @@ namespace PGTAWPF
                                         for (int i = 0; cont == true; i++)
                                         {
                                             CAT21vs21 ADSB = ListADSB[i];
-                                            if (ADSB.Time_milisec <= MLAT.Time_milisec && ADSB.Time_milisec > MLAT.Time_milisec - 5)
+                                            if (ADSB.Time_milisec <= MLAT.Time_milisec && ADSB.Time_milisec > MLAT.Time_milisec - 5 && ADSB.PIC >= PIC)
                                             {
                                                 Before = ADSB;
                                                 BeforeFound = true;
                                             }
-                                            if (ADSB.Time_milisec >= MLAT.Time_milisec && ADSB.Time_milisec < MLAT.Time_milisec + 5 && AfterFound == false)
+                                            if (ADSB.Time_milisec >= MLAT.Time_milisec && ADSB.Time_milisec < MLAT.Time_milisec + 5 && ADSB.PIC >= PIC &&AfterFound == false)
                                             {
                                                 After = ADSB;
                                                 AfterFound = true;
@@ -922,7 +910,7 @@ namespace PGTAWPF
                                                 cont = false;
                                             }
                                         }
-                                        if (Correct == true && Before.PIC >= PIC && After.PIC >= PIC)
+                                        if (Correct == true)
                                         {
                                             ComputeMLATPrecission(MLAT, Before, After, data);
                                         }
@@ -953,7 +941,6 @@ namespace PGTAWPF
             public int zone;
             public List<CAT10> MLATSList = new List<CAT10>();
             public List<double> Distances = new List<double>();
-            public int UsedMLATS = 0;
 
 
             public ListOfMLATSin5Seconds(double StartTime,int zone,CAT10 MLAT)
@@ -968,10 +955,10 @@ namespace PGTAWPF
 
         private void ComputeMLATprecisionInStandsADSBFixed(List<CAT10> MlatsInStandsForAccuracy, Data data)
         {
-            MlatsInStandsForAccuracy.OrderBy(CAT10 => CAT10.Time_milisec);
-            double startTime = MlatsInStandsForAccuracy[0].Time_milisec;
-            List<ListOfMLATSin5Seconds> ListOrderedMlats = new List<ListOfMLATSin5Seconds>();
-            foreach (CAT10 Mlat in MlatsInStandsForAccuracy)
+            MlatsInStandsForAccuracy.OrderBy(CAT10 => CAT10.Time_milisec); //Order messages lists by message time
+            double startTime = MlatsInStandsForAccuracy[0].Time_milisec; //Set start time in first message time( first time of all)
+            List<ListOfMLATSin5Seconds> ListOrderedMlats = new List<ListOfMLATSin5Seconds>(); //Create a list of Messages in 5 seconds
+            foreach (CAT10 Mlat in MlatsInStandsForAccuracy) //Set all messages in List of 5 seconds
             {
                 ListOfMLATSin5Seconds list = ListOrderedMlats.Find(x => (x.StartTime <= Mlat.Time_milisec && x.EndTime > Mlat.Time_milisec && x.zone == Mlat.zone));
                 if (list != null)
@@ -984,28 +971,28 @@ namespace PGTAWPF
                     ListOrderedMlats.Add(list);
                 }
             }
-            foreach (ListOfMLATSin5Seconds List in ListOrderedMlats)
+            foreach (ListOfMLATSin5Seconds List in ListOrderedMlats) //Foreach period of 5 seconds compute it's data
             {
-                foreach (CAT10 Mlat in List.MLATSList)
+                foreach (CAT10 Mlat in List.MLATSList) //foreach message in the list compute it's precission
                 {
-                    Point p = LibreriaDecodificacion.GetFixedMLATPos(TargetAdress);
-                    if (p != null)
+                    Point p = LibreriaDecodificacion.GetFixedMLATPos(TargetAdress); 
+                    if (p != null) 
                     {
                         Point MLATp = new Point(Mlat.X_Component_map, Mlat.Y_Component_map);
                         double dist = ComputeDistanceXY(MLATp, p);
-                        List.Distances.Add(dist);
-                        List.UsedMLATS++;
+                        List.Distances.Add(dist); //Add precission to the ListOFMLATSin5Seconds to compute later the precission in that time
+                        
                         double ErrorLocalX = Mlat.X_Component_map - p.X;
                         double ErrorLocalY = Mlat.Y_Component_map - p.Y;
                    
                         PrecissionPoint pressP = new PrecissionPoint(TargetIdentification, TargetAdress, TrackNumberMLAT, Mlat.X_Component_map, Mlat.Y_Component_map, 53.321, p.X, p.Y, 0, ErrorLocalX, ErrorLocalY, dist, Mlat.zone, Mlat.GroundBit, Mlat.Time_milisec);
-                        data.PrecissionPoints.Add(pressP);
+                        data.PrecissionPoints.Add(pressP); //Create and save the point data
                     }
                 }
             }
             foreach (ListOfMLATSin5Seconds List in ListOrderedMlats)
             {
-                CreateTotalListOfMLATSin5Seconds(List, data);
+                ComputeTotalListOfMLATSin5Seconds(List, data); //Compute interval list precision in another function
             }
         }
 
@@ -1037,7 +1024,6 @@ namespace PGTAWPF
                         Point MLATp = new Point(Mlat.X_Component_map, Mlat.Y_Component_map);
                         double dist = ComputeDistanceXY(MLATp, p);
                         List.Distances.Add(dist);
-                        List.UsedMLATS++;
                         double ErrorLocalX = Mlat.X_Component_map - p.X;
                         double ErrorLocalY = Mlat.Y_Component_map - p.Y;
                         PrecissionPoint pressP = new PrecissionPoint(TargetIdentification, TargetAdress, TrackNumberMLAT, Mlat.X_Component_map, Mlat.Y_Component_map, 53.321, p.X, p.Y, p.Z, ErrorLocalX, ErrorLocalY, dist, Mlat.zone, Mlat.GroundBit, Mlat.Time_milisec);
@@ -1047,19 +1033,19 @@ namespace PGTAWPF
             }
             foreach (ListOfMLATSin5Seconds List in ListOrderedMlats)
             {
-                CreateTotalListOfMLATSin5Seconds(List, data);
+                ComputeTotalListOfMLATSin5Seconds(List, data);
             }
 
         }
 
-        private void CreateTotalListOfMLATSin5Seconds(ListOfMLATSin5Seconds List, Data data)
+        private void ComputeTotalListOfMLATSin5Seconds(ListOfMLATSin5Seconds List, Data data)
         {
             double dist = 0;
             foreach (double distance in List.Distances)
             {
                 dist += distance;
             }
-            double precision = dist / List.UsedMLATS;
+            double precision = dist / List.Distances.Count();
             double PFDdist = 50; /////DISTANCE IN FUNCTION OF ZONE
             if (precision > PFDdist)
             {
@@ -1070,7 +1056,7 @@ namespace PGTAWPF
                 data.ListZones[List.zone - 1].CorrectDetection++;
             }
             data.ListZones[List.zone - 1].MLATPrecision.Add(precision);
-            data.ListZones[List.zone - 1].MLATMessagesUsed+=List.UsedMLATS;            
+            data.ListZones[List.zone - 1].MLATMessagesUsed+=List.Distances.Count();            
         }
 
 
@@ -1138,9 +1124,11 @@ namespace PGTAWPF
         {
             if (MLAT.zone != -1)
             {
-                Point p = LibreriaDecodificacion.GetFixedMLATPos(TargetAdress);
+                Point p = LibreriaDecodificacion.GetFixedMLATPos(TargetAdress); //Get fixed Transponder position from Libreria Decodificacion
                 Point MLATp = new Point(MLAT.X_Component_map, MLAT.Y_Component_map);
-                double dist = ComputeDistanceXY(MLATp, p);
+                double dist = ComputeDistanceXY(MLATp, p); //Compute distance from fixed position and MLAT transmitted position
+
+                ////START of PFD computation
                 double PFDdist = 50;/////DISTANCE IN FUNCTION OF ZONE
                 int zone = MLAT.zone;
                 if (zone == 9 || zone == 10 || zone == 11)
@@ -1159,12 +1147,12 @@ namespace PGTAWPF
                 {
                     data.ListZones[zone - 1].CorrectDetection++;
                 }
+                ////End of PFD computation
 
-
-                data.ListZones[zone - 1].MLATPrecision.Add(dist);
-                data.ListZones[zone - 1].MLATMessagesUsed++;
+                data.ListZones[zone - 1].MLATPrecision.Add(dist); //Add computed precision to the list of precissions of the point zone
+                data.ListZones[zone - 1].MLATMessagesUsed++; //Add number of messages used
                 MLAT.used = true;
-                double ErrorLocalX = MLAT.X_Component_map - p.X;
+                double ErrorLocalX = MLAT.X_Component_map - p.X; //Compute dX and dY to save to the csv
                 double ErrorLocalY = MLAT.Y_Component_map - p.Y;
                 PrecissionPoint pressP = new PrecissionPoint(TargetIdentification, TargetAdress, TrackNumberMLAT, MLAT.X_Component_map, MLAT.Y_Component_map, 53.321, p.X, p.Y, 0, ErrorLocalX, ErrorLocalY, dist, MLAT.zone, MLAT.GroundBit, MLAT.Time_milisec);
                 data.PrecissionPoints.Add(pressP);

@@ -12,7 +12,6 @@ namespace PGTA_WPF
     public class Data
     {
        
-        //public int totaltraj;
 
         public DataTable parameters = new DataTable();
         public DataTable PD = new DataTable();
@@ -23,6 +22,8 @@ namespace PGTA_WPF
 
         public List<DataZone> ListZones = new List<DataZone>();
         public List<PrecissionPoint> PrecissionPoints = new List<PrecissionPoint>();
+
+
         public Data()
         {
             DataZone zone = new DataZone("Runway25L");
@@ -63,6 +64,8 @@ namespace PGTA_WPF
             ListZones.Add(zone17);
             DataZone zone18 = new DataZone("Total Airborne 2.5-5NM");
             ListZones.Add(zone18);
+
+
             parameters.Columns.Add("Zone");
             parameters.Columns.Add("P95");
             parameters.Columns.Add("Max P95");
