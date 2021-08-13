@@ -11,13 +11,13 @@ namespace PGTA_WPF
 {
     public class MarkerDGPS
     {
-        public PointLatLng p;
-        public Point Pxy;
-        public double Time;
-        public double Height;
-        public int zone;
-        public bool used = false;
-        public bool saved = false;
+        public PointLatLng p { get; set; }
+        public Point Pxy { get; set; }
+        public double Time { get; set; }
+        public double Height { get; set; }
+        public int zone { get; set; }
+        public bool used { get; set; } = false;
+        public bool saved { get; set; } = false;
 
         public MarkerDGPS(PointLatLng p,Point Pxy, double t)
         {

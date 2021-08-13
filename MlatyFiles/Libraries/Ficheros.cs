@@ -289,7 +289,6 @@ namespace PGTAWPF
                 int PIC = 0;
                 if (computePIC == true)
                 {
-
                     PICS.Sort();
                     if (PICS.Count > 0)
                     {

@@ -125,26 +125,19 @@ namespace PGTAWPF
             if (zone != -1)
             {
                 double refreshrate = 0;
-                if (zone == 1 || zone == 2 || zone == 3 || zone == 6 || zone == 7 || zone == 8) { refreshrate = 2; }
+                if (zone == 1 || zone == 2 || zone == 3 || zone == 6 || zone == 7 || zone == 8) { refreshrate = 2; } //Set refresh rate for zones 
                 if (zone == 4 || zone == 5) { refreshrate = 5; }
                 if (zone == 9 || zone == 10 || zone == 11 || zone == 12 || zone == 13 || zone == 14) { refreshrate = 1; }
-
                 int expected = 0;
-                List<CAT10> ListPDMLAT = new List<CAT10>();
-                foreach (CAT10 MLAT in ListMLAT)
-                {
-                    if (MLAT.Time_milisec >= startTime -refreshrate && MLAT.Time_milisec <= endTime + refreshrate)
-                    {
-                        ListPDMLAT.Add(MLAT);
-                    }
-                }
-                List<double> times = new List<double>();
+                List<CAT10> ListPDMLAT = ListMLAT.Where(x => x.Time_milisec >= startTime - refreshrate && x.Time_milisec <= endTime + refreshrate).ToList(); //Create a list with all messages that are in the actual computing period
+          
+                List<double> times = new List<double>(); //If a vehicle stops transmiting for more than 30 seconds we assume it stoped the transmitter, so we dount count all that stops as missed MLATS, 
+                                                         // instead we create multiple lists and compute the PD for all the times the vehicle is active. 
                 if (ListPDMLAT.Count > 0)
                 {
                     double Start = ListPDMLAT[0].Time_milisec;
                     for (int i = 1; i < ListPDMLAT.Count; i++)
                     {
-
                         if (ListPDMLAT[i].Time_milisec > ListPDMLAT[i - 1].Time_milisec + 30)
                         {
                             times.Add(Start);
@@ -153,7 +146,8 @@ namespace PGTAWPF
                         }
                     }
                 }
-                if (times.Count == 0)
+
+                if (times.Count == 0) //If there are no stops we compute all in once
                 {
                     for (int i = Convert.ToInt32(startTime); i < Convert.ToInt32(endTime); i ++)
                     {
@@ -164,31 +158,23 @@ namespace PGTAWPF
                         {
                             if (MLAT.Time_milisec >= mintime && MLAT.Time_milisec <= maxtime)
                             {
-                        
                                     found = true;
                                     MLAT.used = true;
-                                
-
                             }
                         }
                         if (found == false)
                         {
                             data.ListZones[zone - 1].MissedMLATSPD++;
                         }
-
                     }
                     expected = Convert.ToInt32((endTime - startTime));
-
-
                 }
-                else
+                else //if there are stops we compute the PD for each time period
                 {
-
                     for (int s = 0; s < times.Count; s += 2)
                     {
                         startTime = times[s];
                         endTime = times[s + 1];
-
                         for (int i = Convert.ToInt32(startTime); i < Convert.ToInt32(endTime); i++)
                         {
                             double mintime = (i - (refreshrate / 2));
@@ -200,8 +186,6 @@ namespace PGTAWPF
                                 {
                                         found = true;
                                         MLAT.used = true;
-                                  
-
                                 }
                             }
                             if (found == false)
@@ -212,7 +196,6 @@ namespace PGTAWPF
                         expected += Convert.ToInt32((endTime - startTime));
 
                         }
-                    
                 }
                 data.ListZones[zone-1].ExpectedMessagesPD += expected;
             }
@@ -307,15 +290,8 @@ namespace PGTAWPF
                 double refreshrate = 1;
                 int expected = 0;
                 int refrat = Convert.ToInt32(refreshrate);
-                List<CAT10> ListUPMLAT = new List<CAT10>();
+                List<CAT10> ListUPMLAT = ListMLAT.Where(x=>x.Time_milisec>=startTime-refreshrate && x.Time_milisec<=endTime+refreshrate).ToList();
                 data.ListZones[zone].expected_PDok++;
-                foreach (CAT10 MLAT in ListMLAT)
-                {
-                    if (MLAT.Time_milisec >= startTime - refreshrate && MLAT.Time_milisec <= endTime + refreshrate)
-                    {
-                        ListUPMLAT.Add(MLAT);
-                    }
-                }
                 List<double> times = new List<double>();
                 if (ListUPMLAT.Count > 0)
                 {
@@ -334,36 +310,16 @@ namespace PGTAWPF
                 if (times.Count == 0)
                 {
                     double time = (startTime + (refreshrate / 2));
-                    int first = 0;
-                    double TimeDif = 10000000;
+                    int first = ListUPMLAT.FindIndex(x => x.Time_milisec == startTime); //Find first message
                     double mintime = (startTime - (refreshrate / 2));
                     double maxtime = (startTime + (refreshrate / 2));
-                    for (int i = 0; i < ListMLAT.Count(); i++)
+                    for (int i = first; i < ListUPMLAT.Count(); i++) //Iterate for all Messages in 
                     {
-                        CAT10 MLAT = ListMLAT[i];
-                        if (MLAT.Time_milisec >= mintime && MLAT.Time_milisec <= maxtime)
-                        {
-                            first = i;
-                            MLAT.used = true;
-                            break;
-                        }
-                        else
-                        {
-                            if (Math.Abs(MLAT.Time_milisec-mintime)<TimeDif)
-                            {
-                                TimeDif = Math.Abs(MLAT.Time_milisec - mintime);
-                                first = 0;
-                            }
-                        }
-                    }
-                    for (int i = first; i < ListMLAT.Count(); i++)
-                    {
-                        CAT10 MLAT = ListMLAT[i];
+                        CAT10 MLAT = ListUPMLAT[i];
 
                         if (MLAT.Time_milisec >= time-refreshrate && MLAT.Time_milisec <= time + refreshrate)
                         {
                             MLAT.used = true;
-                            //time = MLAT.Time_milisec;
                             time = time + refreshrate;
                         }
                         else
@@ -372,7 +328,6 @@ namespace PGTAWPF
                             {
                                 int miss = Convert.ToInt32(MLAT.Time_milisec - time);
                                 data.ListZones[zone - 1].MissedMLATSUP+=miss;
-                              //  time = MLAT.Time_milisec;
                                 time = time + refreshrate;
                                 i = i - 1;
                             }
@@ -394,36 +349,16 @@ namespace PGTAWPF
                         endTime = times[s + 1];
                         expected += Convert.ToInt32((endTime - startTime) / refreshrate);
                         double time = (startTime + (refreshrate / 2));
-                        double TimeDif = 10000000;
-                        int first = 0;
+                        int first = ListUPMLAT.FindIndex(x=>x.Time_milisec==startTime);
                         double mintime = (startTime - (refreshrate / 2));
                         double maxtime = (startTime + (refreshrate / 2));
-                        for (int i = 0; i < ListMLAT.Count(); i++)
+                        for (int i = first; i < ListUPMLAT.Count(); i++)
                         {
-                            CAT10 MLAT = ListMLAT[i];
-                            if (MLAT.Time_milisec >= mintime && MLAT.Time_milisec <= maxtime)
-                            {
-                                first = i;
-                                MLAT.used = true;
-                                break;
-                            }
-                            else
-                            {
-                                if (Math.Abs(MLAT.Time_milisec - mintime) < TimeDif)
-                                {
-                                    TimeDif = Math.Abs(MLAT.Time_milisec - mintime);
-                                    first = 0;
-                                }
-                            }
-                        }
-                        for (int i = first; i < ListMLAT.Count(); i++)
-                        {
-                            CAT10 MLAT = ListMLAT[i];
+                            CAT10 MLAT = ListUPMLAT[i];
 
                             if (MLAT.Time_milisec >= time && MLAT.Time_milisec <= time + refreshrate)
                             {
                                 MLAT.used = true;
-                              //  time = MLAT.Time_milisec;
                                 time = time + refreshrate;
                             }
                             else
@@ -432,7 +367,6 @@ namespace PGTAWPF
                                 {
                                     int miss = Convert.ToInt32(MLAT.Time_milisec - time);
                                     data.ListZones[zone - 1].MissedMLATSUP += miss;
-                                  //  time = MLAT.Time_milisec;
                                     time = time + refreshrate;
                                     i = i - 1;
                                 }
@@ -580,21 +514,16 @@ namespace PGTAWPF
                 }
                 if (aircraftMLAT)
                 {
-                    ListDGPS = ListDGPS.OrderBy(x => x.Time).ToList();
+                    ListDGPS = ListDGPS.OrderBy(x => x.Time).ToList(); //Order missages by time parameter
                     int zone = 0;
-                    bool first = true;
                     double startTime = 0;
                     double EndTime = 0;
-                    for (int i = 0; i < ListMLAT.Count; i++)
+                    startTime = ListMLAT[0].Time_milisec;
+                    zone = ListMLAT[0].zone;
+                
+                    foreach(CAT10 MLAT in ListMLAT) //Iterate for all messages. 
                     {
-                        CAT10 MLAT = ListMLAT[i];
-                        if (MLAT.zone != zone && first == true)
-                        {
-                            startTime = MLAT.Time_milisec;
-                            first = false;
-                            zone = MLAT.zone;
-                        }
-                        if (MLAT.zone != zone && first == false)
+                        if ((MLAT.zone != zone)|| (MLAT == ListMLAT[ListMLAT.Count - 1])) //if we change zone or is the last message, we close the zone and compute PD and UP
                         {
                             EndTime = MLAT.Time_milisec;
                             if (ListADSB.Count > 0 || ListDGPS.Count > 0)
@@ -606,31 +535,22 @@ namespace PGTAWPF
                             startTime = MLAT.Time_milisec;
                             zone = MLAT.zone;
                         }
-                        if (i == ListMLAT.Count - 1)
-                        {
-                            EndTime = MLAT.Time_milisec;
-                            if (ListADSB.Count > 0 || ListDGPS.Count > 0)
-                            {
-                                ComputeZonePD(startTime, EndTime, zone, data);
-
-                                ComputeZoneUP(startTime, EndTime, zone, data);
-                            }
-                        }
+                    
                     }
                 }
             }
         }
 
-        class PossibleAdress
-        {
-            public string Name;
-            public int Times = 1;
+        //class PossibleAdress
+        //{
+        //    public string Name;
+        //    public int Times = 1;
 
-            public PossibleAdress(string name)
-            {
-                this.Name = name;
-            }
-        }
+        //    public PossibleAdress(string name)
+        //    {
+        //        this.Name = name;
+        //    }
+        //}
 
 
         public void ComputePI(Data data)
@@ -664,34 +584,12 @@ namespace PGTAWPF
                 }
                 if (aircraftMLAT)
                 {
-                    List<PossibleAdress> adresses = new List<PossibleAdress>();
-                    foreach (CAT10 MLAT in ListMLAT)
-                    {
-                        PossibleAdress addres = adresses.Find(x => x.Name == MLAT.Target_Address);
-                        if (addres!=null)
-                        {
-                            addres.Times++;
-                        }
-                        else
-                        {
-                            addres = new PossibleAdress(MLAT.Target_Address);
-                            adresses.Add(addres);
-                        }
-                    }
-                    PossibleAdress address = new PossibleAdress("");
-                    foreach (PossibleAdress add in adresses)
-                    {
-                        if (add.Times>address.Times)
-                        {
-                            address = add;    
-                        }
-                    }
                     foreach (CAT10 MLAT in ListMLAT)
                     {
                         int zone = MLAT.zone;
                         if (zone != -1)
                         {
-                            if (MLAT.Target_Address != address.Name)
+                            if (MLAT.Target_Address != this.TargetAdress)
                             {
                                 data.ListZones[zone - 1].IncorrectPI++;
                             }
@@ -1068,7 +966,7 @@ namespace PGTAWPF
             {
                 foreach (CAT10 MLAT in ListMLAT)
                 { 
-                    if ((ComputeDistance(MLAT, ARPCoords) < 20000) && MLAT.zone!=-1)
+                    if (MLAT.zone!=-1)
                     {
                    
                         MarkerDGPS Before = new MarkerDGPS();
