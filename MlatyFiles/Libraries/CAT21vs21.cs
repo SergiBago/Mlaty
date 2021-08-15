@@ -817,7 +817,7 @@ namespace PGTAWPF
 
 
         //AIRBORNE GROUND VECTOR
-        public double Ground_Speed=-1;
+        public double Ground_Speed { get; set; } = -1;
         public string Track_Angle;
         public string Ground_vector;
         private int Compute_Airborne_Ground_Vector(string[] message, int pos)
@@ -1142,15 +1142,15 @@ namespace PGTAWPF
 
         private void GetTime()
         {
-            if (Time_of_Applicability_Position != -1)
+            if (Time_of_Applicability_Position != -1) //Data item I021/071
             { 
                 Time_milisec = Time_of_Applicability_Position;
             }
-            else if (Time_of_Message_Reception_Position_High_Precision!= -1) 
+            else if (Time_of_Message_Reception_Position_High_Precision!= -1)  //Data item I021/074
             {
-                Time_milisec = Time_of_Message_Reception_Position_High_Precision; 
+                Time_milisec = Time_of_Message_Reception_Position_High_Precision; //
             }
-            else if (Time_of_Message_Reception_Position != -1) 
+            else if (Time_of_Message_Reception_Position != -1) //Data item I021/073
             {
                 Time_milisec = Time_of_Message_Reception_Position; 
             }
