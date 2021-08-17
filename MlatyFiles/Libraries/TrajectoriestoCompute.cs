@@ -433,55 +433,55 @@ namespace PGTAWPF
                     
                     Point p = new Point(MLAT.X_Component_map, MLAT.Y_Component_map);
                     MLAT.zone = LibreriaDecodificacion.ComputeZone(p, MLAT.GroundBit);
-                    if (MLAT.zone == 10)
-                    {
-                        if (i < ListMLAT.Count - 2)
-                        {
-                            MLAT.zone = LibreriaDecodificacion.RecomputeZone(null, MLAT, ListMLAT[i + 1]);
-                        }
-                        else if (i > 0)
-                        {
-                            MLAT.zone = LibreriaDecodificacion.RecomputeZone(ListMLAT[i - 1], MLAT, null);
-                        }
-                    }
+                    //if (MLAT.zone == 10)
+                    //{
+                    //    if (i < ListMLAT.Count - 2)
+                    //    {
+                    //        MLAT.zone = LibreriaDecodificacion.RecomputeZone(null, MLAT, ListMLAT[i + 1]);
+                    //    }
+                    //    else if (i > 0)
+                    //    {
+                    //        MLAT.zone = LibreriaDecodificacion.RecomputeZone(ListMLAT[i - 1], MLAT, null);
+                    //    }
+                    //}
 
                     
                 }
             }
-            for (int i = 0; i < ListADSB.Count; i++)
-            {
-                CAT21vs21 ADSB = ListADSB[i];
-                    Point p = new Point(ADSB.X_Component_map, ADSB.Y_Component_map);
-                    ADSB.zone = LibreriaDecodificacion.ComputeZone(p, ADSB.GroundBit);
-                    if (ADSB.zone == 10)
-                    {
-                        if (i < ListADSB.Count - 2)
-                        {
-                            ADSB.zone = LibreriaDecodificacion.RecomputeZone(null, ADSB, ListADSB[i + 1]);
-                        }
-                        else if (i > 0)
-                        {
-                            ADSB.zone = LibreriaDecodificacion.RecomputeZone(ListADSB[i - 1], ADSB, null);
-                        }
-                    }
+            //for (int i = 0; i < ListADSB.Count; i++)
+            //{
+            //    CAT21vs21 ADSB = ListADSB[i];
+            //        Point p = new Point(ADSB.X_Component_map, ADSB.Y_Component_map);
+            //        ADSB.zone = LibreriaDecodificacion.ComputeZone(p, ADSB.GroundBit);
+            //        if (ADSB.zone == 10)
+            //        {
+            //            if (i < ListADSB.Count - 2)
+            //            {
+            //                ADSB.zone = LibreriaDecodificacion.RecomputeZone(null, ADSB, ListADSB[i + 1]);
+            //            }
+            //            else if (i > 0)
+            //            {
+            //                ADSB.zone = LibreriaDecodificacion.RecomputeZone(ListADSB[i - 1], ADSB, null);
+            //            }
+            //        }
                
-            }
-            for (int i = 0; i < ListDGPS.Count; i++)
-            {
-                MarkerDGPS DGPS = ListDGPS[i];
-                DGPS.zone = LibreriaDecodificacion.ComputeZone(DGPS.Pxy, 2);
-                if (DGPS.zone == 10)
-                {
-                    if (i < ListADSB.Count - 2)
-                    {
-                        DGPS.zone = LibreriaDecodificacion.RecomputeZone(null, DGPS, ListDGPS[i + 1]);
-                    }
-                    else if (i > 0)
-                    {
-                        DGPS.zone = LibreriaDecodificacion.RecomputeZone(ListDGPS[i - 1], DGPS, null);
-                    }
-                }
-            }
+            //}
+            //for (int i = 0; i < ListDGPS.Count; i++)
+            //{
+            //    MarkerDGPS DGPS = ListDGPS[i];
+            //    DGPS.zone = LibreriaDecodificacion.ComputeZone(DGPS.Pxy, 2);
+            //    if (DGPS.zone == 10)
+            //    {
+            //        if (i < ListADSB.Count - 2)
+            //        {
+            //            DGPS.zone = LibreriaDecodificacion.RecomputeZone(null, DGPS, ListDGPS[i + 1]);
+            //        }
+            //        else if (i > 0)
+            //        {
+            //            DGPS.zone = LibreriaDecodificacion.RecomputeZone(ListDGPS[i - 1], DGPS, null);
+            //        }
+            //    }
+            //}
         }
     
 
