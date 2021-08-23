@@ -28,7 +28,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>154</ApplicationRevision>
+    <ApplicationRevision>158</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -182,6 +182,9 @@
     <Compile Include="ChartsWindow.xaml.cs">
       <DependentUpon>ChartsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EditExcludedWindow.xaml.cs">
+      <DependentUpon>EditExcludedWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewTablesWindow .xaml.cs">
       <DependentUpon>ViewTablesWindow .xaml</DependentUpon>
     </Compile>
@@ -228,6 +231,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ChartsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EditExcludedWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -385,6 +392,19 @@
   <ItemGroup>
     <Resource Include="images\ChartIco.png" />
     <Resource Include="images\ChartIco2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ExcludedMLATs.mdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ExcludedMLATs_log.ldf">
+      <DependentUpon>ExcludedMLATs.mdf</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="images\AddExcluded.png" />
+    <Resource Include="images\Add.png" />
+    <Resource Include="images\DeleteExcluded.png" />
+    <Resource Include="images\Edit.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

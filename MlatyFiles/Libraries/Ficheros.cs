@@ -299,7 +299,7 @@ namespace PGTAWPF
                 else { PIC = Convert.ToInt32(PICvalue); }
                 foreach (TrajectoriesToCompute traject in traj)
                 {
-                    if (!LibreriaDecodificacion.ExcludedMLATS.Contains(traject.TargetIdentification))
+                    if (!LibreriaDecodificacion.GetExcluded().Contains(traject.TargetAdress))
                     {
                         traject.SetZones();
                         traject.ComputePrecissionADSBinterpoled(this.data, PIC);
@@ -311,6 +311,7 @@ namespace PGTAWPF
                             traject.SaveMarkers(listMarkers);
                         }
                     }
+                
                 }
                 listahex = null;
                 fileBytes = null;

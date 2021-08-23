@@ -173,7 +173,8 @@ namespace PGTAWPF
                 LabelRow.Height = new GridLength(0);
                 SaveMarkers.Visibility = Visibility.Hidden;
                 StackPanelPIC.Visibility = Visibility.Hidden;
-
+                EditLabel.Visibility = Visibility.Visible;
+                EditImage.Visibility = Visibility.Visible;
             }
             else if (a == 1)
             {
@@ -208,7 +209,8 @@ namespace PGTAWPF
                 LoadFirstLabel.Visibility = Visibility.Hidden;
                 Calculate.Visibility = Visibility.Visible;
                 StackPanelPIC.Visibility = Visibility.Visible;
-
+                EditLabel.Visibility = Visibility.Visible;
+                EditImage.Visibility = Visibility.Visible;
             }
         }
 
@@ -256,6 +258,8 @@ namespace PGTAWPF
             StackPanelPIC.Visibility = Visibility.Hidden;
 
 
+            EditLabel.Visibility = Visibility.Hidden;
+            EditImage.Visibility = Visibility.Hidden;
             Rotateimage();
         }
 
@@ -340,6 +344,13 @@ namespace PGTAWPF
             {
                 ScrollBorder.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void EditExcludedList(object sender, MouseButtonEventArgs e)
+        {
+            EditExcludedWindow EditList = new EditExcludedWindow();
+            EditList.GetMainWindow(Form);
+            EditList.Show();
         }
     }
 }

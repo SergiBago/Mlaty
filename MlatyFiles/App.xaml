@@ -5,13 +5,24 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
 
-
+        <Style x:Key="font_style_Content" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontFamily"
+                        Value="Microsoft Sans Serif"/>
+            <Setter Property="VerticalAlignment"
+                        Value="Center"/>
+            <Setter Property="HorizontalAlignment"
+                        Value="Left"/>
+            <Setter Property="Foreground"
+                        Value="#FFB0BEA9"/>
+            <Setter Property="FontSize"
+                        Value="18"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        </Style>
 
         <Style x:Key="BorderStyle" TargetType="{x:Type Border}">
             <Setter Property="Background" Value="Gray"/>
             <Setter Property="BorderBrush" Value="Gray"/>
             <Setter Property="Opacity" Value="01"></Setter>
-
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="5"/>
         </Style>
@@ -20,11 +31,9 @@
             <Setter Property="Background" Value="white"/>
             <Setter Property="BorderBrush" Value="white"/>
             <Setter Property="Opacity" Value="01"></Setter>
-
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="1"/>
         </Style>
-
 
         <!--Control colors.-->
         <Color x:Key="WindowColor">#FFFF0000</Color>

@@ -162,3 +162,7 @@ C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFi
 C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\bin\Debug\SciChart.Drawing.xml
 C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\obj\Debug\AccuracyChartsSciCharts.g.cs
 C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\obj\Debug\AccuracyChartsSciCharts.baml
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\obj\Debug\EditExcludedWindow.g.cs
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\obj\Debug\EditExcludedWindow.baml
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\bin\Debug\ExcludedMLATs.mdf
+C:\Users\sergi\Desktop\GitHub Repositories\Mlaty GitHub repository\Mlaty\MlatyFiles\bin\Debug\ExcludedMLATs_log.ldf

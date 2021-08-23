@@ -8,6 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("excludedmlats.mdf")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("excludedmlats_log.ldf")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("accord.dll.config")]
 
 

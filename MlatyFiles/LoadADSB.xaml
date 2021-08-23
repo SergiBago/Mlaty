@@ -384,6 +384,11 @@
                         <ComboBoxItem Content="14"/>
                     </ComboBox>
                 </StackPanel>
+                <StackPanel Grid.Column="1" Grid.ColumnSpan="10" Grid.Row="10" Margin="10,30,10,10">
+                    <Image x:Name="EditImage" Source="images/Edit.png"  Height="50" MouseLeftButtonUp="EditExcludedList" Cursor="Hand"></Image>
+                    <TextBlock Text="Excluded MLATs List" x:Name="EditLabel" Foreground="#FFB0BEA9" TextAlignment="Center" Cursor="Hand" FontFamily="Microsoft Sans Serif" FontSize="18"  MouseLeftButtonUp="EditExcludedList"/>
+
+                </StackPanel>
             </Grid>
         </ScrollViewer>
         <Border x:Name="ScrollBorder" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="#FF464646" Width="20" Height="20"/>

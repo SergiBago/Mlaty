@@ -309,15 +309,15 @@ namespace PGTAWPF
                 }
                 if (times.Count == 0)
                 {
-                    double time = (startTime + (refreshrate / 2));
+                    double time = (startTime);// + (refreshrate / 2));
                     int first = ListUPMLAT.FindIndex(x => x.Time_milisec == startTime); //Find first message
-                    double mintime = (startTime - (refreshrate / 2));
-                    double maxtime = (startTime + (refreshrate / 2));
+           //         double mintime = (startTime - (refreshrate / 2));
+             //      double maxtime = (startTime + (refreshrate / 2));
                     for (int i = first; i < ListUPMLAT.Count(); i++) //Iterate for all Messages in 
                     {
                         CAT10 MLAT = ListUPMLAT[i];
 
-                        if (MLAT.Time_milisec >= time-refreshrate && MLAT.Time_milisec <= time + refreshrate)
+                        if (MLAT.Time_milisec >= time-0.3 && MLAT.Time_milisec <= time + 0.3)
                         {
                             MLAT.used = true;
                             time = time + refreshrate;
@@ -347,16 +347,15 @@ namespace PGTAWPF
                     {
                         startTime = times[s];
                         endTime = times[s + 1];
-                        expected += Convert.ToInt32((endTime - startTime) / refreshrate);
-                        double time = (startTime + (refreshrate / 2));
-                        int first = ListUPMLAT.FindIndex(x=>x.Time_milisec==startTime);
-                        double mintime = (startTime - (refreshrate / 2));
-                        double maxtime = (startTime + (refreshrate / 2));
-                        for (int i = first; i < ListUPMLAT.Count(); i++)
+                        double time = (startTime);// + (refreshrate / 2));
+                        int first = ListUPMLAT.FindIndex(x => x.Time_milisec == startTime); //Find first message
+                                                                                            //         double mintime = (startTime - (refreshrate / 2));
+                                                                                            //      double maxtime = (startTime + (refreshrate / 2));
+                        for (int i = first; i < ListUPMLAT.Count(); i++) //Iterate for all Messages in 
                         {
                             CAT10 MLAT = ListUPMLAT[i];
 
-                            if (MLAT.Time_milisec >= time && MLAT.Time_milisec <= time + refreshrate)
+                            if (MLAT.Time_milisec >= time - 0.3 && MLAT.Time_milisec <= time + 0.3)
                             {
                                 MLAT.used = true;
                                 time = time + refreshrate;
@@ -370,14 +369,47 @@ namespace PGTAWPF
                                     time = time + refreshrate;
                                     i = i - 1;
                                 }
+
                             }
                             if (time >= endTime)
                             {
                                 break;
                             }
                         }
+                        //  data.ListZones[zone - 1].ExpectedMessagesUP += Convert.ToInt32((endTime - startTime) / refreshrate);
+                        expected += Convert.ToInt32((endTime - startTime) / refreshrate);
+                        //    double time = (startTime + (refreshrate / 2));
+                        //    int first = ListUPMLAT.FindIndex(x=>x.Time_milisec==startTime);
+                        //    double mintime = (startTime - (refreshrate / 2));
+                        //    double maxtime = (startTime + (refreshrate / 2));
+                        //    for (int i = first; i < ListUPMLAT.Count(); i++)
+                        //    {
+                        //        CAT10 MLAT = ListUPMLAT[i];
+
+                        //        if (MLAT.Time_milisec >= time - 0.3 && MLAT.Time_milisec <= time + 0.3)
+                        //        {
+                        //            MLAT.used = true;
+                        //            time = time + refreshrate;
+                        //        }
+                        //        else
+                        //        {
+                        //            if (MLAT.Time_milisec > time + refreshrate)
+                        //            {
+                        //                int miss = Convert.ToInt32(MLAT.Time_milisec - time);
+                        //                data.ListZones[zone - 1].MissedMLATSUP += miss;
+                        //                time = time + refreshrate;
+                        //                i = i - 1;
+                        //            }
+                        //        }
+                        //        if (time >= endTime)
+                        //        {
+                        //            break;
+                        //        }
+                        //    }
+                        //}
+                        data.ListZones[zone - 1].ExpectedMessagesUP += expected;
                     }
-                    data.ListZones[zone - 1].ExpectedMessagesUP += expected;
+
                 }
             }
         }
@@ -433,55 +465,10 @@ namespace PGTAWPF
                     
                     Point p = new Point(MLAT.X_Component_map, MLAT.Y_Component_map);
                     MLAT.zone = LibreriaDecodificacion.ComputeZone(p, MLAT.GroundBit);
-                    //if (MLAT.zone == 10)
-                    //{
-                    //    if (i < ListMLAT.Count - 2)
-                    //    {
-                    //        MLAT.zone = LibreriaDecodificacion.RecomputeZone(null, MLAT, ListMLAT[i + 1]);
-                    //    }
-                    //    else if (i > 0)
-                    //    {
-                    //        MLAT.zone = LibreriaDecodificacion.RecomputeZone(ListMLAT[i - 1], MLAT, null);
-                    //    }
-                    //}
-
                     
                 }
             }
-            //for (int i = 0; i < ListADSB.Count; i++)
-            //{
-            //    CAT21vs21 ADSB = ListADSB[i];
-            //        Point p = new Point(ADSB.X_Component_map, ADSB.Y_Component_map);
-            //        ADSB.zone = LibreriaDecodificacion.ComputeZone(p, ADSB.GroundBit);
-            //        if (ADSB.zone == 10)
-            //        {
-            //            if (i < ListADSB.Count - 2)
-            //            {
-            //                ADSB.zone = LibreriaDecodificacion.RecomputeZone(null, ADSB, ListADSB[i + 1]);
-            //            }
-            //            else if (i > 0)
-            //            {
-            //                ADSB.zone = LibreriaDecodificacion.RecomputeZone(ListADSB[i - 1], ADSB, null);
-            //            }
-            //        }
-               
-            //}
-            //for (int i = 0; i < ListDGPS.Count; i++)
-            //{
-            //    MarkerDGPS DGPS = ListDGPS[i];
-            //    DGPS.zone = LibreriaDecodificacion.ComputeZone(DGPS.Pxy, 2);
-            //    if (DGPS.zone == 10)
-            //    {
-            //        if (i < ListADSB.Count - 2)
-            //        {
-            //            DGPS.zone = LibreriaDecodificacion.RecomputeZone(null, DGPS, ListDGPS[i + 1]);
-            //        }
-            //        else if (i > 0)
-            //        {
-            //            DGPS.zone = LibreriaDecodificacion.RecomputeZone(ListDGPS[i - 1], DGPS, null);
-            //        }
-            //    }
-            //}
+         
         }
     
 
