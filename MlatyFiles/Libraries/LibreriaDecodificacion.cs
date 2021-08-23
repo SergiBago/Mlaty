@@ -34,17 +34,26 @@ namespace PGTAWPF
         public static List<string> GetExcluded()
         {
             List<string> List = new List<string>();
-            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\ExcludedMLATs.mdf;Integrated Security=True;Connect Timeout=30";
-            SqlConnection cnn = new SqlConnection(connectionString);
-            cnn.Open();
-            string sql = "Select * From Excluded";
-            SqlCommand command = new SqlCommand(sql, cnn);
-            SqlDataReader datareader = command.ExecuteReader();
-            while (datareader.Read())
+            string path= $"{AppDomain.CurrentDomain.BaseDirectory}Excluded.txt";
+
+            string[] lines = System.IO.File.ReadAllLines(path);
+            foreach(string name in lines)
             {
-                List.Add((string)datareader.GetValue(0));
+                List.Add(name.Trim(' '));
             }
-            cnn.Close();
+            //string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\ExcludedMLATs.mdf;Integrated Security=True;Connect Timeout=30";
+            ////MessageBox.Show(connectionString);
+
+            //SqlConnection cnn = new SqlConnection(connectionString);
+            //cnn.Open();
+            //string sql = "Select * From Excluded";
+            //SqlCommand command = new SqlCommand(sql, cnn);
+            //SqlDataReader datareader = command.ExecuteReader();
+            //while (datareader.Read())
+            //{
+            //    List.Add((string)datareader.GetValue(0));
+            //}
+            //cnn.Close();
             return List;
         }
 

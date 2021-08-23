@@ -28,7 +28,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>159</ApplicationRevision>
+    <ApplicationRevision>171</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -72,6 +72,9 @@
   <PropertyGroup>
     <StartupObject>
     </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accord, Version=3.8.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
@@ -122,6 +125,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite, Version=1.0.112.1, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.Core.1.0.112.2\lib\net40\System.Data.SQLite.dll</HintPath>
@@ -394,13 +398,10 @@
     <Resource Include="images\ChartIco2.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ExcludedMLATs.mdf">
+    <Content Include="Excluded.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="ExcludedMLATs_log.ldf">
-      <DependentUpon>ExcludedMLATs.mdf</DependentUpon>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="images\ExportKML.png" />
     <Resource Include="images\AddExcluded.png" />
     <Resource Include="images\Add.png" />
     <Resource Include="images\DeleteExcluded.png" />

@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:PGTA_WPF" xmlns:gmaps="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation"
       mc:Ignorable="d" 
-      d:DesignHeight="650" d:DesignWidth="1200"
+      d:DesignHeight="750" d:DesignWidth="1200"
       Title="MAP">
     <Page.Resources>
 
@@ -76,6 +76,15 @@
                 <CheckBox x:Name="ShowMLATHistoryVehicles" HorizontalAlignment="Left" VerticalContentAlignment="Center" TextBlock.TextAlignment="Left" Content="Show MLAT Vehicles" Grid.Row="21" Grid.Column="1" Grid.ColumnSpan="6" Background="#FFC82927" Foreground="White" FontFamily="Microsoft Sans Serif" Margin="25,5" FontSize="20"  Cursor="Hand" IsChecked="False" Click="ShowMLATClick" Style="{DynamicResource CheckBoxStyle1}" BorderBrush="#FFC82927"  />
                 <CheckBox x:Name="ShowADSBHistoryVehicles" HorizontalAlignment="Left" VerticalContentAlignment="Center" TextBlock.TextAlignment="Left" Content="Show ADSB Vehicles" Grid.Row="22" Grid.Column="1" Grid.ColumnSpan="6" Background="#FF50AA78" Foreground="White" FontFamily="Microsoft Sans Serif" Margin="25,5" FontSize="20"  Cursor="Hand" IsChecked="False" Click="ShowADSBClick" Style="{DynamicResource CheckBoxStyle1}" BorderBrush="#FF50AA78" />
                 <CheckBox x:Name="ShowDGPSHistoryVehicles" HorizontalAlignment="Left" VerticalContentAlignment="Center" TextBlock.TextAlignment="Left" Content="Show DGPS Vehicles" Grid.Row="23" Grid.Column="1" Grid.ColumnSpan="6" Background="#FF2882C8" Foreground="White" FontFamily="Microsoft Sans Serif" Margin="25,5" FontSize="20"  Cursor="Hand" IsChecked="False" Click="ShowDGPSClick" Style="{DynamicResource CheckBoxStyle1}" BorderBrush="#FF2882C8" />
+                <Border BorderBrush="#FFFFFFFF" BorderThickness="2" CornerRadius="3" Grid.Row="24" Grid.Column="1" Grid.ColumnSpan="6" Height="40" VerticalAlignment="Top" Margin="20,10,0,0" Cursor="Hand" MouseLeftButtonUp="ExportKMLClick" Width="180" HorizontalAlignment="Left">
+
+                    <StackPanel Orientation="Horizontal" >
+                        
+                    <Image Source="images/ExportKML.png" />
+                    <TextBlock Text="Export KML" Style="{StaticResource font_style_Content}" Foreground="#FFFFFFFF"/>
+                </StackPanel>
+                </Border>
+
             </Grid>
         </ScrollViewer>
     </Grid>

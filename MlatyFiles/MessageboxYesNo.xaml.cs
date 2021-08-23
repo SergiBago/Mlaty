@@ -24,6 +24,7 @@ namespace PGTA_WPF
 
         MainWindow Form;
         AccuracyChartsSciCharts chartsPage;
+        MAP map;
         public MessageboxYesNo()
         {
             InitializeComponent();
@@ -39,15 +40,24 @@ namespace PGTA_WPF
             this.chartsPage= form;
         }
 
+        public void getMapPage(MAP map)
+        {
+
+        }
+
         private void CancelClick(object sender, RoutedEventArgs e)
         {
             if (Form != null)
             {
                 Form.getaction(false);
             }
-            else
+            else if(chartsPage!=null)
             {
                 chartsPage.getaction(false);
+            }
+            else
+            {
+                map.getaction(false);
             }
             this.Close();
         }
@@ -58,10 +68,13 @@ namespace PGTA_WPF
             {
                 Form.getaction(true);
             }
-            else
+            else if (chartsPage != null)
             {
                 chartsPage.getaction(true);
-
+            }
+            else
+            {
+                map.getaction(true);
             }
             this.Close();
         }
@@ -72,10 +85,13 @@ namespace PGTA_WPF
             {
                 Form.getaction(false);
             }
-            else
+            else if (chartsPage != null)
             {
                 chartsPage.getaction(false);
-
+            }
+            else
+            {
+                map.getaction(false);
             }
             this.Close();
         }

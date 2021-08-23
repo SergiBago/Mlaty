@@ -35,9 +35,15 @@ namespace PGTAWPF
     {
         MainWindow window;
         DispatcherTimer Timer = new DispatcherTimer();
-
+        List<string> Names;
+        string path;
         public EditExcludedWindow()
         {
+            path= $"{AppDomain.CurrentDomain.BaseDirectory}Excluded.txt";
+            if(!File.Exists(path))
+            {
+                File.Create(path);
+            }
             InitializeComponent();
             this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
             Timer.Interval = TimeSpan.FromSeconds(0.5);
@@ -59,19 +65,8 @@ namespace PGTAWPF
         private void LoadList()
         {
             NamesPanel.Children.Clear();
-            List<string> List = new List<string>();
-            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\ExcludedMLATs.mdf;Integrated Security=True;Connect Timeout=30";
-            SqlConnection cnn = new SqlConnection(connectionString);
-            cnn.Open();
-            string sql = "Select * From Excluded";
-            SqlCommand command = new SqlCommand(sql, cnn);
-            SqlDataReader datareader = command.ExecuteReader();
-            while (datareader.Read())
-            {
-                List.Add((string)datareader.GetValue(0));
-            }
-            cnn.Close();
-            foreach(string name in List)
+            Names = LibreriaDecodificacion.GetExcluded();
+            foreach(string name in Names)
             {
                 AddExcludedLabel(name);
             }
@@ -122,14 +117,21 @@ namespace PGTAWPF
 
         private void DeleteItemFromList(string Name)
         {
-            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\ExcludedMLATs.mdf;Integrated Security=True;Connect Timeout=30";
-            SqlConnection cnn = new SqlConnection(connectionString);
-            cnn.Open();
-            SqlDataAdapter adapter = new SqlDataAdapter();
-            string sql = $"Delete Excluded where Name='{Name}'";
-            //SqlCommand command = new SqlCommand(sql, cnn);
-            adapter.InsertCommand = new SqlCommand(sql, cnn);
-            adapter.InsertCommand.ExecuteNonQuery();
+            Names.Remove(Name);
+            StringBuilder NewList = new StringBuilder();
+            foreach(string name in Names)
+            {
+                NewList.AppendLine(name);
+            }
+            File.WriteAllText(path, NewList.ToString());
+            //string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\ExcludedMLATs.mdf;Integrated Security=True;Connect Timeout=30";
+            //SqlConnection cnn = new SqlConnection(connectionString);
+            //cnn.Open();
+            //SqlDataAdapter adapter = new SqlDataAdapter();
+            //string sql = $"Delete Excluded where Name='{Name}'";
+            ////SqlCommand command = new SqlCommand(sql, cnn);
+            //adapter.InsertCommand = new SqlCommand(sql, cnn);
+            //adapter.InsertCommand.ExecuteNonQuery();
         }
 
 
@@ -191,14 +193,16 @@ namespace PGTAWPF
                 Text = Text.Trim(' ');
                 if (Text != "")
                 {
-                    string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\ExcludedMLATs.mdf;Integrated Security=True;Connect Timeout=30";
-                    SqlConnection cnn = new SqlConnection(connectionString);
-                    cnn.Open();
-                    SqlDataAdapter adapter = new SqlDataAdapter();
-                    string sql = $"Insert into Excluded values('{Text}')";
-                    adapter.InsertCommand = new SqlCommand(sql, cnn);
-                    adapter.InsertCommand.ExecuteNonQuery();
-                    cnn.Close();
+                    File.AppendAllText(path, Environment.NewLine + Text);
+                    Names.Add(Text);
+                    //string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\ExcludedMLATs.mdf;Integrated Security=True;Connect Timeout=30";
+                    //SqlConnection cnn = new SqlConnection(connectionString);
+                    //cnn.Open();
+                    //SqlDataAdapter adapter = new SqlDataAdapter();
+                    //string sql = $"Insert into Excluded values('{Text}')";
+                    //adapter.InsertCommand = new SqlCommand(sql, cnn);
+                    //adapter.InsertCommand.ExecuteNonQuery();
+                    //cnn.Close();
                     AddExcludedLabel(Text);
                     Text = "";
                 }
@@ -212,15 +216,17 @@ namespace PGTAWPF
                 text = text.Trim(' ');
                 if (text != "")
                 {
-                    string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\ExcludedMLATs.mdf;Integrated Security=True;Connect Timeout=30";
-                    SqlConnection cnn = new SqlConnection(connectionString);
-                    cnn.Open();
-                    SqlDataAdapter adapter = new SqlDataAdapter();
+                    File.AppendAllText(path, Environment.NewLine+text);
+                    Names.Add(text);
+                    //string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\ExcludedMLATs.mdf;Integrated Security=True;Connect Timeout=30";
+                    //SqlConnection cnn = new SqlConnection(connectionString);
+                    //cnn.Open();
+                    //SqlDataAdapter adapter = new SqlDataAdapter();
 
-                    string sql = $"Insert into Excluded values('{text}')";
-                    adapter.InsertCommand = new SqlCommand(sql, cnn);
-                    adapter.InsertCommand.ExecuteNonQuery();
-                    cnn.Close();
+                    //string sql = $"Insert into Excluded values('{text}')";
+                    //adapter.InsertCommand = new SqlCommand(sql, cnn);
+                    //adapter.InsertCommand.ExecuteNonQuery();
+                    //cnn.Close();
                     AddExcludedLabel(text);
                     Text = "";
                 }

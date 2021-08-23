@@ -21,6 +21,9 @@ using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 using GMap.NET.WindowsPresentation;
 using Color = System.Windows.Media.Color;
+using Microsoft.Win32;
+using System.IO;
+using Path = System.Windows.Shapes.Path;
 
 namespace PGTA_WPF
 {
@@ -478,6 +481,188 @@ namespace PGTA_WPF
             ShowPlygons();
         }
 
+        public bool repeteddelete = false;
+        public void getaction(bool delete)
+        {
+            this.repeteddelete = delete;
+        }
 
+        private void ExportKMLClick(object sender, MouseButtonEventArgs e)
+        {
+            SaveFileDialog saveFileDialog1 = new Microsoft.Win32.SaveFileDialog();
+            saveFileDialog1.Filter = "kml files (*.kml*)|*.kml*";//|*.txt|All files (*.*)|*.*";
+            saveFileDialog1.FilterIndex = 2;
+            saveFileDialog1.RestoreDirectory = true;
+            bool correct = false;
+            if (saveFileDialog1.ShowDialog() == true && saveFileDialog1.SafeFileName != null)
+            {
+                string path0 = saveFileDialog1.FileName;
+                string path = path0 + ".kml";
+                // bool correct=false;
+                if (File.Exists(path) == false) { correct = true; }
+                while (correct == false)
+                {
+                    correct = false;
+                    MessageboxYesNo deleteform = new MessageboxYesNo();
+                    deleteform.getMapPage(this);
+                    deleteform.ShowDialog();
+                    if (this.repeteddelete == true)
+                    {
+                        File.Delete(path);
+                        correct = true;
+                    }
+                    else
+                    {
+                        saveFileDialog1 = new Microsoft.Win32.SaveFileDialog();
+                        saveFileDialog1.Filter = "kml files (*.kml*)|*.kml*";//|*.txt|All files (*.*)|*.*";
+                        saveFileDialog1.FilterIndex = 2;
+                        saveFileDialog1.RestoreDirectory = true;
+                        if (saveFileDialog1.ShowDialog() == true && saveFileDialog1.SafeFileName != null)
+                        {
+                            path0 = saveFileDialog1.FileName;
+                            path = path0 + ".kml";
+                        }
+                        if (File.Exists(path) == false) { correct = true; }
+
+                    }
+                }
+                if (correct == true)
+                {
+                    Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+                    ExportKML(path);
+                    Mouse.OverrideCursor = null;
+                }
+            }
+        }
+
+
+        private void ExportKML(string Path)
+        {
+            StringBuilder KMLbuilder = new StringBuilder();
+            KMLbuilder.AppendLine("<?xml version='1.0' encoding='UTF-8'?>");
+            KMLbuilder.AppendLine("<kml xmlns='http://www.opengis.net/kml/2.2'>");
+            KMLbuilder.AppendLine("<Document>");
+            AddZonesPolygons(KMLbuilder);
+            if (Markerslist.Exists(x => x.type == 0))
+            {
+                AddClassMarkers(KMLbuilder, 0, "MLAT");
+            }
+            if (Markerslist.Exists(x => x.type == 1))
+            {
+                AddClassMarkers(KMLbuilder, 1, "ADSB");
+            }
+            if (Markerslist.Exists(x => x.type == 2))
+            {
+                AddClassMarkers(KMLbuilder, 2, "DGPS");
+            }
+            KMLbuilder.Append("</Document>");
+            KMLbuilder.AppendLine("</kml>");
+            File.WriteAllText(Path, KMLbuilder.ToString());
+        }
+
+        private void AddClassMarkers(StringBuilder KMLBuilder, int type, string Name)
+        {
+            List<MapMarker> markers = Markerslist.Where(x => x.type ==type).ToList();
+            KMLBuilder.AppendLine($"<Folder><name>{Name}</name><open>0</open><visibility>1</visibility>");
+            string color ="";
+            if (type == 0) { color = "ff2729C8"; }
+            else if (type == 1) { color = "ff78AA50"; }
+            else { color = "ff2882C8"; }
+            foreach(MapMarker marker in markers)
+            {
+                KMLBuilder.Append(GetMarkerText(marker, color));
+            }
+            KMLBuilder.AppendLine("</Folder>");
+        }
+
+        private StringBuilder GetMarkerText(MapMarker marker, string Color)
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.AppendLine("<Placemark>");
+            builder.AppendLine("<Style>");
+            builder.AppendLine("<IconStyle>");
+            builder.AppendLine($"<color>{Color}</color>");
+            builder.AppendLine("<Icon>");
+            builder.AppendLine("<href>http://maps.google.com/mapfiles/kml/paddle/wht-blank.png</href>");
+            builder.AppendLine("</Icon>");
+            builder.AppendLine("</IconStyle>");
+            builder.AppendLine("</Style>");
+            builder.AppendLine("<Point>");
+            builder.AppendLine($"<coordinates>{Convert.ToString(marker.p.Lng).Replace(",", ".")},{Convert.ToString(marker.p.Lat).Replace(",", ".")}</coordinates>");
+            builder.AppendLine("</Point>");
+            builder.AppendLine("</Placemark>");
+            return builder;
+
+        }
+
+        private void AddZonesPolygons(StringBuilder builder)
+        {
+            builder.AppendLine($"<Folder><name>Zones</name><open>0</open><visibility>1</visibility>");
+
+            AddPolygonZone(builder,"Runway 25L","1BD8E5",zones.Runway25LZones);
+            AddPolygonZone(builder, "Runway 02", "1BD8E5", zones.Runway02Zones);
+            AddPolygonZone(builder, "Runway 25R", "1BD8E5", zones.Runway25RZones);
+            AddPolygonZone(builder, "Stand T1", "000000", zones.StandT1Zones);
+            AddPolygonZone(builder, "Stand T2", "000000", zones.StandT2Zones);
+            AddPolygonZone(builder, "Apron T1", "0606ff", zones.ApronT1Zones);
+            AddPolygonZone(builder, "Apron T2", "0606ff", zones.ApronT2Zones);
+            AddPolygonZone(builder, "Taxi", "00C912", zones.TaxiZones);
+            AddPolygonZone(builder, "Airborne 02 0-2.5 NM", "C90092", zones.Airborne02Zones25);
+            AddPolygonZone(builder, "Airborne 25R 0-2.5 NM", "C90092", zones.Airborne25RZones25);
+            AddPolygonZone(builder, "Airborne 25L 0-2.5 NM", "C90092", zones.Airborne25LZones25);
+            AddPolygonZone(builder, "Airborne 02 2.5-5 NM", "8900C9", zones.Airborne02Zones5);
+            AddPolygonZone(builder, "Airborne 25R 2.5-5 NM", "8900C9", zones.Airborne25RZones5);
+            AddPolygonZone(builder, "Airborne 25L 2.5-5 NM", "8900C9", zones.Airborne25LZones5);
+            builder.AppendLine("</Folder>");
+
+        }
+
+        private void AddPolygonZone(StringBuilder builder,string Name, string Color, List<Polygon> PolygonsList)
+        {
+            string line = $"<Style id=#{Name.Replace(" ","")}#>";
+            builder.AppendLine(line.Replace('#','"'));
+            builder.AppendLine("<LineStyle>");
+            builder.AppendLine($"<color>FF{Color}</color>");
+            builder.AppendLine("</LineStyle>");
+            builder.AppendLine("<PolyStyle>");
+            builder.AppendLine($"<color>75{Color}</color>");
+            builder.AppendLine("<colorMode>normal</colorMode>");
+            builder.AppendLine("<fill>1</fill>");
+            builder.AppendLine("<outline>1</outline>");
+            builder.AppendLine("</PolyStyle>");
+            builder.AppendLine("</Style>");
+
+            builder.AppendLine($"<Folder><name>{Name}</name><open>0</open>");
+            foreach (Polygon pol in PolygonsList)
+            {
+                builder.AppendLine("<Placemark>");
+                builder.AppendLine($"<name>{Name}</name>");
+                builder.AppendLine($"<styleUrl>#{Name.Replace(" ", "")}</styleUrl>");
+                builder.AppendLine("<Polygon>");
+                builder.AppendLine("<extrude>1</extrude>");
+                builder.AppendLine("<altitudeMode>relativeToGround</altitudeMode>");
+                builder.AppendLine("<outerBoundaryIs>");
+                AddPolygonToKML(pol.PointsLatLng, builder);
+                builder.AppendLine("</outerBoundaryIs>");
+                builder.AppendLine("</Polygon>");
+                builder.AppendLine("</Placemark>");
+            }
+            builder.AppendLine("</Folder>");
+        }
+
+        private void AddPolygonToKML(List<PointLatLng> PointsList, StringBuilder builder)
+        {
+            builder.AppendLine("<LinearRing>");
+            builder.AppendLine("<coordinates>");
+            foreach(PointLatLng p in PointsList)
+            {
+                builder.AppendLine($"{Convert.ToString(p.Lng).Replace(",", ".")},{Convert.ToString(p.Lat).Replace(",", ".")},90");
+            }
+            builder.AppendLine($"{Convert.ToString(PointsList[0].Lng).Replace(",", ".")},{Convert.ToString(PointsList[0].Lat).Replace(",", ".")},90");
+
+            builder.AppendLine("</coordinates>");
+            builder.AppendLine("</LinearRing>");
+
+        }
     }
 }

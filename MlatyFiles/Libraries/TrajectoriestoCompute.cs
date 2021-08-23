@@ -1140,30 +1140,30 @@ namespace PGTAWPF
                 else
                 {
 
-                    if (!aircraftMLAT)
-                    {
-                        foreach (CAT10 MLAT in ListMLAT)
-                        {
-                            if (MLAT.TOT == "Aircraft")
-                            {
-                                aircraftMLAT = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (!aircraftMLAT)
-                    {
-                        foreach (CAT21vs21 ADSB in ListADSB)
-                        {
-                            if (ADSB.ECAT == "Light aircraft" || ADSB.ECAT == "Small aircraft" || ADSB.ECAT == "Medium aircraft" || ADSB.ECAT == "Heavy aircraft")
-                            {
-                                aircraftMLAT = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (aircraftMLAT)
-                    {
+                    //if (!aircraftMLAT)
+                    //{
+                    //    foreach (CAT10 MLAT in ListMLAT)
+                    //    {
+                    //        if (MLAT.TOT == "Aircraft")
+                    //        {
+                    //            aircraftMLAT = true;
+                    //            break;
+                    //        }
+                    //    }
+                    //}
+                    //if (!aircraftMLAT)
+                    //{
+                    //    foreach (CAT21vs21 ADSB in ListADSB)
+                    //    {
+                    //        if (ADSB.ECAT == "Light aircraft" || ADSB.ECAT == "Small aircraft" || ADSB.ECAT == "Medium aircraft" || ADSB.ECAT == "Heavy aircraft")
+                    //        {
+                    //            aircraftMLAT = true;
+                    //            break;
+                    //        }
+                    //    }
+                    //}
+                    //if (aircraftMLAT)
+                    //{
                         if (ListMLAT.Count > 0 && ListDGPS.Count > 0)
                         {
                             List<CAT10> MlatsInStandsForAccuracy = new List<CAT10>();
@@ -1230,7 +1230,7 @@ namespace PGTAWPF
                             }
                          
                         }
-                    }
+                    //}
                 }
             }        
 
