@@ -354,6 +354,10 @@ namespace PGTAWPF
         {
             int str = Convert.ToInt32(string.Concat(message[pos], message[pos + 1], message[pos + 2]), 2);
             Time_of_Message_Reception_Position = (Convert.ToDouble(str) / 128);
+            if (Time_of_Message_Reception_Position < firsttime)
+            {
+                Time_of_Message_Reception_Position += 86400;
+            }
             //TimeSpan tiempo = TimeSpan.FromSeconds(segundos);
             //Time_of_Message_Reception_Position = tiempo.ToString(@"hh\:mm\:ss\:fff");
             pos +=3;
@@ -373,6 +377,10 @@ namespace PGTAWPF
             if (FSI == "10") { sec--; }
             if (FSI == "01") { sec++; }
             Time_of_Message_Reception_Position_High_Precision =sec;
+            if (Time_of_Message_Reception_Position_High_Precision < firsttime)
+            {
+                Time_of_Message_Reception_Position_High_Precision += 86400;
+            }
             pos += 4;
             return pos;
         }
@@ -411,13 +419,13 @@ namespace PGTAWPF
         //TIME OF ASTERIX REPORT TRANSMISSION
         public string Time_of_Asterix_Report_Transmission;
         public double Time_of_day_sec;
-        public double time_milisec;
+        public double time_of_Asterix_Report_Transmission;
         private int Compute_Time_of_Asterix_Report_Transmission(string[] message, int pos)
         {
             
             int str = Convert.ToInt32(string.Concat(message[pos], message[pos + 1], message[pos + 2]), 2);
             double segundos = (Convert.ToDouble(str) / 128);
-            time_milisec = segundos;
+            time_of_Asterix_Report_Transmission = segundos;
            // if (time_milisec < FirstTime) { time_milisec += 86400; }
            // Time_of_day_sec = Convert.ToInt32(Math.Truncate(segundos));
             TimeSpan tiempo = TimeSpan.FromSeconds(segundos);
@@ -1156,7 +1164,7 @@ namespace PGTAWPF
             }
             else
             {
-                Time_milisec = time_milisec;
+                Time_milisec = time_of_Asterix_Report_Transmission;
                 time = true; 
             }
             if (Time_milisec < firsttime)

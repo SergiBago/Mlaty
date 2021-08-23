@@ -18,7 +18,7 @@ namespace PGTAWPF
         public int num;
         public int cat10num;
         public int airportCode;
-        public bool used = false;
+        public bool used { get; set; } = false;
         public bool usedPD = false;
         double FirstTime;
         public int zone=-1; //

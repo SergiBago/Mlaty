@@ -390,66 +390,66 @@ namespace PGTAWPF
                     }
                 }
             }
-            //else
-            //{
-            //    if (IsPointInZone(zones.Runway25LZones, p) == true)
-            //    {
-            //        return 1;
-            //    }
-            //    if (IsPointInZone(zones.Runway02Zones, p) == true)
-            //    {
-            //        return 2;
-            //    }
-            //    if (IsPointInZone(zones.Runway25RZones, p) == true)
-            //    {
-            //        return 3;
-            //    }
+            else
+            {
+                if (IsPointInZone(zones.Runway25LZones, p) == true)
+                {
+                    return 1;
+                }
+                if (IsPointInZone(zones.Runway02Zones, p) == true)
+                {
+                    return 2;
+                }
+                if (IsPointInZone(zones.Runway25RZones, p) == true)
+                {
+                    return 3;
+                }
 
-            //    if (IsPointInZone(zones.StandT1Zones, p) == true)
-            //    {
-            //        return 4;
-            //    }
-            //    if (IsPointInZone(zones.StandT2Zones, p) == true)
-            //    {
-            //        return 5;
-            //    }
-            //    if (IsPointInZone(zones.ApronT1Zones, p) == true)
-            //    {
-            //        return 6;
-            //    }
-            //    if (IsPointInZone(zones.ApronT2Zones, p) == true)
-            //    {
-            //        return 7;
-            //    }
-            //    if (IsPointInZone(zones.TaxiZones, p) == true)
-            //    {
-            //        return 8;
-            //    }
-            //    if (IsPointInZone(zones.Airborne25RZones25, p) == true)
-            //    {
-            //        return 9;
-            //    }
-            //    if (IsPointInZone(zones.Airborne02Zones25, p) == true)
-            //    {
-            //        return 10;
-            //    }
-            //    if (IsPointInZone(zones.Airborne25LZones25, p) == true)
-            //    {
-            //        return 11;
-            //    }
-            //    if (IsPointInZone(zones.Airborne25RZones5, p) == true)
-            //    {
-            //        return 12;
-            //    }
-            //    if (IsPointInZone(zones.Airborne02Zones5, p) == true)
-            //    {
-            //        return 13;
-            //    }
-            //    if (IsPointInZone(zones.Airborne25LZones5, p) == true)
-            //    {
-            //        return 14;
-            //    }             
-            //}
+                if (IsPointInZone(zones.StandT1Zones, p) == true)
+                {
+                    return 4;
+                }
+                if (IsPointInZone(zones.StandT2Zones, p) == true)
+                {
+                    return 5;
+                }
+                if (IsPointInZone(zones.ApronT1Zones, p) == true)
+                {
+                    return 6;
+                }
+                if (IsPointInZone(zones.ApronT2Zones, p) == true)
+                {
+                    return 7;
+                }
+                if (IsPointInZone(zones.TaxiZones, p) == true)
+                {
+                    return 8;
+                }
+                if (IsPointInZone(zones.Airborne25RZones25, p) == true)
+                {
+                    return 9;
+                }
+                if (IsPointInZone(zones.Airborne02Zones25, p) == true)
+                {
+                    return 10;
+                }
+                if (IsPointInZone(zones.Airborne25LZones25, p) == true)
+                {
+                    return 11;
+                }
+                if (IsPointInZone(zones.Airborne25RZones5, p) == true)
+                {
+                    return 12;
+                }
+                if (IsPointInZone(zones.Airborne02Zones5, p) == true)
+                {
+                    return 13;
+                }
+                if (IsPointInZone(zones.Airborne25LZones5, p) == true)
+                {
+                    return 14;
+                }
+            }
             return zone;
         }
 

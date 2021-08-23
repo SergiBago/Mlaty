@@ -23,13 +23,16 @@ namespace PGTA_WPF
         public string Area;
         public int GroundBit;
         public string time;
+        public double PreviousPointTimeDifference;
+        public double NextPointTimeDifference;
+
 
         public PrecissionPoint()
         {
 
         }
 
-        public PrecissionPoint(string Callsign,string TargetAddress,int TrackNumber, double LocalX, double LocalY, double ARPH,  double GPSX,double GPSY, double GPSZ, double ErrorLocalX, double ErrorLocalY, double ErrorLocalXY, int area, int GB, double time)
+        public PrecissionPoint(string Callsign,string TargetAddress,int TrackNumber, double LocalX, double LocalY, double ARPH,  double GPSX,double GPSY, double GPSZ, double ErrorLocalX, double ErrorLocalY, double ErrorLocalXY, int area, int GB, double time, double PreviousDifference, double NextDifference)
         {
             this.Callsign = Callsign;
             this.TargetAddress = TargetAddress;
@@ -44,6 +47,8 @@ namespace PGTA_WPF
             this.ErrorLocalY = ErrorLocalY;
             this.ErrorLocalXY = ErrorLocalXY;
             this.GroundBit = GB;
+            this.PreviousPointTimeDifference = PreviousDifference;
+            this.NextPointTimeDifference = NextDifference;
             this.time = ComputeTime(time);
             this.Area = ComputeArea(area);
         }

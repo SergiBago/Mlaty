@@ -157,7 +157,7 @@ namespace PGTAWPF
 
 
 
-                for (int q = 0; q < listahex.Count; q++)
+            for (int q = 0; q < listahex.Count; q++)
                 {
                     namesastadsb[s + 1] = "Computing message " + Convert.ToString(q) + " of " + Convert.ToString(listahex.Count) + " messages...";
                     string[] arraystring = listahex[q];
@@ -297,12 +297,14 @@ namespace PGTAWPF
                     }
                 }
                 else { PIC = Convert.ToInt32(PICvalue); }
+            int discarted = 0;
                 foreach (TrajectoriesToCompute traject in traj)
                 {
                     if (!LibreriaDecodificacion.GetExcluded().Contains(traject.TargetAdress))
                     {
                         traject.SetZones();
-                        traject.ComputePrecissionADSBinterpoled(this.data, PIC);
+                    traject.Sort(); 
+                    discarted +=traject.ComputePrecissionADSBinterpoled(this.data, PIC);
                         traject.ComputePDUD(this.data);
                         traject.ComputePFI(this.data);
                         traject.ComputePI(this.data);
@@ -313,6 +315,7 @@ namespace PGTAWPF
                     }
                 
                 }
+
                 listahex = null;
                 fileBytes = null;
                 numficheros++;
@@ -423,7 +426,9 @@ namespace PGTAWPF
                 {
  
                         traject.SetZones();
-                        traject.ComputePrecissionMLATinterpoledDGPS(this.data);
+                    traject.Sort();
+
+                    traject.ComputePrecissionMLATinterpoledDGPS(this.data);
                         traject.ComputePDUD(this.data);
                         traject.ComputePFI(this.data);
                         traject.ComputePI(this.data);
