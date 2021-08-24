@@ -41,6 +41,8 @@ namespace PGTA_WPF
         Zonas zones = new Zonas();
         LabelsDrawings DrawLabel = new LabelsDrawings();
         List<MapMarker> Markerslist = new List<MapMarker>();
+        List<VehicleTrajectories> TrajectoriesList= new List<VehicleTrajectories>();
+
         List<CustomMarker> ADSBMarkers = new List<CustomMarker>();
         List<CustomMarker> MLATMarkers = new List<CustomMarker>();
         List<CustomMarker> DGPSMarkers = new List<CustomMarker>();
@@ -75,6 +77,11 @@ namespace PGTA_WPF
         public void GetListMarkers(List<MapMarker> list)
         {
             Markerslist = list;
+        }
+
+        public void GetTrajectoriesMarkers(List<VehicleTrajectories> list)
+        {
+            TrajectoriesList = list;
         }
         private void FormLoad(object sender, RoutedEventArgs e)
         {
@@ -663,6 +670,161 @@ namespace PGTA_WPF
             builder.AppendLine("</coordinates>");
             builder.AppendLine("</LinearRing>");
 
+        }
+
+        private void ExportKMLClickTraject(object sender, MouseButtonEventArgs e)
+        {
+            SaveFileDialog saveFileDialog1 = new Microsoft.Win32.SaveFileDialog();
+            saveFileDialog1.Filter = "kml files (*.kml*)|*.kml*";//|*.txt|All files (*.*)|*.*";
+            saveFileDialog1.FilterIndex = 2;
+            saveFileDialog1.RestoreDirectory = true;
+            bool correct = false;
+            if (saveFileDialog1.ShowDialog() == true && saveFileDialog1.SafeFileName != null)
+            {
+                string path0 = saveFileDialog1.FileName;
+                string path = path0 + ".kml";
+                // bool correct=false;
+                if (File.Exists(path) == false) { correct = true; }
+                while (correct == false)
+                {
+                    correct = false;
+                    MessageboxYesNo deleteform = new MessageboxYesNo();
+                    deleteform.getMapPage(this);
+                    deleteform.ShowDialog();
+                    if (this.repeteddelete == true)
+                    {
+                        File.Delete(path);
+                        correct = true;
+                    }
+                    else
+                    {
+                        saveFileDialog1 = new Microsoft.Win32.SaveFileDialog();
+                        saveFileDialog1.Filter = "kml files (*.kml*)|*.kml*";//|*.txt|All files (*.*)|*.*";
+                        saveFileDialog1.FilterIndex = 2;
+                        saveFileDialog1.RestoreDirectory = true;
+                        if (saveFileDialog1.ShowDialog() == true && saveFileDialog1.SafeFileName != null)
+                        {
+                            path0 = saveFileDialog1.FileName;
+                            path = path0 + ".kml";
+                        }
+                        if (File.Exists(path) == false) { correct = true; }
+
+                    }
+                }
+                if (correct == true)
+                {
+                    Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+                    ExportKMLTraject(path);
+                    Mouse.OverrideCursor = null;
+                }
+            }
+        }
+
+
+        private void ExportKMLTraject(string Path)
+        {
+            StringBuilder KMLbuilder = new StringBuilder();
+            KMLbuilder.AppendLine("<?xml version='1.0' encoding='UTF-8'?>");
+            KMLbuilder.AppendLine("<kml xmlns='http://www.opengis.net/kml/2.2'>");
+            KMLbuilder.AppendLine("<Document>");
+            AddZonesPolygons(KMLbuilder);
+            KMLbuilder.AppendLine($"<Folder><name>Trajectories</name><open>0</open><visibility>1</visibility>");
+
+            foreach (VehicleTrajectories traject in TrajectoriesList)
+            {
+                KMLbuilder.AppendLine(GetVehicleTrajectoriesKML(traject));
+            }
+            KMLbuilder.AppendLine("</Folder>");
+
+            KMLbuilder.Append("</Document>");
+            KMLbuilder.AppendLine("</kml>");
+            File.WriteAllText(Path, KMLbuilder.ToString());
+        }
+
+        public string GetVehicleTrajectoriesKML(VehicleTrajectories vehicleTrajectories)
+        {
+            StringBuilder KMLBuilder = new StringBuilder();
+            KMLBuilder.AppendLine($"<Folder><name>{vehicleTrajectories.TargetAddress}</name><open>0</open><visibility>1</visibility>");
+            if(vehicleTrajectories.MLATTrajectories.Count>0)
+            {
+                KMLBuilder.AppendLine($"<Folder><name>MLAT</name><open>0</open><visibility>1</visibility>");
+                foreach(MapTrajectory traject in vehicleTrajectories.MLATTrajectories)
+                {
+                    KMLBuilder.AppendLine(GetTrajectorieKML(traject));
+                }
+                KMLBuilder.AppendLine("</Folder>");
+            }
+            if (vehicleTrajectories.ADSBTrajectories.Count > 0)
+            {
+                KMLBuilder.AppendLine($"<Folder><name>ADSB</name><open>0</open><visibility>1</visibility>");
+                foreach (MapTrajectory traject in vehicleTrajectories.ADSBTrajectories)
+                {
+                    KMLBuilder.AppendLine(GetTrajectorieKML(traject));
+                }
+                KMLBuilder.AppendLine("</Folder>");
+            }
+            if (vehicleTrajectories.DGPSTrajectories.Count > 0)
+            {
+                KMLBuilder.AppendLine($"<Folder><name>DGPS</name><open>0</open><visibility>1</visibility>");
+                foreach (MapTrajectory traject in vehicleTrajectories.DGPSTrajectories)
+                {
+                    KMLBuilder.AppendLine(GetTrajectorieKML(traject));
+                }
+                KMLBuilder.AppendLine("</Folder>");
+            }
+            KMLBuilder.AppendLine("</Folder>");
+            return KMLBuilder.ToString();
+
+        }
+
+        public string GetTrajectorieKML(MapTrajectory traject)
+        {
+            StringBuilder KMLBuilder = new StringBuilder();
+            string caption;
+            string color;
+            if(traject.Type==0)
+            {
+                color = "ff2729C8";
+            }
+            else if(traject.Type==1)
+            {
+                color = "ff78AA50";
+            }
+            else
+            {
+                color = "ff2882C8";
+            }
+            KMLBuilder.AppendLine("<Placemark>");
+            KMLBuilder.AppendLine("<Style id='yellowLineGreenPoly'>");
+            KMLBuilder.AppendLine("<LineStyle>");
+            KMLBuilder.AppendLine("<color>" + color + "</color>");
+            KMLBuilder.AppendLine("<width>4</width>");
+            KMLBuilder.AppendLine("</LineStyle>");
+            KMLBuilder.AppendLine("<PolyStyle>");
+            KMLBuilder.AppendLine("<color>" + color + "</color>");
+            KMLBuilder.AppendLine("</PolyStyle>");
+            KMLBuilder.AppendLine("</Style>");
+            KMLBuilder.AppendLine($"<name>{traject.TargetAddress}</name>");
+            KMLBuilder.AppendLine("<styleUrl>#yellowLineGreenPoly</styleUrl>");
+            KMLBuilder.AppendLine("<LineString>");
+            KMLBuilder.AppendLine(KMLcoordenates(traject.ListPoints));
+            KMLBuilder.AppendLine("</LineString>");
+            KMLBuilder.AppendLine("</Placemark>");
+            return KMLBuilder.ToString();
+        }
+
+        private string KMLcoordenates(List<PointLatLng> points)
+        {
+            StringBuilder KMLcoor = new StringBuilder();
+            KMLcoor.AppendLine("<coordinates>");
+            foreach (PointLatLng p in points)
+            {
+                string Lat = Convert.ToString(p.Lat).Replace(",", ".");
+                string Lon = Convert.ToString(p.Lng).Replace(",", ".");
+                KMLcoor.AppendLine(Lon + "," + Lat);
+            }
+            KMLcoor.AppendLine("</coordinates>");
+            return KMLcoor.ToString();
         }
     }
 }

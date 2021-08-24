@@ -44,6 +44,7 @@ namespace PGTAWPF
         {
             MAP map = new MAP();
             map.GetListMarkers(Archivo.listMarkers);
+            map.GetTrajectoriesMarkers(Archivo.listTrajectories);
             PanelChildForm.Navigate(map);
         }
 

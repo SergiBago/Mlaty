@@ -25,6 +25,7 @@ namespace PGTAWPF
         public List<int> AirportCodesList = new List<int>();
         public Data data = new Data();
         public List<MapMarker> listMarkers = new List<MapMarker>();
+        public List<VehicleTrajectories> listTrajectories = new List<VehicleTrajectories>();
         List<int> PICS = new List<int>();
         bool SavePositions = true;
         List<TrajectoriesToCompute> trajdgps = new List<TrajectoriesToCompute>();
@@ -44,6 +45,7 @@ namespace PGTAWPF
             numficheros = 0;
             data = new Data();
             listMarkers.Clear();
+            listTrajectories.Clear();
         }
 
         /// <summary>
@@ -112,8 +114,8 @@ namespace PGTAWPF
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
             //try
             //{
-            bool computePIC = false;
-            if (PICvalue == "Auto") { computePIC = true; }
+                bool computePIC = false;
+                if (PICvalue == "Auto") { computePIC = true; }
 
                 PICS.Clear();
                 bool first = true;
@@ -130,7 +132,7 @@ namespace PGTAWPF
                 while (i < fileBytes.Length) //Create a list which every item will be an array of bytes (every item is a message)
                 {
                     byte[] array = new byte[contador]; //Lenght of array will be lenght of message octets
-                    for (int j = 0; j < array.Length; j++) 
+                    for (int j = 0; j < array.Length; j++)
                     {
                         array[j] = fileBytes[i]; //Clone readed bytes to message array
                         i++;
@@ -157,7 +159,7 @@ namespace PGTAWPF
 
 
 
-            for (int q = 0; q < listahex.Count; q++)
+                for (int q = 0; q < listahex.Count; q++)
                 {
                     namesastadsb[s + 1] = "Computing message " + Convert.ToString(q) + " of " + Convert.ToString(listahex.Count) + " messages...";
                     string[] arraystring = listahex[q];
@@ -297,23 +299,24 @@ namespace PGTAWPF
                     }
                 }
                 else { PIC = Convert.ToInt32(PICvalue); }
-            int discarted = 0;
+                int discarted = 0;
                 foreach (TrajectoriesToCompute traject in traj)
                 {
                     if (!LibreriaDecodificacion.GetExcluded().Contains(traject.TargetAdress))
                     {
                         traject.SetZones();
-                    traject.Sort(); 
-                    discarted +=traject.ComputePrecissionADSBinterpoled(this.data, PIC);
+                        traject.Sort();
+                        discarted += traject.ComputePrecissionADSBinterpoled(this.data, PIC);
                         traject.ComputePDUD(this.data);
                         traject.ComputePFI(this.data);
                         traject.ComputePI(this.data);
                         if (SavePositions == true)
                         {
                             traject.SaveMarkers(listMarkers);
+                            traject.AddListTrajectories(listTrajectories);
                         }
                     }
-                
+
                 }
 
                 listahex = null;
@@ -382,7 +385,7 @@ namespace PGTAWPF
                         {
 
                             bool trajfound = false;
-                            if(newcat10.Track_Number!=-1)
+                            if (newcat10.Track_Number != -1)
                             {
                                 TrajectoriesToCompute traject = trajdgps.Find(x => x.TargetIdentification == newcat10.Target_Identification);
                                 if (traject != null)
@@ -412,7 +415,7 @@ namespace PGTAWPF
                                         }
                                     }
                                 }
-                            }                  
+                            }
                             if (first == true)
                             {
                                 first = false;
@@ -424,20 +427,21 @@ namespace PGTAWPF
                 namesastdgps[s + 1] = "Computing Parameters...";
                 foreach (TrajectoriesToCompute traject in trajdgps)
                 {
- 
-                        traject.SetZones();
+
+                    traject.SetZones();
                     traject.Sort();
 
                     traject.ComputePrecissionMLATinterpoledDGPS(this.data);
-                        traject.ComputePDUD(this.data);
-                        traject.ComputePFI(this.data);
-                        traject.ComputePI(this.data);
+                    traject.ComputePDUD(this.data);
+                    traject.ComputePFI(this.data);
+                    traject.ComputePI(this.data);
 
-                        if (SavePositions == true)
-                        {
-                            traject.SaveMarkers(listMarkers);
-                        }
-                    
+                    if (SavePositions == true)
+                    {
+                        traject.SaveMarkers(listMarkers);
+                        traject.AddListTrajectories(listTrajectories);
+                    }
+
                 }
                 listahex = null;
                 numficheros++;

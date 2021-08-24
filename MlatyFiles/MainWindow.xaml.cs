@@ -669,6 +669,7 @@ namespace PGTAWPF
             {
                 map = new MAP();
                 map.GetListMarkers(Archivo.listMarkers);
+                map.GetTrajectoriesMarkers(Archivo.listTrajectories);
                 mapstarted = true;
             }
             PanelChildForm.Navigate(map);

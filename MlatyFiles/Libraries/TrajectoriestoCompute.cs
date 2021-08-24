@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
+using Accord.IO;
 
 namespace PGTAWPF
 {
@@ -356,18 +357,18 @@ namespace PGTAWPF
                     {
                         CAT10 MLAT = ListUPMLAT[i];
 
-                        if (MLAT.Time_milisec >= time-0.3 && MLAT.Time_milisec <= time + 0.3)
+                        if (MLAT.Time_milisec >= time-0.3 && MLAT.Time_milisec <= (time + 0.3))
                         {
                             MLAT.used = true;
                             time = time + refreshrate;
                         }
                         else
                         {
-                            if (MLAT.Time_milisec > time + refreshrate)
+                            if (MLAT.Time_milisec > time +0.3)
                             {
                                 int miss = Convert.ToInt32(MLAT.Time_milisec - time);
                                 data.ListZones[zone - 1].MissedMLATSUP+=miss;
-                                time = time + refreshrate;
+                                time = MLAT.Time_milisec+refreshrate;
                                 i = i - 1;
                             }
 
@@ -401,11 +402,11 @@ namespace PGTAWPF
                             }
                             else
                             {
-                                if (MLAT.Time_milisec > time + refreshrate)
+                                if (MLAT.Time_milisec > time + 0.3)
                                 {
                                     int miss = Convert.ToInt32(MLAT.Time_milisec - time);
                                     data.ListZones[zone - 1].MissedMLATSUP += miss;
-                                    time = time + refreshrate;
+                                    time = MLAT.Time_milisec + refreshrate;
                                     i = i - 1;
                                 }
 
@@ -483,6 +484,173 @@ namespace PGTAWPF
                 }
             }
 
+        }
+
+        public void AddListTrajectories(List<VehicleTrajectories> listTrajectories)
+        {
+            VehicleTrajectories vehicleTraject = new VehicleTrajectories(TargetAdress);
+            if(ListMLAT.Exists(x=>x.used==true) && ListMLAT.Count>1)
+            {
+                List<PointLatLng> points = new List<PointLatLng>();
+                MapTrajectory traject = new MapTrajectory(TargetAdress, 0);
+                double previousTime = ListMLAT[0].Time_milisec;
+                bool previousused = ListMLAT[0].used;
+                if(previousused)
+                {
+                    points.Add(new PointLatLng(ListMLAT[0].LatitudeWGS_84_map, ListMLAT[0].LongitudeWGS_84_map));
+                }
+                for (int i=1; i<ListMLAT.Count;i++)
+                {
+                    CAT10 mlat = ListMLAT[i];
+                    if ((previousused && mlat.used)&&((mlat.Time_milisec-previousTime)<30))
+                    {
+                        points.Add(new PointLatLng(mlat.LatitudeWGS_84_map, mlat.LongitudeWGS_84_map));
+                    }
+                    else if(!mlat.used && previousused)
+                    {
+                        traject.ListPoints = points;
+                        if (traject.ListPoints.Count > 1)
+                        {
+                            vehicleTraject.MLATTrajectories.Add(traject.Clone() as MapTrajectory);
+                        }
+                        traject = new MapTrajectory(TargetAdress, 0);
+                        points.Clear();
+                    }
+                    else if(mlat.used && !previousused)
+                    {
+                        points.Add(new PointLatLng(mlat.LatitudeWGS_84_map, mlat.LongitudeWGS_84_map));
+                    }
+                    else if ((previousused && mlat.used) && ((mlat.Time_milisec - previousTime) > 30))
+                    {
+                        traject.ListPoints = points;
+                        if (traject.ListPoints.Count > 1)
+                        {
+                            vehicleTraject.MLATTrajectories.Add(traject.Clone() as MapTrajectory);
+                        }
+                        traject = new MapTrajectory(TargetAdress, 0);
+                        points.Clear();
+                        points.Add(new PointLatLng(mlat.LatitudeWGS_84_map, mlat.LongitudeWGS_84_map));
+
+                    }
+                    previousTime = mlat.Time_milisec;
+                    previousused = mlat.used;
+                   
+                }
+                traject.ListPoints = points;
+                if (traject.ListPoints.Count > 1)
+                {
+                    vehicleTraject.MLATTrajectories.Add(traject.Clone() as MapTrajectory);
+                }
+            }
+            if (ListADSB.Exists(x=>x.used==true) && ListADSB.Count > 1)
+            {
+                List<PointLatLng> points = new List<PointLatLng>();
+                MapTrajectory traject = new MapTrajectory(TargetAdress, 1);
+                double previousTime = ListADSB[0].Time_milisec;
+                bool previousused = ListADSB[0].used;
+                if (previousused)
+                {
+                    points.Add(new PointLatLng(ListADSB[0].LatitudeWGS_84_map, ListADSB[0].LongitudeWGS_84_map));
+                }
+                for (int i = 1; i < ListADSB.Count; i++)
+                {
+                    CAT21vs21 adsb = ListADSB[i];
+                    if ((previousused && adsb.used) && ((adsb.Time_milisec - previousTime) < 30))
+                    {
+                        points.Add(new PointLatLng(adsb.LatitudeWGS_84_map, adsb.LongitudeWGS_84_map));
+                    }
+                    else if (!adsb.used && previousused)
+                    {
+                        traject.ListPoints = points;
+                        if (traject.ListPoints.Count > 1)
+                        {
+                            vehicleTraject.ADSBTrajectories.Add(traject.Clone() as MapTrajectory);
+                        }
+                        traject = new MapTrajectory(TargetAdress, 1);
+                        points.Clear();
+                    }
+                    else if (adsb.used && !previousused)
+                    {
+                        points.Add(new PointLatLng(adsb.LatitudeWGS_84_map, adsb.LongitudeWGS_84_map));
+                    }
+                    else if ((previousused && adsb.used) && ((adsb.Time_milisec - previousTime) > 30))
+                    {
+                        traject.ListPoints = points;
+                        if (traject.ListPoints.Count > 1)
+                        {
+                            vehicleTraject.ADSBTrajectories.Add(traject.Clone() as MapTrajectory);
+                        }
+                        traject = new MapTrajectory(TargetAdress, 1);
+                        points.Clear();
+                        points.Add(new PointLatLng(adsb.LatitudeWGS_84_map, adsb.LongitudeWGS_84_map));
+
+                    }
+                    previousTime = adsb.Time_milisec;
+                    previousused = adsb.used;
+                }
+                traject.ListPoints = points;
+                if (traject.ListPoints.Count > 1)
+                {
+                    vehicleTraject.ADSBTrajectories.Add(traject.Clone() as MapTrajectory);
+                }
+            }
+
+            if (ListDGPS.Exists(x => x.used == true) && ListDGPS.Count > 1)
+            {
+                List<PointLatLng> points = new List<PointLatLng>();
+                MapTrajectory traject = new MapTrajectory(TargetAdress, 1);
+                double previousTime = ListDGPS[0].Time;
+                //bool previousused = ListDGPS[0].used;
+                //if (previousused)
+                //{
+                    points.Add(new PointLatLng(ListDGPS[0].p.Lat, ListDGPS[0].p.Lng));
+                //}
+                for (int i = 1; i < ListDGPS.Count; i++)
+                {
+                    MarkerDGPS dgps = ListDGPS[i];
+                    if (((dgps.Time - previousTime) < 30))
+                    {
+                        points.Add(new PointLatLng(dgps.p.Lat, dgps.p.Lng));
+                    }
+                    //else if (!dgps.used && previousused)
+                    //{
+                    //    traject.ListPoints = points;
+                    //    if (traject.ListPoints.Count > 1)
+                    //    {
+                    //        vehicleTraject.DGPSTrajectories.Add(traject.Clone() as MapTrajectory);
+                    //    }
+                    //    traject = new MapTrajectory(TargetAdress, 1);
+                    //    points.Clear();
+                    //}
+                    //else if (dgps.used && !previousused)
+                    //{
+                    //    points.Add(new PointLatLng(dgps.p.Lat, dgps.p.Lng));
+                    //}
+                    else if (((dgps.Time- previousTime) > 30))
+                    {
+                        traject.ListPoints = points;
+                        if (traject.ListPoints.Count > 1)
+                        {
+                            vehicleTraject.DGPSTrajectories.Add(traject.Clone() as MapTrajectory);
+                        }
+                        traject = new MapTrajectory(TargetAdress, 1);
+                        points.Clear();
+                        points.Add(new PointLatLng(dgps.p.Lat, dgps.p.Lng));
+
+                    }
+                    previousTime = dgps.Time;
+                  //  previousused = dgps.used;
+                }
+                traject.ListPoints = points;
+                if (traject.ListPoints.Count > 1)
+                {
+                    vehicleTraject.DGPSTrajectories.Add(traject.Clone() as MapTrajectory);
+                }
+            }
+            if(vehicleTraject.ADSBTrajectories.Count>0 || vehicleTraject.MLATTrajectories.Count>0 || vehicleTraject.DGPSTrajectories.Count>0)
+            {
+                listTrajectories.Add(vehicleTraject);
+            }
         }
 
 
