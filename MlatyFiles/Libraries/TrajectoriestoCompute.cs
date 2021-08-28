@@ -1132,6 +1132,7 @@ namespace PGTAWPF
                     ListOrderedMlats.Add(list);
                 }
             }
+            double PFDdist = 50;
             foreach (ListOfMLATSin5Seconds List in ListOrderedMlats) //Foreach period of 5 seconds compute it's data
             {
                 foreach (CAT10 Mlat in List.MLATSList) //foreach message in the list compute it's precission
@@ -1147,6 +1148,14 @@ namespace PGTAWPF
                         double ErrorLocalY = Mlat.Y_Component_map - p.Y;
                             data.ListZones[List.zone - 1].MLATMessagesUsed ++;
 
+                        if (dist > PFDdist)
+                        {
+                            data.ListZones[Mlat.zone - 1].FalseDetection++;
+                        }
+                        else
+                        {
+                            data.ListZones[Mlat.zone - 1].CorrectDetection++;
+                        }
                         PrecissionPoint pressP = new PrecissionPoint(TargetIdentification, TargetAdress, TrackNumberMLAT, Mlat.X_Component_map, Mlat.Y_Component_map, 53.321, p.X, p.Y, 0, ErrorLocalX, ErrorLocalY, dist, Mlat.zone, Mlat.GroundBit, Mlat.Time_milisec,-1,-1);
                         data.PrecissionPoints.Add(pressP); //Create and save the point data
                     }
@@ -1176,6 +1185,7 @@ namespace PGTAWPF
                     ListOrderedMlats.Add(list);
                 }
             }
+            double PFDdist = 50;
             foreach (ListOfMLATSin5Seconds List in ListOrderedMlats)
             {
                 foreach(CAT10 Mlat in List.MLATSList)
@@ -1193,6 +1203,14 @@ namespace PGTAWPF
                             double ErrorLocalY = Mlat.Y_Component_map - p.Y;
                             double PreviousPointTimeDifference = Mlat.Time_milisec - ADBSList[0].Time_milisec;
                             double NextPointTimeDifference = ADBSList[1].Time_milisec -Mlat.Time_milisec ;
+                            if (dist > PFDdist)
+                            {
+                                data.ListZones[Mlat.zone - 1].FalseDetection++;
+                            }
+                            else
+                            {
+                                data.ListZones[Mlat.zone - 1].CorrectDetection++;
+                            }
                             data.ListZones[List.zone - 1].MLATMessagesUsed++;
 
                             PrecissionPoint pressP = new PrecissionPoint(TargetIdentification, TargetAdress, TrackNumberMLAT, Mlat.X_Component_map, Mlat.Y_Component_map, 53.321, p.X, p.Y, p.Z, ErrorLocalX, ErrorLocalY, dist, Mlat.zone, Mlat.GroundBit, Mlat.Time_milisec, PreviousPointTimeDifference, NextPointTimeDifference);
@@ -1228,6 +1246,7 @@ namespace PGTAWPF
             }
             foreach (ListOfMLATSin5Seconds List in ListOrderedMlats)
             {
+                double PFDdist = 50;
                 foreach (CAT10 Mlat in List.MLATSList)
                 {
                     List<MarkerDGPS> DGPSList = FindPreviousAndNextDGPS(Mlat);
@@ -1240,6 +1259,14 @@ namespace PGTAWPF
                             data.ListZones[List.zone - 1].MLATMessagesUsed ++;
                             Point MLATp = new Point(Mlat.X_Component_map, Mlat.Y_Component_map);
                             double dist = ComputeDistanceXY(MLATp, p);
+                            if (dist > PFDdist)
+                            {
+                                data.ListZones[Mlat.zone - 1].FalseDetection++;
+                            }
+                            else
+                            {
+                                data.ListZones[Mlat.zone - 1].CorrectDetection++;
+                            }
                             List.Distances.Add(dist);
                             double ErrorLocalX = Mlat.X_Component_map - p.X;
                             double ErrorLocalY = Mlat.Y_Component_map - p.Y;
@@ -1261,20 +1288,23 @@ namespace PGTAWPF
         private void ComputeTotalListOfMLATSin5Seconds(ListOfMLATSin5Seconds List, Data data)
         {
             double dist = 0;
+         //   double PFDdist = 50; /////DISTANCE IN FUNCTION OF ZONE
+          
             foreach (double distance in List.Distances)
             {
                 dist += distance;
+              
             }
             double precision = dist / List.Distances.Count();
-            double PFDdist = 50; /////DISTANCE IN FUNCTION OF ZONE
-            if (precision > PFDdist)
-            {
-                data.ListZones[List.zone - 1].FalseDetection++;
-            }
-            else
-            {
-                data.ListZones[List.zone - 1].CorrectDetection++;
-            }
+            //double PFDdist = 50; /////DISTANCE IN FUNCTION OF ZONE
+            //if (precision > PFDdist)
+            //{
+            //    data.ListZones[List.zone - 1].FalseDetection++;
+            //}
+            //else
+            //{
+            //    data.ListZones[List.zone - 1].CorrectDetection++;
+            //}
             data.ListZones[List.zone - 1].MLATPrecision.Add(precision);
                      
         }

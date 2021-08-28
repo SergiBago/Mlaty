@@ -280,26 +280,26 @@ namespace Mlaty
 
             Airborne025.SeriesName = "Airborne 02 2.5-5NM";
             Airborne025.AcceptsUnsortedData = true;
-            sciChart.RenderableSeries.Add(Airborne0225Series);
+            sciChart.RenderableSeries.Add(Airborne025Series);
               Airborne25R5Series = new XyScatterRenderableSeries
             {
                 Visibility = Visibility.Visible,
             };
             Airborne25R5Series.DataSeries = Airborne25R5;
-            Airborne25R25Series.PointMarker = new EllipsePointMarker() { Width = 5, Height = 5, Stroke=Airborne25R5Color, Fill= Airborne25R5Color };
+            Airborne25R5Series.PointMarker = new EllipsePointMarker() { Width = 5, Height = 5, Stroke=Airborne25R5Color, Fill= Airborne25R5Color };
 
-            Airborne25R25.SeriesName = "Airborne 25R 2.5-5NM";
-            Airborne25R25.AcceptsUnsortedData = true;
-            sciChart.RenderableSeries.Add(Airborne25R25Series);
+            Airborne25R5.SeriesName = "Airborne 25R 2.5-5NM";
+            Airborne25R5.AcceptsUnsortedData = true;
+            sciChart.RenderableSeries.Add(Airborne25R5Series);
 
               Airborne25L5Series = new XyScatterRenderableSeries
             {
                 Visibility = Visibility.Visible,
             };
-            Airborne25L25Series.DataSeries = Airborne25L5;
-            Airborne25L25Series.PointMarker = new EllipsePointMarker() { Width = 5, Height = 5 , Stroke=Airborne25L5Color, Fill= Airborne25L5Color };
+            Airborne25L5Series.DataSeries = Airborne25L5;
+            Airborne25L5Series.PointMarker = new EllipsePointMarker() { Width = 5, Height = 5 , Stroke=Airborne25L5Color, Fill= Airborne25L5Color };
 
-            Airborne25L25.AcceptsUnsortedData = true;
+            Airborne25L5.AcceptsUnsortedData = true;
             Airborne25L5.SeriesName = "Airborne 25L 2.5-5NM";
             sciChart.RenderableSeries.Add(Airborne25L5Series);
 
@@ -392,7 +392,7 @@ namespace Mlaty
                  }
                  if (p.Area == "Airborne02Zones25")
                  {
-                     Airborne025.Append(p.ErrorLocalX, p.ErrorLocalY);
+                     Airborne0225.Append(p.ErrorLocalX, p.ErrorLocalY);
                  }
                  if (p.Area == "Airborne25LZones25")
                  {
@@ -400,7 +400,7 @@ namespace Mlaty
                  }
                  if (p.Area == "Airborne25RZones5")
                  {
-                     Airborne25R25.Append(p.ErrorLocalX, p.ErrorLocalY);
+                     Airborne25R5.Append(p.ErrorLocalX, p.ErrorLocalY);
                  }
                  if (p.Area == "Airborne02Zones5")
                  {
@@ -408,7 +408,7 @@ namespace Mlaty
                  }
                  if (p.Area == "Airborne25LZones5")
                  {
-                     Airborne25L25.Append(p.ErrorLocalX, p.ErrorLocalY);
+                     Airborne25L5.Append(p.ErrorLocalX, p.ErrorLocalY);
                  }
 
 

@@ -537,8 +537,9 @@ namespace PGTAWPF
                                 }
                                 double lat = parameters2[0];
                                 double lon = parameters2[1];
+                                double Height = parameters2[2];
                                 PointLatLng p = new PointLatLng(lat, lon);
-                                Point Pxy = LibreriaDecodificacion.ComputeCartesianFromWGS84(p);
+                                Point Pxy = LibreriaDecodificacion.ComputeCartesianFromWGS84(p,Height);
                                 time = (parameters2[6]) * 3600 + (parameters2[7]) * 60 + (parameters2[8]);
                                 if (first == false)
                                 {
@@ -552,7 +553,7 @@ namespace PGTAWPF
                                     firsttime = time;
                                     first = false;
                                 }
-                                MarkerDGPS DGPS = new MarkerDGPS(p, Pxy, time);
+                                MarkerDGPS DGPS = new MarkerDGPS(p, Pxy, time,Height);
                                 newtraj.ADDDGPS(DGPS);
                             }
                             catch {; }
